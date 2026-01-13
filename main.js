@@ -46,6 +46,8 @@ const draw = () => {
   // Draw anything above the game world
   mainScene.drawForeground(ctx);
 
+  mainScene.drawHud(ctx);
+
 }
 
 // Start the game!
