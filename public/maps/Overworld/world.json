@@ -1,0 +1,7 @@
+{
+    "chunkSize": 30,
+    "chunks": {
+        "0,0": "Chunks/chunk_0_0.json",
+        "0,1": "Chunks/chunk_0_1.json"
+    }
+}

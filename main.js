@@ -3,6 +3,7 @@ import {Vector2} from "./src/Vector2.js";
 import {GameLoop} from "./src/GameLoop.js";
 import {Main} from "./src/objects/Main/Main.js";
 import {CaveLevel1} from "./src/levels/CaveLevel1.js";
+import { WorldLevel } from './src/levels/WorldLevel.js';
 
 // Grabbing the canvas to draw to
 const canvas = document.querySelector("#game-canvas");
@@ -13,7 +14,8 @@ const mainScene = new Main({
   position: new Vector2(0,0)
 })
 //mainScene.setLevel(new OutdoorLevel1())
-mainScene.setLevel(new CaveLevel1())
+// mainScene.setLevel(new CaveLevel1())
+mainScene.setLevel(new WorldLevel())
 
 // Establish update and draw loops
 const update = (delta) => {
@@ -27,7 +29,7 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Draw the sky
-  mainScene.drawBackground(ctx);
+  // mainScene.drawBackground(ctx);
 
   // Save the current state (for camera offset)
   ctx.save();

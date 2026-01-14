@@ -4,7 +4,6 @@ import {resources} from "../Resource.js";
 import {Vector2} from "../Vector2.js";
 import {Exit} from "../objects/Exit/Exit.js";
 import {gridCells} from "../helpers/grid.js";
-import {Hero} from "../objects/Hero/Hero.js";
 import {Rod} from "../objects/Rod/Rod.js";
 import {events} from "../Events.js";
 import {CaveLevel1} from "./CaveLevel1.js";
@@ -28,9 +27,8 @@ export class OutdoorLevel1 extends Level {
     const exit = new Exit(gridCells(6), gridCells(3))
     this.addChild(exit);
 
+    // Define where the hero should spawn (Main will position the hero here)
     this.heroStartPosition = params.heroPosition ?? DEFAULT_HERO_POSITION;
-    const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y)
-    this.addChild(hero);
 
     const rod = new Rod(gridCells(7), gridCells(6))
     this.addChild(rod);

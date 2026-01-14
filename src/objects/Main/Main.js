@@ -5,6 +5,9 @@ import {Inventory} from "../Inventory/Inventory.js";
 import {events} from "../../Events.js";
 import {SpriteTextString} from "../SpriteTextString/SpriteTextString.js";
 import {storyFlags} from "../../StoryFlags.js";
+import {Hero} from "../Hero/Hero.js";
+import {Vector2} from "../../Vector2.js";
+import {gridCells} from "../../helpers/grid.js";
 
 export class Main extends GameObject {
   constructor() {
@@ -12,12 +15,17 @@ export class Main extends GameObject {
     this.level = null;
     this.input = new Input()
     this.camera = new Camera()
+    this.hero = null;
   }
 
   ready() {
 
     const inventory = new Inventory()
     this.addChild(inventory);
+
+    // Create hero (persists across levels)
+    this.hero = new Hero(gridCells(15), gridCells(14));
+    this.addChild(this.hero);
 
     // Change Level handler
     events.on("CHANGE_LEVEL", this, newLevelInstance => {
@@ -74,11 +82,22 @@ export class Main extends GameObject {
   }
 
   drawObjects(ctx) {
+    // 1. Draw ground chunks from level (before game objects)
+    if (this.level && typeof this.level.drawGroundChunks === 'function') {
+      this.level.drawGroundChunks(ctx);
+    }
+
+    // 2. Draw all game objects (hero, NPCs, level children, etc.) - Y-sorted
     this.children.forEach(child => {
       if (child.drawLayer !== "HUD") {
         child.draw(ctx, 0, 0);
       }
     })
+
+    // 3. Draw foreground chunks from level (after game objects)
+    if (this.level && typeof this.level.drawForegroundChunks === 'function') {
+      this.level.drawForegroundChunks(ctx);
+    }
   }
 
   drawForeground(ctx) {

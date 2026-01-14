@@ -18,6 +18,8 @@ class Resources {
       textBox: "/sprites/text-box.png",
       fontWhite: "/sprites/sprite-font-white.png",
       portraits: "/sprites/portraits-sheet.png",
+      // Tilesets for chunked maps
+      overworldTileset: "/maps/Overworld/Tilesets/Overworld.png",
     };
 
     // A bucket to keep all of our images

@@ -4,7 +4,6 @@ import {resources} from "../Resource.js";
 import {Level} from "../objects/Level/Level.js";
 import {gridCells} from "../helpers/grid.js";
 import {Exit } from "../objects/Exit/Exit.js";
-import {Hero} from "../objects/Hero/Hero.js";
 import {Rod} from "../objects/Rod/Rod.js";
 import {events} from "../Events.js";
 import {OutdoorLevel1} from "./OutdoorLevel1.js";
@@ -31,10 +30,8 @@ export class CaveLevel1 extends Level {
     const exit = new Exit(gridCells(3), gridCells(5))
     this.addChild(exit);
 
-
+    // Define where the hero should spawn (Main will position the hero here)
     this.heroStartPosition = params.heroPosition ?? DEFAULT_HERO_POSITION;
-    const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
-    this.addChild(hero);
 
     const rod = new Rod(gridCells(9), gridCells(6))
     this.addChild(rod)

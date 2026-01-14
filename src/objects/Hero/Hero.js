@@ -73,6 +73,11 @@ export class Hero extends GameObject {
     events.on("END_TEXT_BOX", this, () => {
       this.isLocked = false;
     })
+
+    // Emit initial position so chunks load
+    events.emit("HERO_POSITION", this.position);
+    this.lastX = this.position.x;
+    this.lastY = this.position.y;
   }
 
   step(delta, root) {
