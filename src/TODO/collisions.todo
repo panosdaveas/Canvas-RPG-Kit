@@ -1,0 +1,11 @@
+Collisions Layer that acts 2-fold:
+
+    1. Indicator for drawing layers:
+        Layers beneath it render beneath the game objects (players, npcs, etc)
+        Layers above it will render above the game objects (foreground layer)
+    2. Pack smaller collision areas to larger collision areas (instead of hundreds of individual tiles) - map packing concept
+
+    resources: [https://youtu.be/k3262REZ2wY?t=235&si=lAQfyOIG3hGST6OH]
+
+
+
