@@ -1,4 +1,4 @@
-import { CELL_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME } from "../Constants.js";
+import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME } from "../Constants.js";
 
 /**
  * Represents a single chunk loaded from Tiled map editor
@@ -8,8 +8,8 @@ export class TiledChunk {
   constructor(chunkX, chunkY, tiledData, tilesetImage) {
     this.chunkX = chunkX; // Chunk grid X coordinate (e.g., 0, 1, 2...)
     this.chunkY = chunkY; // Chunk grid Y coordinate
-    this.worldX = chunkX * CHUNK_SIZE * CELL_SIZE; // World pixel X position
-    this.worldY = chunkY * CHUNK_SIZE * CELL_SIZE; // World pixel Y position
+    this.worldX = chunkX * CHUNK_SIZE * TILE_SIZE; // World pixel X position
+    this.worldY = chunkY * CHUNK_SIZE * TILE_SIZE; // World pixel Y position
 
     this.tiledData = tiledData; // Raw Tiled JSON data
     this.tilesetImage = tilesetImage; // The tileset sprite sheet
@@ -132,8 +132,8 @@ export class TiledChunk {
         const localY = Math.floor(i / width);
 
         // Convert to world pixel coordinates
-        const worldX = this.worldX + localX * CELL_SIZE;
-        const worldY = this.worldY + localY * CELL_SIZE;
+        const worldX = this.worldX + localX * TILE_SIZE;
+        const worldY = this.worldY + localY * TILE_SIZE;
 
         this.collisionSet.add(`${worldX},${worldY}`);
       }
@@ -171,8 +171,8 @@ export class TiledChunk {
   }
 
   /**
-   * Internal method to draw a single tile layer
-   * Note: ChunkManager already handles chunk-level culling by only loading nearby chunks
+   * Internal method to draw a single tile layer with viewport culling
+   * Only draws tiles visible on screen for optimal performance
    */
   _drawTileLayer(ctx, layer) {
     if (!this.tilesetImage || !this.tilesetImage.isLoaded) return;
@@ -181,10 +181,32 @@ export class TiledChunk {
     const width = layer.width;
     const height = layer.height;
 
-    // Draw all tiles in this layer
-    // (Chunk-level culling already handled by ChunkManager)
-    for (let row = 0; row < height; row++) {
-      for (let col = 0; col < width; col++) {
+    // Get canvas dimensions
+    const canvasWidth = ctx.canvas.width;
+    const canvasHeight = ctx.canvas.height;
+
+    // Get camera offset from context transform
+    // Camera is applied via ctx.translate(), so we extract it from the transform matrix
+    const transform = ctx.getTransform();
+    const cameraX = transform.e;  // Translation X
+    const cameraY = transform.f;  // Translation Y
+
+    // Calculate visible world space
+    const viewLeft = -cameraX;
+    const viewRight = viewLeft + canvasWidth;
+    const viewTop = -cameraY;
+    const viewBottom = viewTop + canvasHeight;
+
+    // Convert to tile coordinates within this chunk
+    const buffer = 1; // Extra tile for smooth scrolling at edges
+    const startCol = Math.max(0, Math.floor((viewLeft - this.worldX) / TILE_SIZE) - buffer);
+    const endCol = Math.min(width, Math.ceil((viewRight - this.worldX) / TILE_SIZE) + buffer);
+    const startRow = Math.max(0, Math.floor((viewTop - this.worldY) / TILE_SIZE) - buffer);
+    const endRow = Math.min(height, Math.ceil((viewBottom - this.worldY) / TILE_SIZE) + buffer);
+
+    // Only draw visible tiles
+    for (let row = startRow; row < endRow; row++) {
+      for (let col = startCol; col < endCol; col++) {
         const index = row * width + col;
         const tileId = data[index];
 
@@ -192,8 +214,8 @@ export class TiledChunk {
         if (tileId === 0) continue;
 
         // Calculate world position
-        const x = this.worldX + col * CELL_SIZE;
-        const y = this.worldY + row * CELL_SIZE;
+        const x = this.worldX + col * TILE_SIZE;
+        const y = this.worldY + row * TILE_SIZE;
 
         // Draw the tile
         this._drawTile(ctx, tileId, x, y);
@@ -237,7 +259,7 @@ export class TiledChunk {
       srcX, srcY, // Source position on tileset
       tileset.tilewidth, tileset.tileheight, // Source dimensions
       x, y, // Destination position in world
-      CELL_SIZE, CELL_SIZE // Destination dimensions
+      TILE_SIZE, TILE_SIZE // Destination dimensions
     );
   }
 

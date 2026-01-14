@@ -7,7 +7,14 @@ html, body {
 
 canvas {
   width: 100%;
-  background: blue;
+  background: black;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  /* Fallback for some browsers */
+  image-rendering: -moz-crisp-edges;
+  /* Firefox */
+  image-rendering: -webkit-crisp-edges;
+  /* Older webkit */
 }
 
 @font-face {

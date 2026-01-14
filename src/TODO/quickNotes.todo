@@ -1,0 +1,5 @@
+ tile-level culling (draws all tiles in loaded chunks)
+
+ Static layer caching - Pre-render static layers to off-screen canvas
+
+ 

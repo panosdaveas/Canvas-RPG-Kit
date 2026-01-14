@@ -1,5 +1,5 @@
 import { TiledChunk } from "./TiledChunk.js";
-import { CHUNK_SIZE, CELL_SIZE, VISIBLE_CHUNK_RADIUS } from "../Constants.js";
+import { CHUNK_SIZE, TILE_SIZE, VISIBLE_CHUNK_RADIUS } from "../Constants.js";
 import { resources } from "../Resource.js";
 
 /**
@@ -48,8 +48,8 @@ export class ChunkManager {
     }
 
     // Calculate which chunk the camera is currently in
-    const chunkX = Math.floor(cameraWorldX / (CHUNK_SIZE * CELL_SIZE));
-    const chunkY = Math.floor(cameraWorldY / (CHUNK_SIZE * CELL_SIZE));
+    const chunkX = Math.floor(cameraWorldX / (CHUNK_SIZE * TILE_SIZE));
+    const chunkY = Math.floor(cameraWorldY / (CHUNK_SIZE * TILE_SIZE));
 
     // console.log(`ChunkManager.update: camera at (${cameraWorldX}, ${cameraWorldY}) = chunk (${chunkX}, ${chunkY})`);
 
