@@ -253,12 +253,12 @@ export class TiledChunk {
     const srcX = (localTileId % tileset.columns) * tileset.tilewidth;
     const srcY = Math.floor(localTileId / tileset.columns) * tileset.tileheight;
 
-    // Draw the tile
+    // Draw the tile - round positions to prevent sub-pixel rendering and pixel bleeding
     ctx.drawImage(
       img,
       srcX, srcY, // Source position on tileset
       tileset.tilewidth, tileset.tileheight, // Source dimensions
-      x, y, // Destination position in world
+      Math.floor(x), Math.floor(y), // Destination position in world
       TILE_SIZE, TILE_SIZE // Destination dimensions
     );
   }
