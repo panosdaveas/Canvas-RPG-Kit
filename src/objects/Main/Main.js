@@ -8,6 +8,7 @@ import {storyFlags} from "../../StoryFlags.js";
 import {Hero} from "../Hero/Hero.js";
 import {Vector2} from "../../Vector2.js";
 import {gridCells} from "../../helpers/grid.js";
+import {CANVAS} from "../../Constants.js";
 
 export class Main extends GameObject {
   constructor() {
@@ -77,20 +78,63 @@ export class Main extends GameObject {
     this.addChild(this.level);
   }
 
+  /**
+   * Check if a game object is within the visible viewport
+   * Uses viewport culling similar to tile rendering
+   */
+  _isInViewport(gameObject, ctx) {
+    // Extract camera offset from canvas transform
+    const transform = ctx.getTransform();
+    const cameraX = -transform.e;  // Inverse of translation X
+    const cameraY = -transform.f;  // Inverse of translation Y
+
+    // Add buffer to prevent pop-in at viewport edges
+    const buffer = 32; // pixels
+
+    // Calculate viewport bounds in world space
+    const viewLeft = cameraX - buffer;
+    const viewRight = cameraX + CANVAS.WIDTH + buffer;
+    const viewTop = cameraY - buffer;
+    const viewBottom = cameraY + CANVAS.HEIGHT + buffer;
+
+    // Check if object position is within viewport bounds
+    return (
+      gameObject.position.x >= viewLeft &&
+      gameObject.position.x <= viewRight &&
+      gameObject.position.y >= viewTop &&
+      gameObject.position.y <= viewBottom
+    );
+  }
+
   drawBackground(ctx) {
     this.level?.background.drawImage(ctx,0,0);
   }
 
   drawObjects(ctx) {
+    // Save context state and apply camera offset
+    ctx.save();
+
+    if (this.camera) {
+      // Round camera position to prevent sub-pixel rendering
+      ctx.translate(
+        Math.floor(this.camera.position.x),
+        Math.floor(this.camera.position.y)
+      );
+    }
+
     // 1. Draw ground chunks from level (before game objects)
     if (this.level && typeof this.level.drawGroundChunks === 'function') {
       this.level.drawGroundChunks(ctx);
     }
 
     // 2. Draw all game objects (hero, NPCs, level children, etc.) - Y-sorted
+    // Apply viewport culling to skip off-screen objects
     this.children.forEach(child => {
       if (child.drawLayer !== "HUD") {
-        child.draw(ctx, 0, 0);
+        // Only draw objects within the visible viewport
+        if (this._isInViewport(child, ctx)) {
+          child.draw(ctx, 0, 0);
+        }
       }
     })
 
@@ -98,6 +142,9 @@ export class Main extends GameObject {
     if (this.level && typeof this.level.drawForegroundChunks === 'function') {
       this.level.drawForegroundChunks(ctx);
     }
+
+    // Restore context state
+    ctx.restore();
   }
 
   drawForeground(ctx) {

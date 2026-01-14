@@ -23,6 +23,10 @@ export const CAMERA = {
 // Layer types - these match the Tiled layer names
 export const COLLISION_LAYER_NAME = "Collisions"; // Layer that separates ground from foreground
 
+export const CULLING = {
+    BUFFER_TILES: 2, // Extra tiles to render beyond viewport for smoothness
+}
+
 // Draw layers for Y-sorting
 export const DRAW_LAYER_FLOOR = "FLOOR";
 export const DRAW_LAYER_GAME = "GAME";

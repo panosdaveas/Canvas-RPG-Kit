@@ -1,4 +1,4 @@
-import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME } from "../Constants.js";
+import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME, CULLING } from "../Constants.js";
 
 /**
  * Represents a single chunk loaded from Tiled map editor
@@ -198,7 +198,7 @@ export class TiledChunk {
     const viewBottom = viewTop + canvasHeight;
 
     // Convert to tile coordinates within this chunk
-    const buffer = 1; // Extra tile for smooth scrolling at edges
+    const buffer = CULLING.BUFFER_TILES; // Extra tile for smooth scrolling at edges
     const startCol = Math.max(0, Math.floor((viewLeft - this.worldX) / TILE_SIZE) - buffer);
     const endCol = Math.min(width, Math.ceil((viewRight - this.worldX) / TILE_SIZE) + buffer);
     const startRow = Math.max(0, Math.floor((viewTop - this.worldY) / TILE_SIZE) - buffer);
