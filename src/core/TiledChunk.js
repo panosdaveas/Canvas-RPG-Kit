@@ -198,7 +198,7 @@ export class TiledChunk {
     const viewBottom = viewTop + canvasHeight;
 
     // Convert to tile coordinates within this chunk
-    const buffer = CULLING.BUFFER_TILES; // Extra tile for smooth scrolling at edges
+    const buffer = CULLING.BUFFER_TILES; // Extra tiles for smooth scrolling at edges
     const startCol = Math.max(0, Math.floor((viewLeft - this.worldX) / TILE_SIZE) - buffer);
     const endCol = Math.min(width, Math.ceil((viewRight - this.worldX) / TILE_SIZE) + buffer);
     const startRow = Math.max(0, Math.floor((viewTop - this.worldY) / TILE_SIZE) - buffer);
@@ -258,7 +258,7 @@ export class TiledChunk {
       img,
       srcX, srcY, // Source position on tileset
       tileset.tilewidth, tileset.tileheight, // Source dimensions
-      Math.round(x), Math.round(y), // Destination position in world
+      Math.floor(x), Math.floor(y), // Destination position in world
       TILE_SIZE, TILE_SIZE // Destination dimensions
     );
   }

@@ -17,6 +17,11 @@ export class Main extends GameObject {
     this.input = new Input()
     this.camera = new Camera()
     this.hero = null;
+
+    // Y-sort optimization: only re-sort when needed
+    this._sortedObjects = [];
+    this._ySortDirty = true;
+    this._lastHeroY = null;
   }
 
   ready() {
@@ -27,6 +32,17 @@ export class Main extends GameObject {
     // Create hero (persists across levels)
     this.hero = new Hero(gridCells(15), gridCells(14));
     this.addChild(this.hero);
+
+    // Initialize sorted objects with hero
+    this._rebuildSortedObjects();
+
+    // Mark Y-sort dirty when hero's Y position changes
+    events.on("HERO_POSITION", this, (position) => {
+      if (this._lastHeroY !== position.y) {
+        this._lastHeroY = position.y;
+        this._ySortDirty = true;
+      }
+    });
 
     // Change Level handler
     events.on("CHANGE_LEVEL", this, newLevelInstance => {
@@ -76,6 +92,60 @@ export class Main extends GameObject {
     }
     this.level = newLevelInstance;
     this.addChild(this.level);
+
+    // Reset sorted objects when level changes
+    this._rebuildSortedObjects();
+  }
+
+  /**
+   * Mark Y-sort as dirty (call when any object's Y position changes)
+   */
+  markYSortDirty() {
+    this._ySortDirty = true;
+  }
+
+  /**
+   * Add an object to the Y-sorted list
+   */
+  addToYSortedObjects(obj) {
+    if (!this._sortedObjects.includes(obj)) {
+      this._sortedObjects.push(obj);
+      this._ySortDirty = true;
+    }
+  }
+
+  /**
+   * Remove an object from the Y-sorted list
+   */
+  removeFromYSortedObjects(obj) {
+    const index = this._sortedObjects.indexOf(obj);
+    if (index !== -1) {
+      this._sortedObjects.splice(index, 1);
+      // No need to mark dirty - removal doesn't affect sort order
+    }
+  }
+
+  /**
+   * Rebuild the sorted objects list from scratch
+   */
+  _rebuildSortedObjects() {
+    this._sortedObjects = [];
+
+    // Add Main's children (hero, etc.) - exclude HUD and Level itself
+    this.children.forEach(child => {
+      if (child.drawLayer !== "HUD" && child !== this.level) {
+        this._sortedObjects.push(child);
+      }
+    });
+
+    // Add Level's children (NPCs, spawned objects, etc.)
+    if (this.level) {
+      this.level.children.forEach(child => {
+        this._sortedObjects.push(child);
+      });
+    }
+
+    this._ySortDirty = true;
   }
 
   /**
@@ -128,30 +198,14 @@ export class Main extends GameObject {
     }
 
     // 2. Draw all game objects (hero, NPCs, level children, etc.) - Y-sorted
-    // Collect all objects that should be Y-sorted together
-    const objectsToSort = [];
-
-    // Add Main's children (hero, etc.) - exclude HUD and Level itself
-    this.children.forEach(child => {
-      if (child.drawLayer !== "HUD" && child !== this.level) {
-        objectsToSort.push(child);
-      }
-    });
-
-    // Add Level's children (NPCs, spawned objects, etc.)
-    if (this.level) {
-      this.level.children.forEach(child => {
-        objectsToSort.push(child);
-      });
+    // Only re-sort when positions have changed
+    if (this._ySortDirty) {
+      this._sortedObjects.sort((a, b) => a.position.y - b.position.y);
+      this._ySortDirty = false;
     }
 
-    // Y-sort all objects together
-    objectsToSort.sort((a, b) => {
-      return a.position.y - b.position.y;
-    });
-
     // Draw Y-sorted objects with viewport culling
-    objectsToSort.forEach(obj => {
+    this._sortedObjects.forEach(obj => {
       if (this._isInViewport(obj, ctx)) {
         obj.draw(ctx, 0, 0);
       }

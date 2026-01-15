@@ -60,6 +60,11 @@ export class ChunkedLevel extends Level {
         // Add to level as a child
         this.addChild(gameObject);
         spawnedObjects.push(gameObject);
+
+        // Notify Main to add to Y-sorted list
+        if (this.parent && typeof this.parent.addToYSortedObjects === 'function') {
+          this.parent.addToYSortedObjects(gameObject);
+        }
       }
     }
 
@@ -91,6 +96,11 @@ export class ChunkedLevel extends Level {
     for (const gameObject of spawnedObjects) {
       // Unsubscribe from events
       events.unsubscribe(gameObject);
+
+      // Notify Main to remove from Y-sorted list
+      if (this.parent && typeof this.parent.removeFromYSortedObjects === 'function') {
+        this.parent.removeFromYSortedObjects(gameObject);
+      }
 
       // Remove from children
       this.children = this.children.filter(child => child !== gameObject);
@@ -133,7 +143,7 @@ export class ChunkedLevel extends Level {
   drawBackground(ctx, x, y) {
     // Draw any custom background (sky, etc.)
     if (this.background) {
-      this.background.drawImage(ctx, x, y);
+      // this.background.drawImage(ctx, x, y);
     }
 
     // Draw ground tile layers from all loaded chunks

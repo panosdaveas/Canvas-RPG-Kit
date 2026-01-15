@@ -52,7 +52,7 @@ const draw = () => {
   mainScene.drawObjects(ctx);
 
   // Draw anything above the game world
-  mainScene.drawForeground(ctx);
+  // mainScene.drawForeground(ctx);
 
   mainScene.drawHud(ctx);
 
