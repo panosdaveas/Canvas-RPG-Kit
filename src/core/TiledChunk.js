@@ -274,13 +274,16 @@ export class TiledChunk {
       if (layer.objects) {
         for (const obj of layer.objects) {
           // Add layer name and chunk position to the object
+          // For tall objects, use the bottom tile as the interaction point
+          // (obj.height - TILE_SIZE) shifts from top to bottom tile
+          const yOffset = obj.height ? obj.height - TILE_SIZE : 0;
           allObjects.push({
             ...obj,
             layerName: layer.name,
             chunkX: this.chunkX,
             chunkY: this.chunkY,
             worldX: this.worldX + obj.x,
-            worldY: this.worldY + obj.y
+            worldY: this.worldY + obj.y + yOffset
           });
         }
       }

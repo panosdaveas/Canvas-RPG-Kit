@@ -39,9 +39,9 @@ export class Camera extends GameObject {
   }
 
   centerPositionOnTarget(pos) {
-    // Round hero position first to eliminate fractional pixel errors
-    const roundedX = Math.round(pos.x);
-    const roundedY = Math.round(pos.y);
+    // Floor hero position first to eliminate fractional pixel errors
+    const flooredX = Math.floor(pos.x);
+    const flooredY = Math.floor(pos.y);
 
     const personHalf = TILE_SIZE / 2;
     const canvasWidth = CANVAS.WIDTH;
@@ -49,8 +49,8 @@ export class Camera extends GameObject {
     const halfWidth = -personHalf + canvasWidth / 2;
     const halfHeight = -personHalf + canvasHeight / 2;
     this.position = new Vector2(
-      -roundedX + halfWidth,
-      -roundedY + halfHeight,
+      -flooredX + halfWidth,
+      -flooredY + halfHeight,
     )
   }
 

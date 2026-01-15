@@ -60,6 +60,11 @@ export class Hero extends GameObject {
     this.itemPickupShell = null;
     this.isLocked = false;
 
+    // Direction hold tracking for turn-in-place mechanic
+    this.directionHeldTime = 0;
+    this.lastDirection = null;
+    this.movementThreshold = 80; // ms - adjust this value to tune the feel
+
     // React to picking up an item
     events.on("HERO_PICKS_UP_ITEM", this, data => {
       this.onPickUpItem(data)
@@ -97,13 +102,31 @@ export class Hero extends GameObject {
     /** @type {Input} */
     const input = root.input;
     if (input?.getActionJustPressed("Space")) {
+      console.log(root?.level)
+      console.log(this.position)
       // Look for an object at the next space (according to where Hero is facing)
-      const objAtPosition = this.parent.children.find(child => {
+      const objAtPosition = root.level?.children.find(child => {
         return child.position.matches(this.position.toNeighbor(this.facingDirection))
       })
+      console.log("ACTION WITH:", objAtPosition)
       if (objAtPosition) {
         events.emit("HERO_REQUESTS_ACTION", objAtPosition);
       }
+    }
+
+    // Track how long direction is held
+    if (input?.direction) {
+      if (input.direction === this.lastDirection) {
+        this.directionHeldTime += delta;
+      } else {
+        // Direction changed, reset timer
+        this.directionHeldTime = 0;
+        this.lastDirection = input.direction;
+      }
+    } else {
+      // No direction held, reset
+      this.directionHeldTime = 0;
+      this.lastDirection = null;
     }
 
     const distance = moveTowards(this, this.destinationPosition, 1);
@@ -126,14 +149,26 @@ export class Hero extends GameObject {
   }
 
   tryMove(root) {
-    const {input} = root;
+    const { input } = root;
 
     if (!input.direction) {
 
-      if (this.facingDirection === LEFT) { this.body.animations.play("standLeft")}
-      if (this.facingDirection === RIGHT) { this.body.animations.play("standRight")}
-      if (this.facingDirection === UP) { this.body.animations.play("standUp")}
-      if (this.facingDirection === DOWN) { this.body.animations.play("standDown")}
+      if (this.facingDirection === LEFT) {
+        this.body.animations.play("standLeft");
+        this.currentAnimation = 'standLeft';
+      }
+      if (this.facingDirection === RIGHT) {
+        this.body.animations.play("standRight");
+        this.currentAnimation = 'standRight';
+      }
+      if (this.facingDirection === UP) {
+        this.body.animations.play("standUp");
+        this.currentAnimation = 'standUp';
+      }
+      if (this.facingDirection === DOWN) {
+        this.body.animations.play("standDown");
+        this.currentAnimation = 'standDown';
+      }
 
       return;
     }
@@ -141,56 +176,59 @@ export class Hero extends GameObject {
     let nextX = this.destinationPosition.x;
     let nextY = this.destinationPosition.y;
     const gridSize = 16;
+    let intendedDirection = input.direction;
 
-    if (input.direction === DOWN) {
-      nextY += gridSize;
+    // Always update facing direction and animation immediately
+    if (intendedDirection === DOWN) {
       this.body.animations.play("walkDown");
+      this.currentAnimation = 'walkDown';
+      this.facingDirection = DOWN;
+      if (this.directionHeldTime >= this.movementThreshold) {
+        nextY += gridSize;
+      }
     }
-    if (input.direction === UP) {
-      nextY -= gridSize;
+    if (intendedDirection === UP) {
       this.body.animations.play("walkUp");
+      this.currentAnimation = 'walkUp';
+      this.facingDirection = UP;
+      if (this.directionHeldTime >= this.movementThreshold) {
+        nextY -= gridSize;
+      }
     }
-    if (input.direction === LEFT) {
-      nextX -= gridSize;
+    if (intendedDirection === LEFT) {
       this.body.animations.play("walkLeft");
+      this.currentAnimation = 'walkLeft';
+      this.facingDirection = LEFT;
+      if (this.directionHeldTime >= this.movementThreshold) {
+        nextX -= gridSize;
+      }
     }
-    if (input.direction === RIGHT) {
-      nextX += gridSize;
+    if (intendedDirection === RIGHT) {
       this.body.animations.play("walkRight");
+      this.currentAnimation = 'walkRight';
+      this.facingDirection = RIGHT;
+      if (this.directionHeldTime >= this.movementThreshold) {
+        nextX += gridSize;
+      }
     }
-    this.facingDirection = input.direction ?? this.facingDirection;
 
     // Validating that the next destination is free
     const spaceIsFree = isSpaceFree(root.level?.walls, nextX, nextY);
 
-    // Check for solid bodies in Main's children AND level's children (where NPCs are)
-    const allObjects = [
-      ...this.parent.children,
-      ...(root.level?.children || [])
-    ];
-    const solidBodyAtSpace = allObjects.find(c => {
+    // const allObjects = [
+    //   ...this.parent.children, // parent is Main
+    //   ...(root.level?.children || []) // objects are in Level
+    // ];
+    // const solidBodyAtSpace = allObjects.find(c => {
+    //   return c.isSolid && c.position.x === nextX && c.position.y === nextY
+    // })
+    const solidBodyAtSpace = root.level?.children.find(c => {
       return c.isSolid && c.position.x === nextX && c.position.y === nextY
     })
-
     if (spaceIsFree && !solidBodyAtSpace) {
       this.destinationPosition.x = nextX;
       this.destinationPosition.y = nextY;
     }
-  }
-
-  onPickUpItem({ image, position }) {
-    // Make sure we land right on the item
-    this.destinationPosition = position.duplicate();
-
-    // Start the pickup animation
-    this.itemPickupTime = 500; // ms
-
-    this.itemPickupShell = new GameObject({});
-    this.itemPickupShell.addChild(new Sprite({
-      resource: image,
-      position: new Vector2(0, -18)
-    }))
-    this.addChild(this.itemPickupShell);
   }
 
   workOnItemPickup(delta) {

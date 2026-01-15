@@ -72,8 +72,8 @@ export class Sprite extends GameObject {
         frameCoordY, // Top Y corner of frame
         frameSizeX, //How much to crop from the sprite sheet (X)
         frameSizeY, //How much to crop from the sprite sheet (Y)
-        Math.round(x), //Where to place this on canvas tag X (0)
-        Math.round(y), //Where to place this on canvas tag Y (0)
+        Math.floor(x), //Where to place this on canvas tag X (0)
+        Math.floor(y), //Where to place this on canvas tag Y (0)
         frameSizeX * this.scale, //How large to scale it (X)
         frameSizeY * this.scale, //How large to scale it (Y)
     );

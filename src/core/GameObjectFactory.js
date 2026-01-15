@@ -1,5 +1,6 @@
 import { Npc } from "../objects/Npc/Npc.js";
 import { Exit } from "../objects/Exit/Exit.js";
+import { Sign } from "../objects/Sign/Sign.js";
 
 /**
  * Factory for spawning game objects from Tiled object layer data
@@ -20,6 +21,10 @@ export class GameObjectFactory {
       // Exit/transition points
       "Exit": this._createExit.bind(this),
       "exit": this._createExit.bind(this),
+
+      // Signs/interactable markers (no sprite, just properties)
+      "Sign": this._createSign.bind(this),
+      "sign": this._createSign.bind(this),
 
       // Add more object types here as needed
       // "Chest": this._createChest.bind(this),
@@ -120,6 +125,14 @@ export class GameObjectFactory {
 
   _createExit(tiledObject) {
     return new Exit(tiledObject.worldX, tiledObject.worldY);
+  }
+
+  _createSign(tiledObject) {
+    const message = this._getProperty(tiledObject, "message") ||
+                    this._getProperty(tiledObject, "text") ||
+                    "";
+
+    return new Sign(tiledObject.worldX, tiledObject.worldY, message);
   }
 
   // Add more factory methods as needed:
