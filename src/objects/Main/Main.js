@@ -8,7 +8,7 @@ import {storyFlags} from "../../StoryFlags.js";
 import {Hero} from "../Hero/Hero.js";
 import {Vector2} from "../../Vector2.js";
 import {gridCells} from "../../helpers/grid.js";
-import {CANVAS} from "../../Constants.js";
+import {CANVAS, CULLING, TILE_SIZE} from "../../Constants.js";
 
 export class Main extends GameObject {
   constructor() {
@@ -89,7 +89,7 @@ export class Main extends GameObject {
     const cameraY = -transform.f;  // Inverse of translation Y
 
     // Add buffer to prevent pop-in at viewport edges
-    const buffer = 32; // pixels
+    const buffer = CULLING.BUFFER_TILES * TILE_SIZE; // pixels
 
     // Calculate viewport bounds in world space
     const viewLeft = cameraX - buffer;
@@ -128,13 +128,32 @@ export class Main extends GameObject {
     }
 
     // 2. Draw all game objects (hero, NPCs, level children, etc.) - Y-sorted
-    // Apply viewport culling to skip off-screen objects
+    // Collect all objects that should be Y-sorted together
+    const objectsToSort = [];
+
+    // Add Main's children (hero, etc.) - exclude HUD and Level itself
     this.children.forEach(child => {
-      if (child.drawLayer !== "HUD") {
-        // Only draw objects within the visible viewport
-        if (this._isInViewport(child, ctx)) {
-          child.draw(ctx, 0, 0);
-        }
+      if (child.drawLayer !== "HUD" && child !== this.level) {
+        objectsToSort.push(child);
+      }
+    });
+
+    // Add Level's children (NPCs, spawned objects, etc.)
+    if (this.level) {
+      this.level.children.forEach(child => {
+        objectsToSort.push(child);
+      });
+    }
+
+    // Y-sort all objects together
+    objectsToSort.sort((a, b) => {
+      return a.position.y - b.position.y;
+    });
+
+    // Draw Y-sorted objects with viewport culling
+    objectsToSort.forEach(obj => {
+      if (this._isInViewport(obj, ctx)) {
+        obj.draw(ctx, 0, 0);
       }
     })
 

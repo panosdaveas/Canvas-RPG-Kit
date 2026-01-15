@@ -4,6 +4,7 @@ import { resources } from "../Resource.js";
 import { Vector2 } from "../Vector2.js";
 import { events } from "../Events.js";
 import { gridCells } from "../helpers/grid.js";
+import { Npc } from "../objects/Npc/Npc.js";
 
 /**
  * Example of a large open-world level using the chunk system
@@ -25,6 +26,18 @@ export class WorldLevel extends ChunkedLevel {
 
     // Define where the hero should spawn (Main will position the hero here)
     this.heroStartPosition = params.heroPosition ?? new Vector2(gridCells(8), gridCells(8));
+
+    const npc1 = new Npc(gridCells(15), gridCells(17), {
+      //content: "I am the first NPC!",
+      content: [
+        {
+          string: "I just can't stand that guy.",
+          requires: [],
+        }
+      ],
+      portraitFrame: 1
+    })
+    this.addChild(npc1);
   }
 
   /**

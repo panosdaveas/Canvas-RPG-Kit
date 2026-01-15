@@ -21,7 +21,7 @@ export class Npc extends GameObject {
     const shadow = new Sprite({
       resource: resources.images.shadow,
       frameSize: new Vector2(32, 32),
-      position: new Vector2(-8, -19),
+      position: new Vector2(-8, -17),
     })
     this.addChild(shadow);
 
@@ -31,7 +31,7 @@ export class Npc extends GameObject {
       frameSize: new Vector2(32, 32),
       hFrames: 2,
       vFrames: 1,
-      position: new Vector2(-8, -20),
+      position: new Vector2(-8, -18),
     })
     this.addChild(body)
   }
