@@ -38,7 +38,12 @@ const draw = () => {
 
   // Clear anything stale
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Disable image smoothing for crisp pixel art (with vendor prefixes)
   ctx.imageSmoothingEnabled = false;
+  ctx.webkitImageSmoothingEnabled = false;
+  ctx.mozImageSmoothingEnabled = false;
+  ctx.msImageSmoothingEnabled = false;
 
   // Draw the sky
   // mainScene.drawBackground(ctx);
