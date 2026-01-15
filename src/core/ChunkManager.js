@@ -7,9 +7,9 @@ import { resources } from "../Resource.js";
  * Implements smart chunk streaming for large open worlds
  */
 export class ChunkManager {
-  constructor(worldMetadataPath, tilesetImage) {
+  constructor(worldMetadataPath, tilesetImages) {
     this.worldMetadataPath = worldMetadataPath; // Path to world.json with chunk references
-    this.tilesetImage = tilesetImage; // Shared tileset image for all chunks
+    this.tilesetImages = tilesetImages; // Array of tileset images for all chunks
 
     this.worldMetadata = null; // Loaded world.json data
     this.loadedChunks = new Map(); // Map of "x,y" => TiledChunk
@@ -134,7 +134,7 @@ export class ChunkManager {
       .then(response => response.json())
       .then(tiledData => {
         // Create TiledChunk instance
-        const chunk = new TiledChunk(chunkX, chunkY, tiledData, this.tilesetImage);
+        const chunk = new TiledChunk(chunkX, chunkY, tiledData, this.tilesetImages);
 
         // Store in loaded chunks using internal x,y format
         this.loadedChunks.set(storageKey, chunk);

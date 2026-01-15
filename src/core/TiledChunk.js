@@ -1,18 +1,19 @@
-import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME, CULLING } from "../Constants.js";
+import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME, CULLING, DEBUG_LAYERS } from "../Constants.js";
 
 /**
  * Represents a single chunk loaded from Tiled map editor
  * Organizes layers into ground, collision, and foreground based on the collision layer position
  */
 export class TiledChunk {
-  constructor(chunkX, chunkY, tiledData, tilesetImage) {
+  constructor(chunkX, chunkY, tiledData, tilesetImages) {
     this.chunkX = chunkX; // Chunk grid X coordinate (e.g., 0, 1, 2...)
     this.chunkY = chunkY; // Chunk grid Y coordinate
     this.worldX = chunkX * CHUNK_SIZE * TILE_SIZE; // World pixel X position
     this.worldY = chunkY * CHUNK_SIZE * TILE_SIZE; // World pixel Y position
 
     this.tiledData = tiledData; // Raw Tiled JSON data
-    this.tilesetImage = tilesetImage; // The tileset sprite sheet
+    // Normalize to array and store tileset images
+    this.tilesetImages = Array.isArray(tilesetImages) ? tilesetImages : [tilesetImages];
     this.isLoaded = false; // Track if chunk is ready to render
 
     // Organized layer groups
@@ -34,23 +35,34 @@ export class TiledChunk {
     this._buildCollisionSet();
 
     this.isLoaded = true;
+    
+    this._debugLayers();
+  }
+
+  _debugLayers() {
+    if (DEBUG_LAYERS.DRAW_COLLISIONS) {
+      this.groundLayers.push(this.collisionLayer);
+    }
   }
 
   /**
    * Parse tileset information from Tiled data
    * Returns array of tileset configs sorted by firstgid (descending)
+   * Each tileset stores its imageIndex to reference the correct image from tilesetImages array
    */
   _parseTilesets() {
     if (!this.tiledData.tilesets) return [];
 
     // Sort by firstgid (descending) for easy lookup
+    // Store imageIndex to map to the correct tileset image
     return this.tiledData.tilesets
-      .map(ts => ({
+      .map((ts, index) => ({
         firstgid: ts.firstgid,
         columns: ts.columns,
         tilewidth: ts.tilewidth || 16,
         tileheight: ts.tileheight || 16,
-        name: ts.name
+        name: ts.name,
+        imageIndex: index // Index into tilesetImages array
       }))
       .sort((a, b) => b.firstgid - a.firstgid);
   }
@@ -175,7 +187,8 @@ export class TiledChunk {
    * Only draws tiles visible on screen for optimal performance
    */
   _drawTileLayer(ctx, layer) {
-    if (!this.tilesetImage || !this.tilesetImage.isLoaded) return;
+    // Check if we have at least one tileset image loaded
+    if (!this.tilesetImages || this.tilesetImages.length === 0) return;
 
     const data = layer.data;
     const width = layer.width;
@@ -225,13 +238,10 @@ export class TiledChunk {
 
   /**
    * Draw a single tile from the tileset
-   * Handles Tiled's tileset mapping with firstgid
+   * Handles Tiled's tileset mapping with firstgid and multiple tileset images
    */
   _drawTile(ctx, tileId, x, y) {
-    if (!this.tilesetImage || !this.tilesetImage.isLoaded) return;
     if (tileId === 0) return; // 0 means empty tile
-
-    const img = this.tilesetImage.image;
 
     // Find the appropriate tileset for this tile ID
     // Tilesets are sorted by firstgid descending, so first match is correct
@@ -243,8 +253,13 @@ export class TiledChunk {
       }
     }
 
-    // Skip collision layer tiles (they're not visual)
-    if (tileset.name === "Collisions") return;
+    if (tileset.name === "Collisions" && !DEBUG_LAYERS.DRAW_COLLISIONS) return; 
+
+    // Get the correct tileset image for this tileset
+    const tilesetImage = this.tilesetImages[tileset.imageIndex];
+    if (!tilesetImage || !tilesetImage.isLoaded) return;
+
+    const img = tilesetImage.image;
 
     // Calculate local tile index within this tileset
     const localTileId = tileId - tileset.firstgid;
@@ -253,7 +268,7 @@ export class TiledChunk {
     const srcX = (localTileId % tileset.columns) * tileset.tilewidth;
     const srcY = Math.floor(localTileId / tileset.columns) * tileset.tileheight;
 
-    // Draw the tile - round positions to prevent sub-pixel rendering and pixel bleeding
+    // Draw the tile - floor positions to prevent sub-pixel rendering and pixel bleeding
     ctx.drawImage(
       img,
       srcX, srcY, // Source position on tileset

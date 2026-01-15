@@ -8,11 +8,14 @@ import { events } from "../../Events.js";
  * Extends the base Level class with ChunkManager integration
  */
 export class ChunkedLevel extends Level {
-  constructor(worldMetadataPath, tilesetImage, params = {}) {
+  constructor(worldMetadataPath, tilesetImages, params = {}) {
     super();
 
-    // Initialize ChunkManager
-    this.chunkManager = new ChunkManager(worldMetadataPath, tilesetImage);
+    // Normalize tilesetImages to always be an array
+    const images = Array.isArray(tilesetImages) ? tilesetImages : [tilesetImages];
+
+    // Initialize ChunkManager with array of tileset images
+    this.chunkManager = new ChunkManager(worldMetadataPath, images);
 
     // Track spawned objects by chunk
     this.spawnedObjectsByChunk = new Map(); // Map of "x,y" => GameObject[]

@@ -20,6 +20,7 @@ class Resources {
       portraits: "/sprites/portraits-sheet.png",
       // Tilesets for chunked maps
       overworldTileset: "/maps/Overworld/Tilesets/Overworld.png",
+      collisionsTileset: "/maps/Overworld/Tilesets/Collisions.png",
     };
 
     // A bucket to keep all of our images

@@ -2,8 +2,8 @@
 export const TILE_SIZE = 16; // Pixels per grid cell
 
 export const CANVAS = {
-    WIDTH: 480, // canvas width in pixels
-    HEIGHT: 360, // canvas height in pixels
+    WIDTH: 360, // canvas width in pixels
+    HEIGHT: 180, // canvas height in pixels
 }
 
 // Chunk system configuration
@@ -32,3 +32,7 @@ export const DRAW_LAYER_FLOOR = "FLOOR";
 export const DRAW_LAYER_GAME = "GAME";
 export const DRAW_LAYER_FOREGROUND = "FOREGROUND";
 export const DRAW_LAYER_HUD = "HUD";
+
+export const DEBUG_LAYERS = {
+    DRAW_COLLISIONS: true, // Set to true to render collision layer tiles
+}

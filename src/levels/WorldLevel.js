@@ -12,10 +12,13 @@ import { Npc } from "../objects/Npc/Npc.js";
  */
 export class WorldLevel extends ChunkedLevel {
   constructor(params = {}) {
-    // Call ChunkedLevel constructor with world metadata path and tileset
+    // Call ChunkedLevel constructor with world metadata path and tileset images array
     super(
       "/maps/Overworld/world.json",  // Path to world.json
-      resources.images.overworldTileset  // Tileset image resource
+      [
+        resources.images.overworldTileset,   // First tileset image (index 0)
+        resources.images.collisionsTileset,  // Second tileset image (index 1)
+      ]
     );
 
     // Optional: Set up a sky background
