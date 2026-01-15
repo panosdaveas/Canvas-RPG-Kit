@@ -115,11 +115,11 @@ export class Main extends GameObject {
     ctx.save();
 
     if (this.camera) {
-      // Round camera position to prevent sub-pixel rendering
-      ctx.translate(
-        Math.floor(this.camera.position.x),
-        Math.floor(this.camera.position.y)
-      );
+      // Round camera position to nearest pixel (Math.round handles negative numbers correctly)
+      const camX = Math.round(this.camera.position.x);
+      const camY = Math.round(this.camera.position.y);
+
+      ctx.translate(camX, camY);
     }
 
     // 1. Draw ground chunks from level (before game objects)

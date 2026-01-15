@@ -258,7 +258,7 @@ export class TiledChunk {
       img,
       srcX, srcY, // Source position on tileset
       tileset.tilewidth, tileset.tileheight, // Source dimensions
-      Math.floor(x), Math.floor(y), // Destination position in world
+      Math.round(x), Math.round(y), // Destination position in world
       TILE_SIZE, TILE_SIZE // Destination dimensions
     );
   }
