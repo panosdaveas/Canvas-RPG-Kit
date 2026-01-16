@@ -4,6 +4,10 @@ html, body {
   overflow: hidden;
 }
 
+* {
+  cursor: url('/sprites/pointer.png'), auto;
+}
+
 canvas {
   width: 100%;
   background: black;

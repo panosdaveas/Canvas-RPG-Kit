@@ -9,7 +9,7 @@ import {resources} from './src/Resource.js';
 
 // Grabbing the canvas to draw to
 const canvas = document.querySelector("#game-canvas");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d", { alpha: false });
 
 // Show loading screen
 function drawLoadingScreen() {
