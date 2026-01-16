@@ -496,7 +496,7 @@
                         {
                          "name":"message",
                          "type":"string",
-                         "value":"Hi! i'm a RED sign!"
+                         "value":"Hi! I'm a RED sign!"
                         }],
                  "rotation":0,
                  "type":"Sign",
@@ -513,7 +513,7 @@
                         {
                          "name":"message",
                          "type":"string",
-                         "value":"Hi! i'm a BLUE sign!"
+                         "value":"Hi! I'm a BLUE sign!"
                         }],
                  "rotation":0,
                  "type":"Sign",
@@ -537,16 +537,21 @@
                 {
                  "height":0,
                  "id":8,
-                 "name":"",
+                 "name":"hero",
                  "point":true,
                  "properties":[
                         {
-                         "name":"spawnHero",
-                         "type":"bool",
-                         "value":true
+                         "name":"posX",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"posY",
+                         "type":"int",
+                         "value":0
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"Spawn",
                  "visible":true,
                  "width":0,
                  "x":272,
@@ -570,14 +575,9 @@
                  "name":"1",
                  "properties":[
                         {
-                         "name":"isActive",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"targetPos",
+                         "name":"targetLevel",
                          "type":"string",
-                         "value":"(16,14)"
+                         "value":"interior_1"
                         }],
                  "rotation":0,
                  "type":"Exit",
@@ -591,9 +591,69 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "class":"Npcs",
+         "draworder":"topdown",
+         "id":20,
+         "name":"Npcs",
+         "objects":[
+                {
+                 "height":0,
+                 "id":35,
+                 "name":"npc_1",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawn",
+                         "type":"object",
+                         "value":35
+                        }],
+                 "rotation":0,
+                 "type":"Npc",
+                 "visible":true,
+                 "width":0,
+                 "x":240,
+                 "y":272
+                }, 
+                {
+                 "height":0,
+                 "id":37,
+                 "name":"npc_2",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"spawn",
+                         "type":"object",
+                         "value":37
+                        }],
+                 "rotation":0,
+                 "type":"Npc",
+                 "visible":true,
+                 "width":0,
+                 "x":384,
+                 "y":272
+                }, 
+                {
+                 "gid":1938,
+                 "height":16,
+                 "id":38,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":384,
+                 "y":288
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":20,
- "nextobjectid":27,
+ "nextlayerid":22,
+ "nextobjectid":42,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

@@ -1,6 +1,6 @@
 const makeStandingFrames = (rootFrame = 0) => {
   return {
-    duration: 400,
+    duration: 480,
     frames: [
       {
         time: 0,
@@ -11,22 +11,22 @@ const makeStandingFrames = (rootFrame = 0) => {
 }
 const makeWalkingFrames = (rootFrame=0) => {
   return {
-    duration: 400,
+    duration: 480,
     frames: [
       {
         time: 0,
         frame: rootFrame+1
       },
       {
-        time: 100,
+        time: 120,
         frame: rootFrame
       },
       {
-        time: 200,
+        time: 240,
         frame: rootFrame+1
       },
       {
-        time: 300,
+        time: 360,
         frame: rootFrame+2
       }
     ]
@@ -44,7 +44,7 @@ export const WALK_UP = makeWalkingFrames(6);
 export const WALK_LEFT = makeWalkingFrames(9);
 
 export const PICK_UP_DOWN = {
-  duration: 400,
+  duration: 480,
   frames: [
     {
       time: 0,
