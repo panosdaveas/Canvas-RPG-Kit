@@ -2,7 +2,7 @@ html, body {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  image-rendering: pixelated;
+  /* image-rendering: pixelated; */
 }
 
 canvas {

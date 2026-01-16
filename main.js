@@ -11,6 +11,16 @@ import {resources} from './src/Resource.js';
 const canvas = document.querySelector("#game-canvas");
 const ctx = canvas.getContext("2d");
 
+// Get the device's pixel ratio (usually 1 on desktop, 2+ on high-DPI displays)
+// const dpr = window.devicePixelRatio || 1;
+
+// Set internal canvas resolution to match device pixels
+// canvas.width = CANVAS.WIDTH * dpr;
+// canvas.height = CANVAS.HEIGHT * dpr;
+
+// Scale the drawing context to compensate
+// ctx.scale(dpr, dpr);
+
 // Show loading screen
 function drawLoadingScreen() {
   ctx.fillStyle = "#000";
@@ -48,9 +58,9 @@ async function startGame() {
 
     // Disable image smoothing for crisp pixel art (with vendor prefixes)
     ctx.imageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
-    ctx.mozImageSmoothingEnabled = false;
-    ctx.msImageSmoothingEnabled = false;
+    // ctx.webkitImageSmoothingEnabled = false;
+    // ctx.mozImageSmoothingEnabled = false;
+    // ctx.msImageSmoothingEnabled = false;
 
     // Draw objects in the mounted scene (camera offset handled inside)
     mainScene.drawObjects(ctx);

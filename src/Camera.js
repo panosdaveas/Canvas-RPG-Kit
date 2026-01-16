@@ -12,8 +12,12 @@ export class Camera extends GameObject {
     this.deadZoneHeight = CAMERA.DEAD_ZONE_HEIGHT; // How far up/down hero can move before camera follows - change to 0 for instant follow
 
     this.currentLevel = null;
+    this.frozen = false; // Set to true to freeze camera position (for debugging)
 
     events.on("HERO_POSITION", this, heroPosition => {
+      // Skip camera updates if frozen
+      if (this.frozen) return;
+
       // Only update camera if it's enabled for the current level
       if (this.currentLevel?.cameraEnabled !== false) {
         this.updateCameraWithDeadZone(heroPosition);
