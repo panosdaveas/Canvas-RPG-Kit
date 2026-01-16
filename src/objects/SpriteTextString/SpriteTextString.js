@@ -4,11 +4,12 @@ import {Vector2} from "../../Vector2.js";
 import {Sprite} from "../../Sprite.js";
 import {getCharacterFrame, getCharacterWidth} from "./spriteFontMap.js";
 import {events} from "../../Events.js";
+import {CANVAS} from "../../Constants.js";
 
 export class SpriteTextString extends GameObject {
   constructor(config={}) {
     super({
-      position: new Vector2(32, 108)
+      position: new Vector2(32, CANVAS.HEIGHT - 80)
     });
 
 
