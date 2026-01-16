@@ -17,16 +17,19 @@ export class TiledChunk {
     this.isLoaded = false; // Track if chunk is ready to render
 
     // Organized layer groups
-    this.groundLayers = []; // Layers below collision layer
+    this.groundLayers = []; // Layers below collision layer (non-static)
+    this.staticGroundLayers = []; // Ground layers with static=true
     this.collisionLayer = null; // The collision layer itself
-    this.foregroundLayers = []; // Layers above collision layer
+    this.foregroundLayers = []; // Layers above collision layer (non-static)
+    this.staticForegroundLayers = []; // Foreground layers with static=true
     this.objectLayers = []; // Object layers (interactions, NPCs, etc.)
 
     // Y-sort tracking
     this.foregroundYSortLayers = []; // Foreground layers that participate in Y-sorting
 
-    // Cache for static layers (layer name → off-screen canvas)
-    this._layerCache = new Map();
+    // Static layer caching - offscreen canvases for pre-rendered static layers
+    this.staticGroundCanvas = null;
+    this.staticForegroundCanvas = null
 
     // Parse tilesets from Tiled data
     this.tilesets = this._parseTilesets();
@@ -37,7 +40,7 @@ export class TiledChunk {
     // Build collision set for quick lookups
     this._buildCollisionSet();
 
-    // Cache static layers for better performance
+    // Cache static layers to offscreen canvases
     this._cacheStaticLayers();
 
     this.isLoaded = true;
@@ -49,95 +52,6 @@ export class TiledChunk {
     if (DEBUG_LAYERS.DRAW_COLLISIONS) {
       this.groundLayers.push(this.collisionLayer);
     }
-  }
-
-  /**
-   * Cache static layers to off-screen canvases for better performance
-   * Only caches layers with static=true property in Tiled
-   */
-  _cacheStaticLayers() {
-    const allLayers = [...this.groundLayers, ...this.foregroundLayers];
-
-    for (const layer of allLayers) {
-      if (!layer) continue;
-
-      const isStatic = this._getLayerProperty(layer, "static");
-      if (isStatic === true) {
-        this._cacheLayer(layer);
-      }
-    }
-  }
-
-  /**
-   * Render a layer to an off-screen canvas for caching
-   */
-  _cacheLayer(layer) {
-    const width = layer.width * TILE_SIZE;
-    const height = layer.height * TILE_SIZE;
-
-    // Create off-screen canvas
-    const offscreenCanvas = document.createElement("canvas");
-    offscreenCanvas.width = width;
-    offscreenCanvas.height = height;
-    const offCtx = offscreenCanvas.getContext("2d");
-
-    // Disable image smoothing for pixel art
-    offCtx.imageSmoothingEnabled = false;
-
-    // Draw all tiles to the off-screen canvas
-    const data = layer.data;
-    for (let i = 0; i < data.length; i++) {
-      const tileId = data[i];
-      if (tileId === 0) continue;
-
-      const col = i % layer.width;
-      const row = Math.floor(i / layer.width);
-      const x = col * TILE_SIZE;
-      const y = row * TILE_SIZE;
-
-      this._drawTileToContext(offCtx, tileId, x, y);
-    }
-
-    // Store in cache
-    this._layerCache.set(layer.name, offscreenCanvas);
-    // console.log(`Cached static layer: ${layer.name} for chunk (${this.chunkX},${this.chunkY})`);
-  }
-
-  /**
-   * Draw a single tile to a context (used for caching)
-   * Similar to _drawTile but without viewport culling
-   */
-  _drawTileToContext(ctx, tileId, x, y) {
-    if (tileId === 0) return;
-
-    // Find the appropriate tileset
-    let tileset = this.tilesets[0];
-    for (const ts of this.tilesets) {
-      if (tileId >= ts.firstgid) {
-        tileset = ts;
-        break;
-      }
-    }
-
-    // Skip collision tiles in cache (they're debug only)
-    if (tileset.name === "Collisions") return;
-
-    // Get the correct tileset image
-    const tilesetImage = this.tilesetImages[tileset.imageIndex];
-    if (!tilesetImage || !tilesetImage.isLoaded) return;
-
-    const img = tilesetImage.image;
-    const localTileId = tileId - tileset.firstgid;
-    const srcX = (localTileId % tileset.columns) * tileset.tilewidth;
-    const srcY = Math.floor(localTileId / tileset.columns) * tileset.tileheight;
-
-    ctx.drawImage(
-      img,
-      srcX, srcY,
-      tileset.tilewidth, tileset.tileheight,
-      x, y,
-      TILE_SIZE, TILE_SIZE
-    );
   }
 
   /**
@@ -164,6 +78,7 @@ export class TiledChunk {
 
   /**
    * Parse Tiled layers and organize them into ground/collision/foreground
+   * Separates static layers (static=true property) for caching optimization
    */
   _parseLayers() {
     let foundCollision = false;
@@ -181,31 +96,36 @@ export class TiledChunk {
         if (layer.name === COLLISION_LAYER_NAME) {
           this.collisionLayer = layer;
           foundCollision = true;
-          // console.log(`Chunk (${this.chunkX},${this.chunkY}): Found collision layer`);
           continue;
         }
+
+        // Check if this layer is marked as static for caching
+        const isStatic = this._getLayerProperty(layer, "static") === true;
 
         // Organize into ground or foreground based on collision layer position
         if (!foundCollision) {
           // Layers before collision = ground
-          this.groundLayers.push(layer);
-          // console.log(`Chunk (${this.chunkX},${this.chunkY}): Ground layer "${layer.name}"`);
+          if (isStatic) {
+            this.staticGroundLayers.push(layer);
+          } else {
+            this.groundLayers.push(layer);
+          }
         } else {
           // Layers after collision = foreground
-          this.foregroundLayers.push(layer);
-          // console.log(`Chunk (${this.chunkX},${this.chunkY}): Foreground layer "${layer.name}"`);
+          if (isStatic) {
+            this.staticForegroundLayers.push(layer);
+          } else {
+            this.foregroundLayers.push(layer);
+          }
 
           // Check if this layer participates in Y-sorting
           const ySort = this._getLayerProperty(layer, "ySort");
           if (ySort === true) {
             this.foregroundYSortLayers.push(layer);
-            // console.log(`Chunk (${this.chunkX},${this.chunkY}): Layer "${layer.name}" has ySort=true`);
           }
         }
       }
     }
-
-    // console.log(`Chunk (${this.chunkX},${this.chunkY}): ${this.groundLayers.length} ground, ${this.foregroundLayers.length} foreground layers`);
   }
 
   /**
@@ -248,9 +168,111 @@ export class TiledChunk {
   }
 
   /**
+   * Cache static layers to offscreen canvases for optimized rendering
+   * Static layers are pre-rendered once and drawn as a single image
+   */
+  _cacheStaticLayers() {
+    const chunkPixelSize = CHUNK_SIZE * TILE_SIZE;
+
+    // Cache static ground layers
+    if (this.staticGroundLayers.length > 0) {
+      this.staticGroundCanvas = document.createElement("canvas");
+      this.staticGroundCanvas.width = chunkPixelSize;
+      this.staticGroundCanvas.height = chunkPixelSize;
+      const groundCtx = this.staticGroundCanvas.getContext("2d");
+
+      // Draw all static ground layers to the offscreen canvas
+      for (const layer of this.staticGroundLayers) {
+        this._drawTileLayerToCanvas(groundCtx, layer);
+      }
+    }
+
+    // Cache static foreground layers
+    if (this.staticForegroundLayers.length > 0) {
+      this.staticForegroundCanvas = document.createElement("canvas");
+      this.staticForegroundCanvas.width = chunkPixelSize;
+      this.staticForegroundCanvas.height = chunkPixelSize;
+      const foregroundCtx = this.staticForegroundCanvas.getContext("2d");
+
+      // Draw all static foreground layers to the offscreen canvas
+      for (const layer of this.staticForegroundLayers) {
+        this._drawTileLayerToCanvas(foregroundCtx, layer);
+      }
+    }
+  }
+
+  /**
+   * Draw a tile layer to an offscreen canvas (no viewport culling, draws entire layer)
+   * Used for pre-rendering static layers
+   */
+  _drawTileLayerToCanvas(ctx, layer) {
+    if (!this.tilesetImages || this.tilesetImages.length === 0) return;
+
+    const data = layer.data;
+    const width = layer.width;
+    const height = layer.height;
+
+    for (let row = 0; row < height; row++) {
+      for (let col = 0; col < width; col++) {
+        const index = row * width + col;
+        const tileId = data[index];
+
+        if (tileId === 0) continue;
+
+        // Position relative to chunk origin (0,0 of the offscreen canvas)
+        const x = col * TILE_SIZE;
+        const y = row * TILE_SIZE;
+
+        this._drawTileAt(ctx, tileId, x, y);
+      }
+    }
+  }
+
+  /**
+   * Draw a single tile at a position (used by both regular and cached rendering)
+   */
+  _drawTileAt(ctx, tileId, x, y) {
+    if (tileId === 0) return;
+
+    // Find the appropriate tileset for this tile ID
+    let tileset = this.tilesets[0];
+    for (const ts of this.tilesets) {
+      if (tileId >= ts.firstgid) {
+        tileset = ts;
+        break;
+      }
+    }
+
+    if (tileset.name === "Collisions" && !DEBUG_LAYERS.DRAW_COLLISIONS) return;
+
+    const tilesetImage = this.tilesetImages[tileset.imageIndex];
+    if (!tilesetImage || !tilesetImage.isLoaded) return;
+
+    const img = tilesetImage.image;
+    const localTileId = tileId - tileset.firstgid;
+    const srcX = (localTileId % tileset.columns) * tileset.tilewidth;
+    const srcY = Math.floor(localTileId / tileset.columns) * tileset.tileheight;
+
+    ctx.drawImage(
+      img,
+      srcX, srcY,
+      tileset.tilewidth, tileset.tileheight,
+      Math.floor(x), Math.floor(y),
+      TILE_SIZE, TILE_SIZE
+    );
+  }
+
+  /**
    * Draw ground layers (layers below collision)
+   * Static layers are drawn from cached canvas, non-static are drawn tile-by-tile
    */
   drawGroundLayers(ctx) {
+    // Draw cached static ground layers as single image
+    if (this.staticGroundCanvas) {
+      ctx.drawImage(this.staticGroundCanvas, this.worldX, this.worldY);
+    }
+
+    // Draw non-static ground layers tile-by-tile (with viewport culling)
     for (const layer of this.groundLayers) {
       this._drawTileLayer(ctx, layer);
     }
@@ -258,42 +280,36 @@ export class TiledChunk {
 
   /**
    * Draw foreground layers (layers above collision)
+   * Static layers are drawn from cached canvas, non-static are drawn tile-by-tile
    * Note: Layers with ySort=true should be drawn with game objects using Y-sorting
    */
   drawForegroundLayers(ctx, includeYSort = true) {
-    // console.log(`Chunk (${this.chunkX},${this.chunkY}): drawForegroundLayers called, ${this.foregroundLayers.length} layers, includeYSort=${includeYSort}`);
+    // Draw cached static foreground layers as single image
+    if (this.staticForegroundCanvas) {
+      ctx.drawImage(this.staticForegroundCanvas, this.worldX, this.worldY);
+    }
 
+    // Draw non-static foreground layers tile-by-tile (with viewport culling)
     for (const layer of this.foregroundLayers) {
       const hasYSort = this.foregroundYSortLayers.includes(layer);
 
       // Skip Y-sort layers if not requested (they'll be drawn separately with objects)
       if (hasYSort && !includeYSort) {
-        // console.log(`Chunk (${this.chunkX},${this.chunkY}): Skipping ySort layer "${layer.name}"`);
         continue;
       }
 
-      // console.log(`Chunk (${this.chunkX},${this.chunkY}): Drawing foreground layer "${layer.name}"`);
       this._drawTileLayer(ctx, layer);
     }
   }
 
   /**
    * Internal method to draw a single tile layer with viewport culling
-   * Uses cached canvas for static layers, otherwise draws tile-by-tile
+   * Only draws tiles visible on screen for optimal performance
    */
   _drawTileLayer(ctx, layer) {
     // Check if we have at least one tileset image loaded
     if (!this.tilesetImages || this.tilesetImages.length === 0) return;
 
-    // Check if this layer is cached (static layer)
-    const cachedCanvas = this._layerCache.get(layer.name);
-    if (cachedCanvas) {
-      // Draw the cached canvas at the chunk's world position
-      ctx.drawImage(cachedCanvas, Math.floor(this.worldX), Math.floor(this.worldY));
-      return;
-    }
-
-    // Non-cached layer: draw tile-by-tile with viewport culling
     const data = layer.data;
     const width = layer.width;
     const height = layer.height;
@@ -357,7 +373,7 @@ export class TiledChunk {
       }
     }
 
-    if (tileset.name === "Collisions" && !DEBUG_LAYERS.DRAW_COLLISIONS) return; 
+    if (tileset.name === "Collisions" && !DEBUG_LAYERS.DRAW_COLLISIONS) return;
 
     // Get the correct tileset image for this tileset
     const tilesetImage = this.tilesetImages[tileset.imageIndex];
@@ -416,12 +432,17 @@ export class TiledChunk {
    */
   destroy() {
     this.groundLayers = [];
+    this.staticGroundLayers = [];
     this.foregroundLayers = [];
+    this.staticForegroundLayers = [];
     this.foregroundYSortLayers = [];
     this.objectLayers = [];
     this.collisionSet.clear();
-    // Clear cached layer canvases
-    this._layerCache.clear();
+
+    // Clean up cached canvases
+    this.staticGroundCanvas = null;
+    this.staticForegroundCanvas = null;
+
     this.isLoaded = false;
   }
 }
