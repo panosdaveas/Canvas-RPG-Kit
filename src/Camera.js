@@ -88,8 +88,8 @@ export class Camera extends GameObject {
   centerPositionOnTarget(pos) {
     // Create a new position based on the incoming position
     const personHalf = SPRITE.HERO_HALF_SIZE;
-    const canvasWidth = DISPLAY.CANVAS_WIDTH;
-    const canvasHeight = DISPLAY.CANVAS_HEIGHT;
+    const canvasWidth = CANVAS.WIDTH;
+    const canvasHeight = CANVAS.HEIGHT;
     const halfWidth = -personHalf + canvasWidth / 2;
     const halfHeight = -personHalf + canvasHeight / 2;
     this.position = new Vector2(

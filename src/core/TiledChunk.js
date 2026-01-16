@@ -1,4 +1,4 @@
-import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME, CULLING, DEBUG_LAYERS } from "../Constants.js";
+import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME, CULLING, DEBUG_LAYERS, CANVAS } from "../Constants.js";
 
 /**
  * Represents a single chunk loaded from Tiled map editor
@@ -314,9 +314,9 @@ export class TiledChunk {
     const width = layer.width;
     const height = layer.height;
 
-    // Get canvas dimensions
-    const canvasWidth = ctx.canvas.width;
-    const canvasHeight = ctx.canvas.height;
+    // Get canvas dimensions (use constants for consistency)
+    const canvasWidth = CANVAS.WIDTH;
+    const canvasHeight = CANVAS.HEIGHT;
 
     // Get camera offset from context transform
     // Camera is applied via ctx.translate(), so we extract it from the transform matrix
