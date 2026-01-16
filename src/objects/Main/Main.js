@@ -205,11 +205,14 @@ export class Main extends GameObject {
     }
 
     // Draw Y-sorted objects with viewport culling
+    let objectsDrawn = 0;
     this._sortedObjects.forEach(obj => {
       if (this._isInViewport(obj, ctx)) {
         obj.draw(ctx, 0, 0);
+        objectsDrawn++;
       }
-    })
+    });
+    // console.log(`Objects drawn: ${objectsDrawn} / ${this._sortedObjects.length} total`);
 
     // 3. Draw foreground chunks from level (after game objects)
     if (this.level && typeof this.level.drawForegroundChunks === 'function') {

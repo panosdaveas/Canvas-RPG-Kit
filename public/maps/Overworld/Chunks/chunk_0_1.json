@@ -78,6 +78,12 @@
          "id":2,
          "name":"Ground",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -119,6 +125,12 @@
          "id":4,
          "name":"Signs",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -160,6 +172,12 @@
          "id":3,
          "name":"Collisions",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -203,6 +221,11 @@
          "opacity":1,
          "properties":[
                 {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
                  "name":"ySort",
                  "type":"bool",
                  "value":true
@@ -245,6 +268,12 @@
  "nextlayerid":7,
  "nextobjectid":5,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"static",
+         "type":"bool",
+         "value":true
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
  "tileheight":16,

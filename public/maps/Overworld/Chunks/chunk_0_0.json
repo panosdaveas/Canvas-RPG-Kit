@@ -37,6 +37,12 @@
          "id":2,
          "name":"Water",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -78,6 +84,12 @@
          "id":1,
          "name":"Ground",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -119,6 +131,12 @@
          "id":3,
          "name":"Grass",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -160,6 +178,12 @@
          "id":7,
          "name":"Path",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -201,6 +225,12 @@
          "id":5,
          "name":"Trees",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -242,6 +272,12 @@
          "id":4,
          "name":"Houses",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -283,6 +319,12 @@
          "id":6,
          "name":"Fenses",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -325,6 +367,11 @@
          "name":"Signs",
          "opacity":1,
          "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }, 
                 {
                  "name":"ySort",
                  "type":"bool",
@@ -371,6 +418,12 @@
          "id":17,
          "name":"Collisions",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":30,
@@ -413,6 +466,11 @@
          "name":"Overlay",
          "opacity":1,
          "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }, 
                 {
                  "name":"ySort",
                  "type":"bool",

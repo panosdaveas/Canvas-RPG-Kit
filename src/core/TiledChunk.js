@@ -25,6 +25,9 @@ export class TiledChunk {
     // Y-sort tracking
     this.foregroundYSortLayers = []; // Foreground layers that participate in Y-sorting
 
+    // Cache for static layers (layer name → off-screen canvas)
+    this._layerCache = new Map();
+
     // Parse tilesets from Tiled data
     this.tilesets = this._parseTilesets();
 
@@ -34,8 +37,11 @@ export class TiledChunk {
     // Build collision set for quick lookups
     this._buildCollisionSet();
 
+    // Cache static layers for better performance
+    this._cacheStaticLayers();
+
     this.isLoaded = true;
-    
+
     this._debugLayers();
   }
 
@@ -43,6 +49,95 @@ export class TiledChunk {
     if (DEBUG_LAYERS.DRAW_COLLISIONS) {
       this.groundLayers.push(this.collisionLayer);
     }
+  }
+
+  /**
+   * Cache static layers to off-screen canvases for better performance
+   * Only caches layers with static=true property in Tiled
+   */
+  _cacheStaticLayers() {
+    const allLayers = [...this.groundLayers, ...this.foregroundLayers];
+
+    for (const layer of allLayers) {
+      if (!layer) continue;
+
+      const isStatic = this._getLayerProperty(layer, "static");
+      if (isStatic === true) {
+        this._cacheLayer(layer);
+      }
+    }
+  }
+
+  /**
+   * Render a layer to an off-screen canvas for caching
+   */
+  _cacheLayer(layer) {
+    const width = layer.width * TILE_SIZE;
+    const height = layer.height * TILE_SIZE;
+
+    // Create off-screen canvas
+    const offscreenCanvas = document.createElement("canvas");
+    offscreenCanvas.width = width;
+    offscreenCanvas.height = height;
+    const offCtx = offscreenCanvas.getContext("2d");
+
+    // Disable image smoothing for pixel art
+    offCtx.imageSmoothingEnabled = false;
+
+    // Draw all tiles to the off-screen canvas
+    const data = layer.data;
+    for (let i = 0; i < data.length; i++) {
+      const tileId = data[i];
+      if (tileId === 0) continue;
+
+      const col = i % layer.width;
+      const row = Math.floor(i / layer.width);
+      const x = col * TILE_SIZE;
+      const y = row * TILE_SIZE;
+
+      this._drawTileToContext(offCtx, tileId, x, y);
+    }
+
+    // Store in cache
+    this._layerCache.set(layer.name, offscreenCanvas);
+    // console.log(`Cached static layer: ${layer.name} for chunk (${this.chunkX},${this.chunkY})`);
+  }
+
+  /**
+   * Draw a single tile to a context (used for caching)
+   * Similar to _drawTile but without viewport culling
+   */
+  _drawTileToContext(ctx, tileId, x, y) {
+    if (tileId === 0) return;
+
+    // Find the appropriate tileset
+    let tileset = this.tilesets[0];
+    for (const ts of this.tilesets) {
+      if (tileId >= ts.firstgid) {
+        tileset = ts;
+        break;
+      }
+    }
+
+    // Skip collision tiles in cache (they're debug only)
+    if (tileset.name === "Collisions") return;
+
+    // Get the correct tileset image
+    const tilesetImage = this.tilesetImages[tileset.imageIndex];
+    if (!tilesetImage || !tilesetImage.isLoaded) return;
+
+    const img = tilesetImage.image;
+    const localTileId = tileId - tileset.firstgid;
+    const srcX = (localTileId % tileset.columns) * tileset.tilewidth;
+    const srcY = Math.floor(localTileId / tileset.columns) * tileset.tileheight;
+
+    ctx.drawImage(
+      img,
+      srcX, srcY,
+      tileset.tilewidth, tileset.tileheight,
+      x, y,
+      TILE_SIZE, TILE_SIZE
+    );
   }
 
   /**
@@ -184,12 +279,21 @@ export class TiledChunk {
 
   /**
    * Internal method to draw a single tile layer with viewport culling
-   * Only draws tiles visible on screen for optimal performance
+   * Uses cached canvas for static layers, otherwise draws tile-by-tile
    */
   _drawTileLayer(ctx, layer) {
     // Check if we have at least one tileset image loaded
     if (!this.tilesetImages || this.tilesetImages.length === 0) return;
 
+    // Check if this layer is cached (static layer)
+    const cachedCanvas = this._layerCache.get(layer.name);
+    if (cachedCanvas) {
+      // Draw the cached canvas at the chunk's world position
+      ctx.drawImage(cachedCanvas, Math.floor(this.worldX), Math.floor(this.worldY));
+      return;
+    }
+
+    // Non-cached layer: draw tile-by-tile with viewport culling
     const data = layer.data;
     const width = layer.width;
     const height = layer.height;
@@ -316,6 +420,8 @@ export class TiledChunk {
     this.foregroundYSortLayers = [];
     this.objectLayers = [];
     this.collisionSet.clear();
+    // Clear cached layer canvases
+    this._layerCache.clear();
     this.isLoaded = false;
   }
 }
