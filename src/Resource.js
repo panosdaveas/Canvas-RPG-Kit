@@ -39,6 +39,21 @@ class Resources {
       }
     })
   }
+
+  // Returns a promise that resolves when all images are loaded
+  allLoaded() {
+    const loadPromises = Object.values(this.images).map(img => {
+      if (img.isLoaded) return Promise.resolve();
+      return new Promise(resolve => {
+        img.image.onload = () => {
+          img.isLoaded = true;
+          resolve();
+        };
+        img.image.onerror = () => resolve(); // Don't block on failed loads
+      });
+    });
+    return Promise.all(loadPromises);
+  }
 }
 
 // Create one instance for the whole app to use
