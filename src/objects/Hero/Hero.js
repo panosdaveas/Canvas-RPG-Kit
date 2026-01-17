@@ -72,11 +72,14 @@ export class Hero extends GameObject {
   }
 
   ready() {
+    events.on("HERO_ACTION_FINISHED", this, () => {
+      this.isLocked = false;
+    })
     events.on("START_TEXT_BOX", this, () => {
-      this.isLocked = true;
+      // this.isLocked = true;
     })
     events.on("END_TEXT_BOX", this, () => {
-      this.isLocked = false;
+      // this.isLocked = false;
     })
 
     // Emit initial position so chunks load

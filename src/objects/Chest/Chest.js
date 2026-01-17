@@ -62,6 +62,7 @@ export class Chest extends GameObject {
             // Only respond if the hero is interacting with THIS chest
             if (withObject === this) {
                 this.onInteractWithHero();
+                events.emit("HERO_ACTION_FINISHED");
             }
         })
     }

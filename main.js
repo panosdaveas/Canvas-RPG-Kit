@@ -2,9 +2,7 @@ import './style.css'
 import {Vector2} from "./src/Vector2.js";
 import {GameLoop} from "./src/GameLoop.js";
 import {Main} from "./src/objects/Main/Main.js";
-import {CaveLevel1} from "./src/levels/CaveLevel1.js";
 import { WorldLevel } from './src/levels/WorldLevel.js';
-import {CANVAS} from './src/Constants.js';
 import {resources} from './src/Resource.js';
 
 // Grabbing the canvas to draw to

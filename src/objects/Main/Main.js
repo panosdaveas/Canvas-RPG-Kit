@@ -49,8 +49,13 @@ export class Main extends GameObject {
       this.setLevel(newLevelInstance)
     })
 
+    events.on("HERO_ACTION_FINISHED", this, () => {
+      this.hero.isLocked = false;
+    })
+
     // Launch Text Box handler
     events.on("HERO_REQUESTS_ACTION", this, (withObject) => {
+      this.hero.isLocked = true;
 
 
       if (typeof withObject.getContent === "function") {
@@ -79,6 +84,7 @@ export class Main extends GameObject {
         const endingSub = events.on("END_TEXT_BOX", this, () => {
           textbox.destroy();
           events.off(endingSub)
+          events.emit("HERO_ACTION_FINISHED");
         })
       }
 

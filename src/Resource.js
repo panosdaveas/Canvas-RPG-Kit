@@ -21,6 +21,7 @@ class Resources {
       // Tilesets for chunked maps
       overworldTileset: "/maps/Overworld/Tilesets/Overworld.png",
       collisionsTileset: "/maps/Overworld/Tilesets/Collisions.png",
+      interiorTileset: "/maps/Interior/Tilesets/indoor_tileset.png",
       // World Objects
       chest: "/sprites/chest.png",
     };

@@ -23,7 +23,7 @@ export class GameObjectFactory {
       "Exit": this._createExit.bind(this),
       "exit": this._createExit.bind(this),
 
-      // Signs/interactable markers (no sprite, just properties)
+      // Signs/interactive markers (no sprite, just properties)
       "Sign": this._createSign.bind(this),
       "sign": this._createSign.bind(this),
 
@@ -125,7 +125,9 @@ export class GameObjectFactory {
   }
 
   _createExit(tiledObject) {
-    return new Exit(tiledObject.worldX, tiledObject.worldY);
+    const targetPos = this._getProperty(tiledObject, "targetLevel") || null;
+
+    return new Exit(tiledObject.worldX, tiledObject.worldY, targetPos);
   }
 
   _createSign(tiledObject) {

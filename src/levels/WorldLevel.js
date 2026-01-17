@@ -1,9 +1,9 @@
 import { ChunkedLevel } from "../objects/Level/ChunkedLevel.js";
-import { Sprite } from "../Sprite.js";
 import { resources } from "../Resource.js";
 import { Vector2 } from "../Vector2.js";
 import { events } from "../Events.js";
 import { gridCells } from "../helpers/grid.js";
+import { RoomLevel } from "./RoomLevel.js";
 import { Npc } from "../objects/Npc/Npc.js";
 
 /**
@@ -28,19 +28,19 @@ export class WorldLevel extends ChunkedLevel {
     // });
 
     // Define where the hero should spawn (Main will position the hero here)
-    this.heroStartPosition = params.heroPosition ?? new Vector2(gridCells(8), gridCells(8));
+    this.heroStartPosition = params.heroPosition ?? new Vector2(gridCells(15), gridCells(14));
 
-    const npc1 = new Npc(gridCells(15), gridCells(17), {
-      //content: "I am the first NPC!",
-      content: [
-        {
-          string: "I just can't stand that guy.",
-          requires: [],
-        }
-      ],
-      portraitFrame: 1
-    })
-    this.addChild(npc1);
+    // const npc1 = new Npc(gridCells(15), gridCells(16), {
+    //   //content: "I am the first NPC!",
+    //   content: [
+    //     {
+    //       string: "I just can't stand that guy.",
+    //       requires: [],
+    //     }
+    //   ],
+    //   portraitFrame: 1
+    // })
+    // this.addChild(npc1);
   }
 
   /**
@@ -52,6 +52,10 @@ export class WorldLevel extends ChunkedLevel {
       // Update camera position so chunks load around the hero
       this.updateCameraPosition(pos.x, pos.y);
     });
+
+    events.on("HERO_EXITS", this, () => {
+      events.emit("CHANGE_LEVEL", new RoomLevel({ heroPosition: new Vector2(gridCells(7), gridCells(9)) }))
+    })
 
     // Note: Initialize is async, so we call it in ready()
     // This loads the world metadata and initial chunks
