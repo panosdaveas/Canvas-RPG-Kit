@@ -1,4 +1,4 @@
-const makeStandingFrames = (rootFrame = 0) => {
+const makeIdleFrames = (rootFrame = 0) => {
   return {
     duration: 400,
     frames: [
@@ -9,13 +9,13 @@ const makeStandingFrames = (rootFrame = 0) => {
     ]
   }
 }
-const makeWalkingFrames = (rootFrame=0) => {
+const makeWalkingFrames = (rootFrame = 0) => {
   return {
     duration: 400,
     frames: [
       {
         time: 0,
-        frame: rootFrame+1
+        frame: rootFrame + 1
       },
       {
         time: 100,
@@ -23,20 +23,20 @@ const makeWalkingFrames = (rootFrame=0) => {
       },
       {
         time: 200,
-        frame: rootFrame+1
+        frame: rootFrame + 1
       },
       {
         time: 300,
-        frame: rootFrame+2
+        frame: rootFrame + 2
       }
     ]
   }
 }
 
-export const STAND_DOWN = makeStandingFrames(1);
-export const STAND_RIGHT = makeStandingFrames(4);
-export const STAND_UP = makeStandingFrames(7);
-export const STAND_LEFT = makeStandingFrames(10);
+export const IDLE_DOWN = makeIdleFrames(1);
+export const IDLE_RIGHT = makeIdleFrames(4);
+export const IDLE_UP = makeIdleFrames(7);
+export const IDLE_LEFT = makeIdleFrames(10);
 
 export const WALK_DOWN = makeWalkingFrames(0);
 export const WALK_RIGHT = makeWalkingFrames(3);

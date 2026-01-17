@@ -1,24 +1,24 @@
-import {GameObject} from "../../GameObject.js";
-import {Vector2} from "../../Vector2.js";
-import {DOWN, LEFT, RIGHT, UP} from "../../Input.js";
-import {gridCells, isSpaceFree} from "../../helpers/grid.js";
-import {Sprite} from "../../Sprite.js";
-import {resources} from "../../Resource.js";
-import {Animations} from "../../Animations.js";
-import {FrameIndexPattern} from "../../FrameIndexPattern.js";
+import { GameObject } from "../../GameObject.js";
+import { Vector2 } from "../../Vector2.js";
+import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
+import { gridCells, isSpaceFree } from "../../helpers/grid.js";
+import { Sprite } from "../../Sprite.js";
+import { resources } from "../../Resource.js";
+import { Animations } from "../../Animations.js";
+import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 import {
   PICK_UP_DOWN,
-  STAND_DOWN,
-  STAND_LEFT,
-  STAND_RIGHT,
-  STAND_UP,
+  IDLE_DOWN,
+  IDLE_LEFT,
+  IDLE_RIGHT,
+  IDLE_UP,
   WALK_DOWN,
   WALK_LEFT,
   WALK_RIGHT,
   WALK_UP
 } from "./heroAnimations.js";
-import {moveTowards} from "../../helpers/moveTowards.js";
-import {events} from "../../Events.js";
+import { moveTowards } from "../../helpers/moveTowards.js";
+import { events } from "../../Events.js";
 
 export class Hero extends GameObject {
   constructor(x, y) {
@@ -35,7 +35,7 @@ export class Hero extends GameObject {
 
     this.body = new Sprite({
       resource: resources.images.hero,
-      frameSize: new Vector2(32,32),
+      frameSize: new Vector2(32, 32),
       hFrames: 3,
       vFrames: 8,
       frame: 1,
@@ -45,10 +45,10 @@ export class Hero extends GameObject {
         walkUp: new FrameIndexPattern(WALK_UP),
         walkLeft: new FrameIndexPattern(WALK_LEFT),
         walkRight: new FrameIndexPattern(WALK_RIGHT),
-        standDown: new FrameIndexPattern(STAND_DOWN),
-        standUp: new FrameIndexPattern(STAND_UP),
-        standLeft: new FrameIndexPattern(STAND_LEFT),
-        standRight: new FrameIndexPattern(STAND_RIGHT),
+        idleDown: new FrameIndexPattern(IDLE_DOWN),
+        idleUp: new FrameIndexPattern(IDLE_UP),
+        idleLeft: new FrameIndexPattern(IDLE_LEFT),
+        idleRight: new FrameIndexPattern(IDLE_RIGHT),
         pickUpDown: new FrameIndexPattern(PICK_UP_DOWN),
       })
     })
@@ -89,6 +89,7 @@ export class Hero extends GameObject {
 
     // Don't do anything when locked
     if (this.isLocked) {
+      this.playIdleAnimation();
       return;
     }
 
@@ -102,8 +103,6 @@ export class Hero extends GameObject {
     /** @type {Input} */
     const input = root.input;
     if (input?.getActionJustPressed("Space")) {
-      console.log(root?.level)
-      console.log(this.position)
       // Look for an object at the next space (according to where Hero is facing)
       const objAtPosition = root.level?.children.find(child => {
         return child.position.matches(this.position.toNeighbor(this.facingDirection))
@@ -148,26 +147,45 @@ export class Hero extends GameObject {
     events.emit("HERO_POSITION", this.position)
   }
 
+  playIdleAnimation() {
+    if (this.facingDirection === LEFT) {
+      this.body.animations.play("idleLeft");
+      this.currentAnimation = 'idleLeft';
+    }
+    if (this.facingDirection === RIGHT) {
+      this.body.animations.play("idleRight");
+      this.currentAnimation = 'idleRight';
+    }
+    if (this.facingDirection === UP) {
+      this.body.animations.play("idleUp");
+      this.currentAnimation = 'idleUp';
+    }
+    if (this.facingDirection === DOWN) {
+      this.body.animations.play("idleDown");
+      this.currentAnimation = 'idleDown';
+    }
+  }
+
   tryMove(root) {
     const { input } = root;
 
     if (!input.direction) {
 
       if (this.facingDirection === LEFT) {
-        this.body.animations.play("standLeft");
-        this.currentAnimation = 'standLeft';
+        this.body.animations.play("idleLeft");
+        this.currentAnimation = 'idleLeft';
       }
       if (this.facingDirection === RIGHT) {
-        this.body.animations.play("standRight");
-        this.currentAnimation = 'standRight';
+        this.body.animations.play("idleRight");
+        this.currentAnimation = 'idleRight';
       }
       if (this.facingDirection === UP) {
-        this.body.animations.play("standUp");
-        this.currentAnimation = 'standUp';
+        this.body.animations.play("idleUp");
+        this.currentAnimation = 'idleUp';
       }
       if (this.facingDirection === DOWN) {
-        this.body.animations.play("standDown");
-        this.currentAnimation = 'standDown';
+        this.body.animations.play("idleDown");
+        this.currentAnimation = 'idleDown';
       }
 
       return;
