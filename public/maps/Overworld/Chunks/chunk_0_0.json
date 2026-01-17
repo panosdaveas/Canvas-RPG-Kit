@@ -463,7 +463,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":30,
          "id":18,
-         "name":"Overlay",
+         "name":"Foreground",
          "opacity":1,
          "properties":[
                 {
@@ -533,30 +533,7 @@
          "draworder":"topdown",
          "id":13,
          "name":"Spawns",
-         "objects":[
-                {
-                 "height":0,
-                 "id":8,
-                 "name":"hero",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"posX",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"posY",
-                         "type":"int",
-                         "value":0
-                        }],
-                 "rotation":0,
-                 "type":"Spawn",
-                 "visible":true,
-                 "width":0,
-                 "x":272,
-                 "y":240
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -575,9 +552,9 @@
                  "name":"1",
                  "properties":[
                         {
-                         "name":"targetLevel",
-                         "type":"string",
-                         "value":"interior_1"
+                         "name":"targetMap",
+                         "type":"file",
+                         "value":"..\/Interior:Rooms\/JSON\/interior_1.json"
                         }],
                  "rotation":0,
                  "type":"Exit",
@@ -585,6 +562,29 @@
                  "width":16,
                  "x":320,
                  "y":208
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":26,
+         "name":"SpawnPlayer",
+         "objects":[
+                {
+                 "height":0,
+                 "id":53,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"SpawnPlayer",
+                 "visible":true,
+                 "width":0,
+                 "x":320,
+                 "y":240
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -654,47 +654,6 @@
         }, 
         {
          "draworder":"topdown",
-         "id":23,
-         "name":"Paths",
-         "objects":[
-                {
-                 "height":0,
-                 "id":43,
-                 "name":"path_1",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"trace",
-                         "type":"object",
-                         "value":44
-                        }],
-                 "rotation":0,
-                 "type":"Path",
-                 "visible":true,
-                 "width":0,
-                 "x":240,
-                 "y":272
-                }, 
-                {
-                 "height":0,
-                 "id":44,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":112,
-                 "y":256
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
          "id":25,
          "name":"Chests",
          "objects":[
@@ -727,8 +686,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":26,
- "nextobjectid":53,
+ "nextlayerid":27,
+ "nextobjectid":54,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

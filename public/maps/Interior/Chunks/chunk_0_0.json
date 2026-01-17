@@ -179,6 +179,7 @@
          "y":0
         }, 
         {
+         "class":"Exit",
          "draworder":"topdown",
          "id":9,
          "name":"Exits",
@@ -189,9 +190,9 @@
                  "name":"exit_1",
                  "properties":[
                         {
-                         "name":"targetLevel",
-                         "type":"string",
-                         "value":"Overworld"
+                         "name":"targetMap",
+                         "type":"file",
+                         "value":"..\/..\/JSON\/chunk_0_0.json"
                         }],
                  "rotation":0,
                  "type":"Exit",
@@ -201,6 +202,12 @@
                  "y":160
                 }],
          "opacity":1,
+         "properties":[
+                {
+                 "name":"targetMap",
+                 "type":"file",
+                 "value":""
+                }],
          "type":"objectgroup",
          "visible":true,
          "x":0,
@@ -216,19 +223,8 @@
                  "id":5,
                  "name":"",
                  "point":true,
-                 "properties":[
-                        {
-                         "name":"posX",
-                         "type":"int",
-                         "value":8
-                        }, 
-                        {
-                         "name":"posY",
-                         "type":"int",
-                         "value":0
-                        }],
                  "rotation":0,
-                 "type":"Spawn",
+                 "type":"SpawnPlayer",
                  "visible":true,
                  "width":0,
                  "x":128,
