@@ -81,8 +81,8 @@ export class Camera extends GameObject {
 
     this.clampToMapBounds();
 
-    this.position.x = Math.round(this.position.x);
-    this.position.y = Math.round(this.position.y);
+    this.position.x = Math.floor(this.position.x);
+    this.position.y = Math.floor(this.position.y);
   }
 
   centerPositionOnTarget(pos) {

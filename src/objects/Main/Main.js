@@ -186,8 +186,8 @@ export class Main extends GameObject {
 
     if (this.camera) {
       // Floor camera position to prevent sub-pixel jitter (consistent with tile rendering)
-      const camX = Math.floor(this.camera.position.x);
-      const camY = Math.floor(this.camera.position.y);
+      const camX = this.camera.position.x;
+      const camY = this.camera.position.y;
 
       ctx.translate(camX, camY);
     }

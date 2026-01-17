@@ -3,7 +3,7 @@ export const TILE_SIZE = 16; // Pixels per grid cell
 
 export const CANVAS = {
     WIDTH: 360, // canvas width in pixels
-    HEIGHT: 360, // canvas height in pixels
+    HEIGHT: 180, // canvas height in pixels
 }
 
 // Chunk system configuration

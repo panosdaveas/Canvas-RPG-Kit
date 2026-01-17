@@ -48,9 +48,9 @@ async function startGame() {
 
     // Disable image smoothing for crisp pixel art (with vendor prefixes)
     ctx.imageSmoothingEnabled = false;
-    // ctx.webkitImageSmoothingEnabled = false;
-    // ctx.mozImageSmoothingEnabled = false;
-    // ctx.msImageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+    ctx.mozImageSmoothingEnabled = false;
+    ctx.msImageSmoothingEnabled = false;
 
     // Draw objects in the mounted scene (camera offset handled inside)
     mainScene.drawObjects(ctx);
