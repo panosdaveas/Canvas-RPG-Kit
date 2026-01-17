@@ -2,7 +2,7 @@ class Resources {
   constructor() {
     // Everything we plan to download
     this.toLoad = {
-      hero: "/sprites/hero-sheet.png",
+      hero: "/sprites/hero.png",
       shadow: "/sprites/shadow.png",
       rod: "/sprites/rod.png",
       exit: "/sprites/exit.png",
@@ -21,6 +21,8 @@ class Resources {
       // Tilesets for chunked maps
       overworldTileset: "/maps/Overworld/Tilesets/Overworld.png",
       collisionsTileset: "/maps/Overworld/Tilesets/Collisions.png",
+      // World Objects
+      chest: "/sprites/chest.png",
     };
 
     // A bucket to keep all of our images

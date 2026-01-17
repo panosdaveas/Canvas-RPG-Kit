@@ -1,7 +1,5 @@
 import {GameObject} from "../../GameObject.js";
 import {Vector2} from "../../Vector2.js";
-import {Sprite} from "../../Sprite.js";
-import {resources} from "../../Resource.js";
 import {events} from "../../Events.js";
 
 export class Exit extends GameObject {
@@ -9,9 +7,6 @@ export class Exit extends GameObject {
     super({
       position: new Vector2(x,y)
     });
-    // this.addChild(new Sprite({
-    //   resource: resources.images.exit
-    // }))
 
     this.drawLayer = "FLOOR";
   }

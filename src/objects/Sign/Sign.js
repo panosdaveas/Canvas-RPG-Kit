@@ -12,8 +12,8 @@ export class Sign extends GameObject {
       position: new Vector2(x, y)
     });
 
-    // Signs are not solid - player can stand on them
-    this.isSolid = false;
+    // Signs are solid - defined in the collision layer in TIled - no need to add solid body here
+    // this.isSolid = false;
 
     // The message to display when interacted with
     this.message = message;

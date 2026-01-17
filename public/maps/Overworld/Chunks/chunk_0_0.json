@@ -108,7 +108,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2802, 2802, 2802, 2802, 2959, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2802, 2802, 2802, 2802, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 2802, 0, 0, 0, 0, 0,
@@ -651,9 +651,84 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":23,
+         "name":"Paths",
+         "objects":[
+                {
+                 "height":0,
+                 "id":43,
+                 "name":"path_1",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"trace",
+                         "type":"object",
+                         "value":44
+                        }],
+                 "rotation":0,
+                 "type":"Path",
+                 "visible":true,
+                 "width":0,
+                 "x":240,
+                 "y":272
+                }, 
+                {
+                 "height":0,
+                 "id":44,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":112,
+                 "y":256
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":25,
+         "name":"Chests",
+         "objects":[
+                {
+                 "height":0,
+                 "id":52,
+                 "name":"chest_1",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"itemType",
+                         "type":"string",
+                         "value":"GOLD"
+                        }, 
+                        {
+                         "name":"value",
+                         "type":"int",
+                         "value":100
+                        }],
+                 "rotation":0,
+                 "type":"Chest",
+                 "visible":true,
+                 "width":0,
+                 "x":240,
+                 "y":208
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":22,
- "nextobjectid":42,
+ "nextlayerid":26,
+ "nextobjectid":53,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -697,6 +772,100 @@
          "tilecount":2,
          "tileheight":16,
          "tilewidth":16
+        }, 
+        {
+         "columns":12,
+         "firstgid":21003,
+         "image":"..\/Tilesets\/Characters\/RSE Protags 01.png",
+         "imageheight":256,
+         "imagewidth":288,
+         "margin":0,
+         "name":"Hero",
+         "spacing":0,
+         "tilecount":96,
+         "tileheight":32,
+         "tiles":[
+                {
+                 "animation":[
+                        {
+                         "duration":120,
+                         "tileid":48
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":49
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":50
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":49
+                        }],
+                 "id":48
+                }, 
+                {
+                 "animation":[
+                        {
+                         "duration":120,
+                         "tileid":60
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":61
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":62
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":61
+                        }],
+                 "id":60
+                }, 
+                {
+                 "animation":[
+                        {
+                         "duration":120,
+                         "tileid":72
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":73
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":74
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":73
+                        }],
+                 "id":72
+                }, 
+                {
+                 "animation":[
+                        {
+                         "duration":120,
+                         "tileid":84
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":85
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":86
+                        }, 
+                        {
+                         "duration":120,
+                         "tileid":85
+                        }],
+                 "id":84
+                }],
+         "tilewidth":24
         }],
  "tilewidth":16,
  "type":"map",

@@ -1,6 +1,7 @@
 import { Npc } from "../objects/Npc/Npc.js";
 import { Exit } from "../objects/Exit/Exit.js";
 import { Sign } from "../objects/Sign/Sign.js";
+import { Chest } from "../objects/Chest/Chest.js";
 
 /**
  * Factory for spawning game objects from Tiled object layer data
@@ -27,7 +28,7 @@ export class GameObjectFactory {
       "sign": this._createSign.bind(this),
 
       // Add more object types here as needed
-      // "Chest": this._createChest.bind(this),
+      "Chest": this._createChest.bind(this),
       // "Enemy": this._createEnemy.bind(this),
     };
   }
@@ -137,10 +138,10 @@ export class GameObjectFactory {
 
   // Add more factory methods as needed:
   //
-  // _createChest(tiledObject) {
-  //   const itemType = this._getProperty(tiledObject, "itemType") || "GOLD";
-  //   return new Chest(tiledObject.worldX, tiledObject.worldY, itemType);
-  // }
+  _createChest(tiledObject) {
+    const itemType = this._getProperty(tiledObject, "itemType") || "GOLD";
+    return new Chest(tiledObject.worldX, tiledObject.worldY, itemType);
+  }
   //
   // _createEnemy(tiledObject) {
   //   const enemyType = this._getProperty(tiledObject, "enemyType") || "SLIME";

@@ -51,10 +51,6 @@ export class ChunkedLevel extends Level {
 
     for (const tiledObject of tiledObjects) {
       // Skip hero spawn points - hero is managed by Main
-      const isHeroSpawn = this._getProperty(tiledObject, "spawnHero");
-      if (isHeroSpawn) {
-        continue; // Don't spawn hero from Tiled
-      }
 
       // Use factory to create game object from Tiled data
       const gameObject = this.gameObjectFactory.create(tiledObject);
