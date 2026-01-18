@@ -18,12 +18,12 @@ export const TOTAL_WORLD_CHUNKS = 2;
 export const CAMERA = {
     DEFAULT_MAP_WIDTH: CHUNK_SIZE * TILE_SIZE * TOTAL_WORLD_CHUNKS, // default camera width in pixels
     DEFAULT_MAP_HEIGHT: CHUNK_SIZE * TILE_SIZE, // default camera height in pixels
-    DEAD_ZONE_WIDTH: 0,  // How far left/right hero can move before camera follows - change to 0 for instant follow
-    DEAD_ZONE_HEIGHT: 0, // How far up/down hero can move before camera follows
+    DEAD_ZONE_WIDTH: TILE_SIZE,  // How far left/right hero can move before camera follows - change to 0 for instant follow
+    DEAD_ZONE_HEIGHT: TILE_SIZE, // How far up/down hero can move before camera follows
 }
 
 export const SPRITE = {
-    HERO_HALF_SIZE: TILE_SIZE, // Half the size of the hero sprite (16x16 sprite)
+    HERO_HALF_SIZE: TILE_SIZE / 2, // Half the size of the hero sprite (16x16 sprite)
 }
 
 // Layer types - these match the Tiled layer names

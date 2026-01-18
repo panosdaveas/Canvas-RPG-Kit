@@ -44,14 +44,25 @@ async function startGame() {
     // Clear anything stale
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    ctx.save();
+
+    if (mainScene.camera) {
+      // math floo/round to prevent sub-pixel bleeding jitter (consistent with tile rendering)
+      const camX = Math.round(mainScene.camera.position.x);
+      const camY = Math.round(mainScene.camera.position.y);
+      ctx.translate(camX, camY);
+    }
+
     // Disable image smoothing for crisp pixel art (with vendor prefixes)
-    ctx.imageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
-    ctx.mozImageSmoothingEnabled = false;
-    ctx.msImageSmoothingEnabled = false;
+    // ctx.imageSmoothingEnabled = false;
+    // ctx.webkitImageSmoothingEnabled = false;
+    // ctx.mozImageSmoothingEnabled = false;
+    // ctx.msImageSmoothingEnabled = false;
 
     // Draw objects in the mounted scene (camera offset handled inside)
     mainScene.drawObjects(ctx);
+
+    ctx.restore();
 
     // Draw HUD
     mainScene.drawHud(ctx);

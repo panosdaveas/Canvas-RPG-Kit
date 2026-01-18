@@ -213,15 +213,15 @@ export class Main extends GameObject {
 
   drawObjects(ctx) {
     // Save context state and apply camera offset
-    ctx.save();
+    // ctx.save();
 
-    if (this.camera) {
-      // Floor camera position to prevent sub-pixel jitter (consistent with tile rendering)
-      const camX = Math.floor(this.camera.position.x);
-      const camY = Math.floor(this.camera.position.y);
+    // if (this.camera) {
+    //   // Floor camera position to prevent sub-pixel jitter (consistent with tile rendering)
+    //   const camX = Math.floor(this.camera.position.x);
+    //   const camY = Math.floor(this.camera.position.y);
 
-      ctx.translate(camX, camY);
-    }
+    //   ctx.translate(camX, camY);
+    // }
 
     // 1. Draw ground chunks from level (before game objects)
     if (this.level && typeof this.level.drawGroundChunks === 'function') {
@@ -251,16 +251,16 @@ export class Main extends GameObject {
     }
 
     // Restore context state
-    ctx.restore();
+    // ctx.restore();
   }
 
-  drawForeground(ctx) {
-    this.children.forEach(child => {
-      if (child.drawLayer === "FOREGROUND") {
-        child.draw(ctx, 0, 0);
-      }
-    })
-  }
+  // drawForeground(ctx) {
+  //   this.children.forEach(child => {
+  //     if (child.drawLayer === "FOREGROUND") {
+  //       child.draw(ctx, 0, 0);
+  //     }
+  //   })
+  // }
 
   drawHud(ctx) {
     this.children.forEach(child => {
