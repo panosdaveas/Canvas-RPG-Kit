@@ -48,8 +48,8 @@ async function startGame() {
 
     if (mainScene.camera) {
       // math floo/round to prevent sub-pixel bleeding jitter (consistent with tile rendering)
-      const camX = Math.round(mainScene.camera.position.x);
-      const camY = Math.round(mainScene.camera.position.y);
+      const camX = mainScene.camera.position.x;
+      const camY = mainScene.camera.position.y;
       ctx.translate(camX, camY);
     }
 
