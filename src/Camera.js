@@ -103,8 +103,8 @@ export class Camera extends GameObject {
     const halfWidth = -personHalf + canvasWidth / 2;
     const halfHeight = -personHalf + canvasHeight / 2;
     this.position = new Vector2(
-      -pos.x + halfWidth,
-      -pos.y + halfHeight,
+      Math.floor(-pos.x + halfWidth),
+      Math.floor(-pos.y + halfHeight),
     )
   }
 }
