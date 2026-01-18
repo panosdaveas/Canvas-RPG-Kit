@@ -13,10 +13,18 @@ export class Camera extends GameObject {
 
     this.currentLevel = null;
     this.frozen = false; // Set to true to freeze camera position (for debugging)
+    this._centerOnNextPosition = false; // Flag to center camera on next hero position update
 
     events.on("HERO_POSITION", this, heroPosition => {
       // Skip camera updates if frozen
       if (this.frozen) return;
+
+      // Center immediately after level change (instead of using dead zone)
+      if (this._centerOnNextPosition) {
+        this._centerOnNextPosition = false;
+        this.centerPositionOnTarget(heroPosition);
+        return;
+      }
 
       // Only update camera if it's enabled for the current level
       if (this.currentLevel?.cameraEnabled !== false) {
@@ -25,17 +33,19 @@ export class Camera extends GameObject {
     })
 
     // Camera knows when a new level starts
-    events.on("CHANGE_LEVEL", this, (newMap) => {
-      this.currentLevel = newMap;
-      this.centerPositionOnTarget(newMap.heroStartPosition);
+    events.on("CHANGE_LEVEL", this, (data) => {
+      const { level } = data;
+      this.currentLevel = level;
+      // Flag to center on next HERO_POSITION (which Main.js emits after repositioning hero)
+      this._centerOnNextPosition = true;
     })
   }
 
   clampToMapBounds() {
     const canvasWidth = CANVAS.WIDTH;
     const canvasHeight = CANVAS.HEIGHT;
-    const mapWidth = CAMERA.DEFAULT_MAP_WIDTH;  // Your map width in pixels
-    const mapHeight = CAMERA.DEFAULT_MAP_HEIGHT; // Your map height in pixels
+    const mapWidth = CAMERA.DEFAULT_MAP_WIDTH;
+    const mapHeight = CAMERA.DEFAULT_MAP_HEIGHT;
 
     // Only clamp if map is larger than canvas
     if (mapWidth > canvasWidth) {

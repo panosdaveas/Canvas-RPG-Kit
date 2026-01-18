@@ -125,9 +125,10 @@ export class GameObjectFactory {
   }
 
   _createExit(tiledObject) {
-    const targetPos = this._getProperty(tiledObject, "targetLevel") || null;
+    const targetMap = this._getProperty(tiledObject, "targetMap") || null;
+    console.log("Creating exit to:", targetMap);
 
-    return new Exit(tiledObject.worldX, tiledObject.worldY, targetPos);
+    return new Exit(tiledObject.worldX, tiledObject.worldY, targetMap);
   }
 
   _createSign(tiledObject) {

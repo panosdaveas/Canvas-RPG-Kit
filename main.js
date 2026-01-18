@@ -2,7 +2,7 @@ import './style.css'
 import {Vector2} from "./src/Vector2.js";
 import {GameLoop} from "./src/GameLoop.js";
 import {Main} from "./src/objects/Main/Main.js";
-import { WorldLevel } from './src/levels/WorldLevel.js';
+import { Overworld } from './src/levels/Overworld.js';
 import {resources} from './src/Resource.js';
 
 // Grabbing the canvas to draw to
@@ -32,7 +32,7 @@ async function startGame() {
     position: new Vector2(0,0)
   })
   window.mainScene = mainScene; // Expose for debugging
-  mainScene.setLevel(new WorldLevel())
+  mainScene.setLevel(new Overworld());
 
   // Establish update and draw loops
   const update = (delta) => {

@@ -9,6 +9,7 @@ import {Hero} from "../Hero/Hero.js";
 import {Vector2} from "../../Vector2.js";
 import {gridCells} from "../../helpers/grid.js";
 import {CANVAS, CULLING, TILE_SIZE} from "../../Constants.js";
+import {globalState} from "../../GlobalState.js";
 
 export class Main extends GameObject {
   constructor() {
@@ -45,8 +46,21 @@ export class Main extends GameObject {
     });
 
     // Change Level handler
-    events.on("CHANGE_LEVEL", this, newLevelInstance => {
-      this.setLevel(newLevelInstance)
+    // Expects: { level: LevelInstance, heroPosition: Vector2, useSavedPosition?: boolean }
+    events.on("CHANGE_LEVEL", this, (data) => {
+      const { level, heroPosition, useSavedPosition } = data;
+
+      // If returning to overworld, use the saved position from GlobalState
+      let finalPosition = heroPosition;
+      if (useSavedPosition) {
+        const savedPosition = globalState.getOverworldPosition();
+        if (savedPosition) {
+          finalPosition = savedPosition;
+          console.log("Using saved overworld position:", finalPosition);
+        }
+      }
+
+      this.setLevel(level, finalPosition);
     })
 
     events.on("HERO_ACTION_FINISHED", this, () => {
@@ -92,12 +106,23 @@ export class Main extends GameObject {
 
   }
 
-  setLevel(newLevelInstance) {
+  setLevel(newLevelInstance, heroPosition = null) {
     if (this.level) {
       this.level.destroy();
     }
     this.level = newLevelInstance;
+    console.log("New level set:", this.level);
     this.addChild(this.level);
+
+    // Reposition hero if a position was provided
+    if (heroPosition && this.hero) {
+      this.hero.position.x = heroPosition.x;
+      this.hero.position.y = heroPosition.y;
+      this.hero.destinationPosition.x = heroPosition.x;
+      this.hero.destinationPosition.y = heroPosition.y;
+      // Emit position so camera and chunks update
+      events.emit("HERO_POSITION", this.hero.position);
+    }
 
     // Reset sorted objects when level changes
     this._rebuildSortedObjects();

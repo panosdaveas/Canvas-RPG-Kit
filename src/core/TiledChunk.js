@@ -212,6 +212,10 @@ export class TiledChunk {
     const width = layer.width;
     const height = layer.height;
 
+    // Get layer offset (Tiled allows per-layer offsets)
+    const layerOffsetX = layer.offsetx || 0;
+    const layerOffsetY = layer.offsety || 0;
+
     for (let row = 0; row < height; row++) {
       for (let col = 0; col < width; col++) {
         const index = row * width + col;
@@ -219,9 +223,9 @@ export class TiledChunk {
 
         if (tileId === 0) continue;
 
-        // Position relative to chunk origin (0,0 of the offscreen canvas)
-        const x = col * TILE_SIZE;
-        const y = row * TILE_SIZE;
+        // Position relative to chunk origin with layer offset
+        const x = col * TILE_SIZE + layerOffsetX;
+        const y = row * TILE_SIZE + layerOffsetY;
 
         this._drawTileAt(ctx, tileId, x, y);
       }
@@ -314,6 +318,10 @@ export class TiledChunk {
     const width = layer.width;
     const height = layer.height;
 
+    // Get layer offset (Tiled allows per-layer offsets)
+    const layerOffsetX = layer.offsetx || 0;
+    const layerOffsetY = layer.offsety || 0;
+
     // Get canvas dimensions (use constants for consistency)
     const canvasWidth = CANVAS.WIDTH;
     const canvasHeight = CANVAS.HEIGHT;
@@ -346,9 +354,9 @@ export class TiledChunk {
         // Skip empty tiles
         if (tileId === 0) continue;
 
-        // Calculate world position
-        const x = this.worldX + col * TILE_SIZE;
-        const y = this.worldY + row * TILE_SIZE;
+        // Calculate world position with layer offset
+        const x = this.worldX + col * TILE_SIZE + layerOffsetX;
+        const y = this.worldY + row * TILE_SIZE + layerOffsetY;
 
         // Draw the tile
         this._drawTile(ctx, tileId, x, y);

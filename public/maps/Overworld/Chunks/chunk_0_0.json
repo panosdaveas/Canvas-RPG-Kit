@@ -554,7 +554,7 @@
                         {
                          "name":"targetMap",
                          "type":"file",
-                         "value":"..\/Interior:Rooms\/JSON\/interior_1.json"
+                         "value":"..\/..\/Interior\/Chunks\/chunk_0_0.json"
                         }],
                  "rotation":0,
                  "type":"Exit",
@@ -579,6 +579,12 @@
                  "id":53,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"facingDirection",
+                         "type":"string",
+                         "value":"DOWN"
+                        }],
                  "rotation":0,
                  "type":"SpawnPlayer",
                  "visible":true,
@@ -696,7 +702,7 @@
         {
          "columns":140,
          "firstgid":1,
-         "image":"..\/Tilesets\/Overworld.png",
+         "image":"..\/..\/..\/..\/..\/Tiles\/Canvas-RPG-Kit-TILED\/Tilesets\/Overworld.png",
          "imageheight":2400,
          "imagewidth":2240,
          "margin":0,
@@ -722,7 +728,7 @@
         {
          "columns":1,
          "firstgid":21001,
-         "image":"..\/Tilesets\/Collisions.png",
+         "image":"..\/..\/..\/..\/..\/Tiles\/Canvas-RPG-Kit-TILED\/Tilesets\/Collisions.png",
          "imageheight":32,
          "imagewidth":16,
          "margin":0,
@@ -735,7 +741,7 @@
         {
          "columns":12,
          "firstgid":21003,
-         "image":"..\/Tilesets\/Characters\/RSE Protags 01.png",
+         "image":"..\/..\/..\/..\/..\/Tiles\/Canvas-RPG-Kit-TILED\/Tilesets\/Characters\/RSE Protags 01.png",
          "imageheight":256,
          "imagewidth":288,
          "margin":0,

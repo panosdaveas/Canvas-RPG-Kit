@@ -187,7 +187,7 @@ export class ChunkedLevel extends Level {
       this.chunkManager.destroy();
     }
 
-    // Clean up spawned objects
+    // Clean up spawned objects and unsubscribe from events
     for (const [key, objects] of this.spawnedObjectsByChunk.entries()) {
       for (const obj of objects) {
         events.unsubscribe(obj);
@@ -195,7 +195,19 @@ export class ChunkedLevel extends Level {
     }
     this.spawnedObjectsByChunk.clear();
 
-    // Unsubscribe from all events
+    // Unsubscribe this level from all events
     events.unsubscribe(this);
+
+    // Destroy all children and remove this level from parent
+    // This ensures proper cleanup in the GameObject tree
+    this.children.forEach(child => {
+      events.unsubscribe(child);
+    });
+    this.children = [];
+
+    // Remove from parent's children array
+    if (this.parent) {
+      this.parent.removeChild(this);
+    }
   }
 }
