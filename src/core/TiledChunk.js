@@ -35,9 +35,12 @@ export class TiledChunk {
 
     // Static layer caching - offscreen canvases for pre-rendered static layers
     this.staticGroundCanvas = null;
-    this.staticForegroundCanvas = null
+    this.staticForegroundCanvas = null;
 
-    // Parse tilesets from Tiled data
+    // Animated tile data - maps tileId to animation info
+    this.tileAnimations = new Map();
+
+    // Parse tilesets from Tiled data (including animation data)
     this.tilesets = this._parseTilesets();
 
     // Parse and organize the layers
@@ -64,9 +67,29 @@ export class TiledChunk {
    * Parse tileset information from Tiled data
    * Returns array of tileset configs sorted by firstgid (descending)
    * Each tileset stores its imageIndex to reference the correct image from tilesetImages array
+   * Also parses animation data for animated tiles
    */
   _parseTilesets() {
     if (!this.tiledData.tilesets) return [];
+
+    // Parse animation data from each tileset
+    for (const ts of this.tiledData.tilesets) {
+      if (ts.tiles) {
+        for (const tile of ts.tiles) {
+          if (tile.animation) {
+            // Store animation with global tile ID (firstgid + local tile id)
+            const globalTileId = ts.firstgid + tile.id;
+            this.tileAnimations.set(globalTileId, {
+              frames: tile.animation.map(frame => ({
+                tileId: ts.firstgid + frame.tileid,
+                duration: frame.duration
+              })),
+              totalDuration: tile.animation.reduce((sum, f) => sum + f.duration, 0)
+            });
+          }
+        }
+      }
+    }
 
     // Sort by firstgid (descending) for easy lookup
     // Store imageIndex to map to the correct tileset image
@@ -373,15 +396,35 @@ export class TiledChunk {
   /**
    * Draw a single tile from the tileset
    * Handles Tiled's tileset mapping with firstgid and multiple tileset images
+   * Automatically handles animated tiles by cycling through frames
    */
   _drawTile(ctx, tileId, x, y) {
     if (tileId === 0) return; // 0 means empty tile
+
+    // Check if this tile has animation data
+    const animation = this.tileAnimations.get(tileId);
+    let drawTileId = tileId;
+
+    if (animation) {
+      // Calculate current frame based on time
+      const currentTime = performance.now();
+      const timeInCycle = currentTime % animation.totalDuration;
+      let elapsed = 0;
+
+      for (const frame of animation.frames) {
+        elapsed += frame.duration;
+        if (timeInCycle < elapsed) {
+          drawTileId = frame.tileId;
+          break;
+        }
+      }
+    }
 
     // Find the appropriate tileset for this tile ID
     // Tilesets are sorted by firstgid descending, so first match is correct
     let tileset = this.tilesets[0]; // Default to first tileset
     for (const ts of this.tilesets) {
-      if (tileId >= ts.firstgid) {
+      if (drawTileId >= ts.firstgid) {
         tileset = ts;
         break;
       }
@@ -396,7 +439,7 @@ export class TiledChunk {
     const img = tilesetImage.image;
 
     // Calculate local tile index within this tileset
-    const localTileId = tileId - tileset.firstgid;
+    const localTileId = drawTileId - tileset.firstgid;
 
     // Calculate source position on the tileset image
     const srcX = (localTileId % tileset.columns) * tileset.tilewidth;
@@ -452,6 +495,7 @@ export class TiledChunk {
     this.foregroundYSortLayers = [];
     this.objectLayers = [];
     this.collisionSet.clear();
+    this.tileAnimations.clear();
 
     // Clean up cached canvases
     this.staticGroundCanvas = null;

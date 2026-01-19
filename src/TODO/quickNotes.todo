@@ -2,4 +2,19 @@
 
  Static layer caching - Pre-render static layers to off-screen canvas - done!
 
+TODO: add transition at level change. maybe freeze the player for a duration, or animate move
+
+TODO: check css file - disable crist-edges - check how to scale canvas in css / compare to html canvas size
+
+TODO: animated tiles / seperate from static layers / alternatively, TiledChunk could detect which tiles have animations and exclude them from static caching. 
+
+TODO: calculate expected vs real draw calls per second
+
+TODO: packet collisions??
+
+BATTLE: Rock-Paper-Scissor | Enhanced | Combo of hand signs like jutsu / find scrolls to learn techniques
+
+BATTLE: Alchemy / elemental / material system / crafting ??
+
+
  
