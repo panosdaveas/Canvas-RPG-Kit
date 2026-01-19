@@ -18,6 +18,12 @@
          "id":8,
          "name":"Background",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":12,
@@ -40,6 +46,12 @@
          "id":1,
          "name":"Floor",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":12,
@@ -62,6 +74,12 @@
          "id":4,
          "name":"Floor_Shadows",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":12,
@@ -84,6 +102,12 @@
          "id":2,
          "name":"Walls_North",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":12,
@@ -106,6 +130,12 @@
          "id":3,
          "name":"Walls_Sides",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":12,
@@ -130,6 +160,12 @@
          "offsetx":-8,
          "offsety":0,
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":12,
@@ -152,6 +188,12 @@
          "id":7,
          "name":"Furniture",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":12,
@@ -174,6 +216,12 @@
          "id":6,
          "name":"Collisions",
          "opacity":0.79,
+         "properties":[
+                {
+                 "name":"static",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":12,

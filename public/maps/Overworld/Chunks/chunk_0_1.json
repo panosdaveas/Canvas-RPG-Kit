@@ -271,7 +271,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":7,
+ "nextlayerid":8,
  "nextobjectid":5,
  "orientation":"orthogonal",
  "properties":[
@@ -287,7 +287,7 @@
         {
          "columns":140,
          "firstgid":1,
-         "image":"..\/Tilesets\/Overworld.png",
+         "image":"..\/..\/..\/..\/..\/Tiles\/Canvas-RPG-Kit-TILED\/Tilesets\/Overworld.png",
          "imageheight":2400,
          "imagewidth":2240,
          "margin":0,
@@ -313,7 +313,7 @@
         {
          "columns":1,
          "firstgid":21001,
-         "image":"..\/Tilesets\/Collisions.png",
+         "image":"..\/..\/..\/..\/..\/Tiles\/Canvas-RPG-Kit-TILED\/Tilesets\/Collisions.png",
          "imageheight":32,
          "imagewidth":16,
          "margin":0,
