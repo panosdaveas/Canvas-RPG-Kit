@@ -3,10 +3,9 @@ import { resources } from "../Resource.js";
 import { Vector2 } from "../Vector2.js";
 import { events } from "../Events.js";
 import { gridCells } from "../helpers/grid.js";
-import { InteriorLevel } from "../objects/Level/types/InteriorLevel.js";
+import { SimpleLevel } from "../objects/Level/types/SimpleLevel.js";
 import { Npc } from "../objects/Npc/Npc.js";
-import { getSpawnPlayerFromMap, getWorldNameFromPath } from "../helpers/mapUtils.js";
-import { getLevelConfig } from "../helpers/levelConfig.js";
+import { getSpawnPlayerFromMap, getWorldNameFromPath, resolveMapPath } from "../helpers/mapUtils.js";
 import { globalState } from "../GlobalState.js";
 
 /**
@@ -87,24 +86,24 @@ export class Overworld extends ChunkedLevel {
       const worldName = getWorldNameFromPath(targetMap);
       console.log("Transitioning to world:", worldName);
 
-      // Get level configuration for target world
-      const levelConfig = getLevelConfig(worldName);
-
-      if (levelConfig) {
-        // Create InteriorLevel with the appropriate config
-        const newLevel = new InteriorLevel({
-          worldPath: levelConfig.worldPath,
-          tilesets: levelConfig.getTilesets(),
-          heroPosition: heroPosition
-        });
-
-        events.emit("CHANGE_LEVEL", {
-          level: newLevel,
-          heroPosition: heroPosition
-        });
-      } else if (worldName !== "Overworld") {
-        console.warn(`No level config found for world: ${worldName}`);
+      // Skip if somehow targeting Overworld (shouldn't happen from within Overworld)
+      if (worldName === "Overworld") {
+        return;
       }
+
+      // Convert relative targetMap path to absolute path
+      const absoluteMapPath = resolveMapPath(targetMap);
+
+      // Create SimpleLevel - tilesets are auto-detected from the map JSON
+      const newLevel = new SimpleLevel({
+        mapPath: absoluteMapPath,
+        heroPosition: heroPosition
+      });
+
+      events.emit("CHANGE_LEVEL", {
+        level: newLevel,
+        heroPosition: heroPosition
+      });
     });
 
     // Note: Initialize is async, so we call it in ready()

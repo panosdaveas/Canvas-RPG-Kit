@@ -1,28 +1,18 @@
 import { resources } from "../Resource.js";
 
 /**
- * Configuration for different level types/worlds.
- * Maps world names to their tileset resources and world.json paths.
+ * Configuration for CHUNKED levels only.
  *
- * Add new rooms/interiors here as you create them in Tiled.
+ * Simple levels (single-map rooms) don't need config here -
+ * they auto-detect tilesets from the map JSON file.
+ *
+ * Only add entries here for large chunked worlds that need
+ * world.json + multiple chunk files.
  */
 export const levelConfigs = {
-  "Interior": {
-    worldPath: "/maps/Interior/world.json",
-    getTilesets: () => [
-      resources.images.interiorTileset,
-      resources.images.collisionsTileset,
-    ]
-  },
-  // Add more rooms as needed:
-  // "Cave": {
-  //   worldPath: "/maps/Cave/world.json",
-  //   getTilesets: () => [
-  //     resources.images.caveTileset,
-  //     resources.images.collisionsTileset,
-  //   ]
-  // },
+  // Example of a chunked level (large area with dynamic loading):
   // "Dungeon": {
+  //   type: "chunked",
   //   worldPath: "/maps/Dungeon/world.json",
   //   getTilesets: () => [
   //     resources.images.dungeonTileset,
@@ -33,7 +23,7 @@ export const levelConfigs = {
 
 /**
  * Get level configuration by world name
- * @param {string} worldName - e.g., "Interior", "Cave"
+ * @param {string} worldName - e.g., "Dungeon", "LargeArea"
  * @returns {Object|null} Configuration object or null if not found
  */
 export function getLevelConfig(worldName) {

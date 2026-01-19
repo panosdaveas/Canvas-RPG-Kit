@@ -554,7 +554,7 @@
                         {
                          "name":"targetMap",
                          "type":"file",
-                         "value":"..\/..\/Interior\/Chunks\/chunk_0_0.json"
+                         "value":"..\/..\/Interior\/Rooms\/room_0.json"
                         }],
                  "rotation":0,
                  "type":"Exit",
@@ -571,7 +571,7 @@
                         {
                          "name":"targetMap",
                          "type":"file",
-                         "value":"..\/..\/Interior\/Chunks\/chunk_0_1.json"
+                         "value":"..\/..\/Interior\/Rooms\/room_1.json"
                         }],
                  "rotation":0,
                  "type":"Exit",

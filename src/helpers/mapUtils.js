@@ -64,7 +64,7 @@ export async function getSpawnPlayerFromMap(targetMapPath) {
  * Converts a relative Tiled path to an absolute fetch path
  * e.g., "../../Interior/Chunks/chunk_0_0.json" -> "/maps/Interior/Chunks/chunk_0_0.json"
  */
-function resolveMapPath(relativePath) {
+export function resolveMapPath(relativePath) {
   // Remove the "../.." prefix and build absolute path
   // Tiled paths are like: "../../Interior/Chunks/chunk_0_0.json"
   // We want: "/maps/Interior/Chunks/chunk_0_0.json"
