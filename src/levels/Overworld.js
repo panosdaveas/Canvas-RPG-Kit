@@ -96,8 +96,7 @@ export class Overworld extends ChunkedLevel {
 
       // Create SimpleLevel - tilesets are auto-detected from the map JSON
       const newLevel = new SimpleLevel({
-        mapPath: absoluteMapPath,
-        heroPosition: heroPosition
+        mapPath: absoluteMapPath
       });
 
       events.emit("CHANGE_LEVEL", {

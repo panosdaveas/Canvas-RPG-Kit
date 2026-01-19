@@ -7,6 +7,7 @@ import { gridCells } from "../../../helpers/grid.js";
 import { getWorldNameFromPath, getSpawnPlayerFromMap, resolveMapPath } from "../../../helpers/mapUtils.js";
 import { globalState } from "../../../GlobalState.js";
 import { resources } from "../../../Resource.js";
+import { CANVAS, TILE_SIZE } from "../../../Constants.js";
 
 /**
  * Mapping from tileset image filenames to preloaded resource keys.
@@ -38,18 +39,13 @@ export class SimpleLevel extends Level {
   constructor(config = {}) {
     super();
 
-    const {
-      mapPath,
-      heroPosition = null,
-      defaultSpawn = new Vector2(gridCells(7), gridCells(9))
-    } = config;
+    const { mapPath } = config;
 
     if (!mapPath) {
       throw new Error("SimpleLevel requires a mapPath");
     }
 
     this.mapPath = mapPath;
-    this.heroStartPosition = heroPosition ?? defaultSpawn;
 
     // The single TiledChunk that represents this room
     this.chunk = null;
@@ -98,14 +94,39 @@ export class SimpleLevel extends Level {
       // Auto-detect tilesets from the map JSON
       const tilesetImages = this._resolveTilesets(mapData);
 
-      // Create a TiledChunk at position (0, 0) - it's the only chunk
-      this.chunk = new TiledChunk(0, 0, mapData, tilesetImages);
+      // Calculate offset to center the room on screen
+      const roomWidth = mapData.width * TILE_SIZE;
+      const roomHeight = mapData.height * TILE_SIZE;
+      const offset = {
+        x: Math.floor((CANVAS.WIDTH - roomWidth) / 2),
+        y: Math.floor((CANVAS.HEIGHT - roomHeight) / 2)
+      };
 
-      // Spawn game objects from the map
+      // Create a TiledChunk with the centering offset
+      this.chunk = new TiledChunk(0, 0, mapData, tilesetImages, offset);
+
+      // Apply offset to hero position (hero was positioned before offset was calculated)
+      this._repositionHero(offset);
+
+      // Spawn game objects from the map (positions include offset via getObjects())
       this._spawnObjects();
 
     } catch (error) {
       console.error(`Error loading SimpleLevel map: ${this.mapPath}`, error);
+    }
+  }
+
+  /**
+   * Reposition hero with the centering offset
+   */
+  _repositionHero(offset) {
+    const hero = this.parent?.hero;
+    if (hero) {
+      hero.position.x += offset.x;
+      hero.position.y += offset.y;
+      hero.destinationPosition.x += offset.x;
+      hero.destinationPosition.y += offset.y;
+      events.emit("HERO_POSITION", hero.position);
     }
   }
 
@@ -182,15 +203,14 @@ export class SimpleLevel extends Level {
     } else {
       // Transitioning to another simple level - use the targetMap path directly
       const spawnData = await getSpawnPlayerFromMap(targetMap);
-      const heroPosition = spawnData?.position ?? new Vector2(gridCells(7), gridCells(9));
+      const heroPosition = spawnData?.position ?? new Vector2(gridCells(5), gridCells(5));
 
       // Convert the relative targetMap path to absolute path
       const absoluteMapPath = resolveMapPath(targetMap);
 
       // Create SimpleLevel with just the map path - tilesets auto-detected
       const newLevel = new SimpleLevel({
-        mapPath: absoluteMapPath,
-        heroPosition: heroPosition
+        mapPath: absoluteMapPath
       });
 
       events.emit("CHANGE_LEVEL", {

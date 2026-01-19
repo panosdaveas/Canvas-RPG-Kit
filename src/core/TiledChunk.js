@@ -3,13 +3,19 @@ import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME, CULLING, DEBUG_LAYERS, CAN
 /**
  * Represents a single chunk loaded from Tiled map editor
  * Organizes layers into ground, collision, and foreground based on the collision layer position
+ *
+ * @param {number} chunkX - Chunk grid X coordinate (e.g., 0, 1, 2...)
+ * @param {number} chunkY - Chunk grid Y coordinate
+ * @param {Object} tiledData - Raw Tiled JSON data
+ * @param {Array} tilesetImages - Array of tileset image resources
+ * @param {Object} offset - Optional offset {x, y} to shift the chunk's world position (default: {x: 0, y: 0})
  */
 export class TiledChunk {
-  constructor(chunkX, chunkY, tiledData, tilesetImages) {
+  constructor(chunkX, chunkY, tiledData, tilesetImages, offset = { x: 0, y: 0 }) {
     this.chunkX = chunkX; // Chunk grid X coordinate (e.g., 0, 1, 2...)
     this.chunkY = chunkY; // Chunk grid Y coordinate
-    this.worldX = chunkX * CHUNK_SIZE * TILE_SIZE; // World pixel X position
-    this.worldY = chunkY * CHUNK_SIZE * TILE_SIZE; // World pixel Y position
+    this.worldX = chunkX * CHUNK_SIZE * TILE_SIZE + offset.x; // World pixel X position with offset
+    this.worldY = chunkY * CHUNK_SIZE * TILE_SIZE + offset.y; // World pixel Y position with offset
 
     this.tiledData = tiledData; // Raw Tiled JSON data
     // Normalize to array and store tileset images

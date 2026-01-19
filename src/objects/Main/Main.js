@@ -23,6 +23,9 @@ export class Main extends GameObject {
     this._sortedObjects = [];
     this._ySortDirty = true;
     this._lastHeroY = null;
+
+    // Debug logging throttle
+    this._lastLogTime = 0;
   }
 
   ready() {
@@ -243,7 +246,14 @@ export class Main extends GameObject {
         objectsDrawn++;
       }
     });
-    // console.log(`Objects drawn: ${objectsDrawn} / ${this._sortedObjects.length} total`);
+
+    //DEBUG:
+    // Throttled debug log (every 1 second)
+    // const now = performance.now();
+    // if (now - this._lastLogTime >= 1000) {
+    //   console.log(`Objects drawn: ${objectsDrawn} / ${this._sortedObjects.length} total`);
+    //   this._lastLogTime = now;
+    // }
 
     // 3. Draw foreground chunks from level (after game objects)
     if (this.level && typeof this.level.drawForegroundChunks === 'function') {

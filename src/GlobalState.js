@@ -19,7 +19,6 @@ class GlobalState {
    */
   saveOverworldPosition(position, facingDirection) {
     this.savedOverworldPosition = position.duplicate();
-    console.log("FD:", facingDirection)
     this.savedOverworldPosition.x = Math.round(this.savedOverworldPosition.x);
     this.savedOverworldPosition.y = Math.round(this.savedOverworldPosition.y);
     if (facingDirection === "UP") {
