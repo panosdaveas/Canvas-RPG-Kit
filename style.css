@@ -13,7 +13,7 @@ canvas {
   width: 100%;
   background: black;
   /* Fallback for some browsers */
-  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
   /* Firefox */
   image-rendering: -webkit-crisp-edges;
   /* Older webkit */
