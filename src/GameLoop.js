@@ -22,7 +22,7 @@ export class GameLoop {
     this.accumulatedTime += deltaTime;
 
     // FIXED: time step updates.
-    // Using 'if' for single update per frame (smoother visuals, may slow down if lagging)
+    //NOTE: Using 'if' for single update per frame (smoother visuals, may slow down if lagging)
     // Switch to 'while' if you need the game to catch up when behind (can cause jitter)
     while (this.accumulatedTime >= this.timeStep) {
       this.update(this.timeStep); // Here, we pass the fixed time step size.
