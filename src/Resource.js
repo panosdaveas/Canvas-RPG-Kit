@@ -4,6 +4,7 @@ class Resources {
     this.toLoad = {
       hero: "/sprites/hero.png",
       shadow: "/sprites/shadow.png",
+      drone:"/sprites/drone.png",
       rod: "/sprites/rod.png",
       exit: "/sprites/exit.png",
       // Outdoor
@@ -14,6 +15,7 @@ class Resources {
       caveGround: "/sprites/cave-ground.png",
       // NPCs
       knight: "/sprites/knight-sheet-1.png",
+      npcs: "/sprites/npcs.png",
       // HUD
       textBox: "/sprites/text-box.png",
       fontWhite: "/sprites/sprite-font-white.png",

@@ -33,6 +33,27 @@ export class Hero extends GameObject {
     })
     this.addChild(shadow);
 
+    const drone = new Sprite({
+      resource: resources.images.drone,
+      frameSize: new Vector2(16, 24),
+      hFrames: 3,
+      vFrames: 1,
+      frame: 0,
+      position: new Vector2(-12, -24),
+      animations: new Animations({
+        idle: new FrameIndexPattern(WALK_DOWN),
+      })
+    })
+    const droneShadow = new Sprite({
+      resource: resources.images.shadow,
+      frameSize: new Vector2(32, 32),
+      position: new Vector2(-8, -0),
+    })
+    drone.addChild(droneShadow);
+
+    this.addChild(drone);
+
+
     this.body = new Sprite({
       resource: resources.images.hero,
       frameSize: new Vector2(32, 32),
