@@ -1,4 +1,5 @@
 import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME, CULLING, DEBUG_LAYERS, CANVAS } from "../Constants.js";
+import { encodeCoord } from "../helpers/grid.js";
 
 /**
  * Represents a single chunk loaded from Tiled map editor
@@ -169,7 +170,7 @@ export class TiledChunk {
 
   /**
    * Build a Set of collision coordinates for quick collision detection
-   * Format: "x,y" where x,y are world pixel coordinates
+   * Uses numeric encoding (32-bit integer) for memory efficiency
    */
   _buildCollisionSet() {
     this.collisionSet = new Set();
@@ -191,7 +192,7 @@ export class TiledChunk {
         const worldX = this.worldX + localX * TILE_SIZE;
         const worldY = this.worldY + localY * TILE_SIZE;
 
-        this.collisionSet.add(`${worldX},${worldY}`);
+        this.collisionSet.add(encodeCoord(worldX, worldY));
       }
     }
   }

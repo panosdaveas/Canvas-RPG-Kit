@@ -211,7 +211,7 @@ export class ChunkManager {
 
   /**
    * Get collision walls from all loaded chunks
-   * Returns a Set of "x,y" strings representing solid grid cells
+   * Returns a Set of encoded numeric keys representing solid grid cells
    */
   getCollisionWalls() {
     const allWalls = new Set();

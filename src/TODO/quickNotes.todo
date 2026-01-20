@@ -16,5 +16,31 @@ BATTLE: Rock-Paper-Scissor | Enhanced | Combo of hand signs like jutsu / find sc
 
 BATTLE: Alchemy / elemental / material system / crafting ??
 
+ENGINE:
+1. Detection - Layers marked with static=true property in Tiled are identified during _parseLayers()                                                      
+2. Pre-rendering - The _cacheStaticLayers() method creates offscreen canvases (480x480px for 30x30 tile chunks) and draws all static layer tiles to them once at chunk initialization                                                  
+3. Fast rendering - At draw time, static layers render as a single ctx.drawImage() call instead of tile-by-tile:                                 
+  if (this.staticGroundCanvas) {                                                
+    ctx.drawImage(this.staticGroundCanvas, this.worldX, this.worldY);           
+  }
 
- 
+ Static vs Dynamic layers:                                                     
+  ┌───────────────────────────────────────┬───────────────────────────────┐     
+  │             Static Layers             │        Dynamic Layers         │     
+  ├───────────────────────────────────────┼───────────────────────────────┤     
+  │ Pre-rendered once to offscreen canvas │ Drawn tile-by-tile each frame │     
+  ├───────────────────────────────────────┼───────────────────────────────┤     
+  │ Single drawImage() per frame          │ Viewport culling applied      │     
+  ├───────────────────────────────────────┼───────────────────────────────┤     
+  │ Zero per-frame overhead               │ Supports animated tiles       │     
+  ├───────────────────────────────────────┼───────────────────────────────┤     
+  │ For terrain, permanent structures     │ For changing/animated content │     
+  └───────────────────────────────────────┴──────────────────────────────
+
+NOTE: maybe use a different ratio for the off-screen canvas (16:9) - not squares! 
+
+NOTE: draw HUD in a new canvas object
+
+NOTE: check on the collisions - we aggregate the tiles, but maybe we need packeting
+
+NOTE: object layers do NOT participate in draw calls. They're purely data.
