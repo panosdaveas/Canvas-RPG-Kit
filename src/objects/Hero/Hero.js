@@ -1,7 +1,7 @@
 import { GameObject } from "../../GameObject.js";
 import { Vector2 } from "../../Vector2.js";
 import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
-import { gridCells, isSpaceFree } from "../../helpers/grid.js";
+import { isSpaceFree } from "../../helpers/grid.js";
 import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
 import { Animations } from "../../Animations.js";
@@ -32,27 +32,6 @@ export class Hero extends GameObject {
       position: new Vector2(-8, -18),
     })
     this.addChild(shadow);
-
-    const drone = new Sprite({
-      resource: resources.images.drone,
-      frameSize: new Vector2(16, 24),
-      hFrames: 3,
-      vFrames: 1,
-      frame: 0,
-      position: new Vector2(-12, -24),
-      animations: new Animations({
-        idle: new FrameIndexPattern(WALK_DOWN),
-      })
-    })
-    const droneShadow = new Sprite({
-      resource: resources.images.shadow,
-      frameSize: new Vector2(32, 32),
-      position: new Vector2(-8, -0),
-    })
-    drone.addChild(droneShadow);
-
-    this.addChild(drone);
-
 
     this.body = new Sprite({
       resource: resources.images.hero,
@@ -95,12 +74,6 @@ export class Hero extends GameObject {
   ready() {
     events.on("HERO_ACTION_FINISHED", this, () => {
       this.isLocked = false;
-    })
-    events.on("START_TEXT_BOX", this, () => {
-      // this.isLocked = true;
-    })
-    events.on("END_TEXT_BOX", this, () => {
-      // this.isLocked = false;
     })
 
     // Emit initial position so chunks load
@@ -257,13 +230,6 @@ export class Hero extends GameObject {
     // Validating that the next destination is free
     const spaceIsFree = isSpaceFree(root.level?.walls, nextX, nextY);
 
-    // const allObjects = [
-    //   ...this.parent.children, // parent is Main
-    //   ...(root.level?.children || []) // objects are in Level
-    // ];
-    // const solidBodyAtSpace = allObjects.find(c => {
-    //   return c.isSolid && c.position.x === nextX && c.position.y === nextY
-    // })
     const solidBodyAtSpace = root.level?.children.find(c => {
       return c.isSolid && c.position.x === nextX && c.position.y === nextY
     })

@@ -6,7 +6,6 @@ import {events} from "../../Events.js";
 import {SpriteTextString} from "../SpriteTextString/SpriteTextString.js";
 import {storyFlags} from "../../StoryFlags.js";
 import {Hero} from "../Hero/Hero.js";
-import {Vector2} from "../../Vector2.js";
 import {gridCells} from "../../helpers/grid.js";
 import {CANVAS, CULLING, TILE_SIZE} from "../../Constants.js";
 import {globalState} from "../../GlobalState.js";
@@ -104,9 +103,7 @@ export class Main extends GameObject {
           events.emit("HERO_ACTION_FINISHED");
         })
       }
-
     })
-
   }
 
   setLevel(newLevelInstance, heroPosition = null) {
@@ -215,16 +212,6 @@ export class Main extends GameObject {
   }
 
   drawObjects(ctx) {
-    // Save context state and apply camera offset
-    // ctx.save();
-
-    // if (this.camera) {
-    //   // Floor camera position to prevent sub-pixel jitter (consistent with tile rendering)
-    //   const camX = Math.floor(this.camera.position.x);
-    //   const camY = Math.floor(this.camera.position.y);
-
-    //   ctx.translate(camX, camY);
-    // }
 
     // 1. Draw ground chunks from level (before game objects)
     if (this.level && typeof this.level.drawGroundChunks === 'function') {
@@ -259,18 +246,15 @@ export class Main extends GameObject {
     if (this.level && typeof this.level.drawForegroundChunks === 'function') {
       this.level.drawForegroundChunks(ctx);
     }
-
-    // Restore context state
-    // ctx.restore();
   }
 
-  // drawForeground(ctx) {
-  //   this.children.forEach(child => {
-  //     if (child.drawLayer === "FOREGROUND") {
-  //       child.draw(ctx, 0, 0);
-  //     }
-  //   })
-  // }
+  drawForeground(ctx) {
+    this.children.forEach(child => {
+      if (child.drawLayer === "FOREGROUND") {
+        child.draw(ctx, 0, 0);
+      }
+    })
+  }
 
   drawHud(ctx) {
     this.children.forEach(child => {
