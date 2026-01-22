@@ -9,7 +9,7 @@ import {CANVAS} from "../../Constants.js";
 export class SpriteTextString extends GameObject {
   constructor(config={}) {
     super({
-      position: new Vector2(32, CANVAS.HEIGHT - 80)
+      position: new Vector2((CANVAS.WIDTH - 256) / 2, CANVAS.HEIGHT - 80)
     });
 
 
@@ -69,6 +69,11 @@ export class SpriteTextString extends GameObject {
 
   }
 
+  ready() {
+    // Mark HUD dirty for initial render
+    events.emit("HUD_DIRTY");
+  }
+
   step(delta, root) {
 
     // Listen for user Input
@@ -78,6 +83,7 @@ export class SpriteTextString extends GameObject {
       if (this.showingIndex < this.finalIndex) {
         // Skip
         this.showingIndex = this.finalIndex;
+        events.emit("HUD_DIRTY");
         return;
       }
 
@@ -93,6 +99,9 @@ export class SpriteTextString extends GameObject {
 
       // Reset time counter for next character
       this.timeUntilNextShow = this.textSpeed;
+
+      // Mark HUD dirty so it re-renders with new character
+      events.emit("HUD_DIRTY");
     }
   }
 

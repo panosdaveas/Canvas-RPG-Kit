@@ -44,3 +44,5 @@ NOTE: draw HUD in a new canvas object
 NOTE: check on the collisions - we aggregate the tiles, but maybe we need packeting
 
 NOTE: object layers do NOT participate in draw calls. They're purely data.
+
+NOTE: draw hud layer in new DOM canvas, or Js canvas ???

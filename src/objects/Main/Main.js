@@ -23,6 +23,13 @@ export class Main extends GameObject {
     this._ySortDirty = true;
     this._lastHeroY = null;
 
+    // HUD canvas optimization: only re-render when content changes
+    this._hudCanvas = document.createElement('canvas');
+    this._hudCanvas.width = CANVAS.WIDTH;
+    this._hudCanvas.height = CANVAS.HEIGHT;
+    this._hudCtx = this._hudCanvas.getContext('2d');
+    this._hudDirty = true;
+
     // Debug logging throttle
     this._lastLogTime = 0;
   }
@@ -45,6 +52,11 @@ export class Main extends GameObject {
         this._lastHeroY = position.y;
         this._ySortDirty = true;
       }
+    });
+
+    // Mark HUD dirty when HUD content changes
+    events.on("HUD_DIRTY", this, () => {
+      this._hudDirty = true;
     });
 
     // Change Level handler
@@ -99,6 +111,7 @@ export class Main extends GameObject {
         // Unsubscribe from this text box after it's destroyed
         const endingSub = events.on("END_TEXT_BOX", this, () => {
           textbox.destroy();
+          this._hudDirty = true; // Re-render HUD without textbox
           events.off(endingSub)
           events.emit("HERO_ACTION_FINISHED");
         })
@@ -256,12 +269,30 @@ export class Main extends GameObject {
     })
   }
 
+  /**
+   * Mark HUD as dirty (call when HUD content changes)
+   */
+  markHudDirty() {
+    this._hudDirty = true;
+  }
+
+  /**
+   * Draw HUD using cached canvas (only re-renders when dirty)
+   */
   drawHud(ctx) {
-    this.children.forEach(child => {
-      if (child.drawLayer === "HUD") {
-        child.draw(ctx, 0, 0);
-      }
-    })
+    if (this._hudDirty) {
+      // Clear and re-render HUD canvas
+      this._hudCtx.clearRect(0, 0, this._hudCanvas.width, this._hudCanvas.height);
+      this.children.forEach(child => {
+        if (child.drawLayer === "HUD") {
+          child.draw(this._hudCtx, 0, 0);
+        }
+      });
+      this._hudDirty = false;
+    }
+
+    // Blit cached HUD canvas to main canvas
+    ctx.drawImage(this._hudCanvas, 0, 0);
   }
 
 }

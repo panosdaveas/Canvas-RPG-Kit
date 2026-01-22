@@ -56,6 +56,9 @@ export class Inventory extends GameObject {
       })
       this.addChild(sprite);
     })
+
+    // Mark HUD dirty so it re-renders
+    events.emit("HUD_DIRTY");
   }
 
   removeFromInventory(id) {
