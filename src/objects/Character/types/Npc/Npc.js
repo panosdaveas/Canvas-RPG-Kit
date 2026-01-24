@@ -4,6 +4,7 @@ import { resources } from "../../../../Resource.js";
 import { storyFlags } from "../../../../StoryFlags.js";
 import { events } from "../../../../Events.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
+import { PathController } from "../../../../controllers/PathController.js"
 
 export class Npc extends Character {
   /**
@@ -30,21 +31,23 @@ export class Npc extends Character {
       frame: config.frame ?? 1,
       bodyOffset: new Vector2(-8, -20),
       shadowOffset: new Vector2(-8, -18),
-      isSolid: true
+      isSolid: true,
     });
+
+    // this.setController(new PathController(this, {
+    //   path: [
+    //     new Vector2(this.position.x, this.position.y),  // Start position    
+    //   ],
+    //   loop: true,
+    //   speed: 0.5
+    // }));             
 
     // NPC-specific: dialogue content
     this.facingDirection = config.facingDirection;
     this.textContent = config.content;
     this.textPortraitFrame = config.portraitFrame;
+    this.path = config.path || null;
   }
-
-  // ready() {
-  //   events.on("HERO_REQUESTS_ACTION"), this, () => {
-  //     const.
-  //     this.facingDirection
-  //   }
-  // }
 
   /**
    * Get dialogue content, respecting story flags
