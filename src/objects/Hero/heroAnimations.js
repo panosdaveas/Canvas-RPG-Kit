@@ -1,6 +1,6 @@
 const makeIdleFrames = (rootFrame = 0) => {
   return {
-    duration: 400,
+    duration: 450,
     frames: [
       {
         time: 0,
@@ -11,22 +11,22 @@ const makeIdleFrames = (rootFrame = 0) => {
 }
 const makeWalkingFrames = (rootFrame = 0) => {
   return {
-    duration: 400,
+    duration: 600,
     frames: [
       {
         time: 0,
         frame: rootFrame + 1
       },
       {
-        time: 100,
+        time: 150,
         frame: rootFrame
       },
       {
-        time: 200,
+        time: 300,
         frame: rootFrame + 1
       },
       {
-        time: 300,
+        time: 450,
         frame: rootFrame + 2
       }
     ]
