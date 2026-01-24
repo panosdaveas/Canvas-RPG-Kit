@@ -10,6 +10,7 @@ export class Npc extends Character {
    * @param {number} x - X position
    * @param {number} y - Y position
    * @param {Object} config - NPC configuration
+   * @param {string} [config.spriteResource] - NPC spritesheet reference to resources
    * @param {Array} [config.content] - Dialogue content array
    * @param {number} [config.portraitFrame] - Portrait frame for dialogue
    * @param {Object} [config.spriteResource] - Custom sprite resource
@@ -21,7 +22,7 @@ export class Npc extends Character {
   constructor(x, y, config = {}) {
     super({
       position: new Vector2(x, y),
-      spriteResource: config.spriteResource ?? resources.images.npcs_animated,
+      spriteResource: resources.images[config.spriteResource] ?? resources.images.npc1,
       animations: createHeroAnimations(),
       frameSize: config.frameSize ?? new Vector2(32, 32),
       hFrames: config.hFrames ?? 3,
@@ -33,6 +34,7 @@ export class Npc extends Character {
     });
 
     // NPC-specific: dialogue content
+    this.facingDirection = config.facingDirection;
     this.textContent = config.content;
     this.textPortraitFrame = config.portraitFrame;
   }

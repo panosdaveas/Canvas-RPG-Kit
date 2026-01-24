@@ -665,9 +665,29 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"content",
+                         "type":"string",
+                         "value":"Hi!"
+                        }, 
+                        {
+                         "name":"facingDirection",
+                         "type":"string",
+                         "value":"DOWN"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":0
+                        }, 
+                        {
                          "name":"spawn",
                          "type":"object",
                          "value":35
+                        }, 
+                        {
+                         "name":"spriteResource",
+                         "type":"string",
+                         "value":"npc1"
                         }],
                  "rotation":0,
                  "type":"Npc",
@@ -683,9 +703,29 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"content",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"facingDirection",
+                         "type":"string",
+                         "value":"LEFT"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":0
+                        }, 
+                        {
                          "name":"spawn",
                          "type":"object",
                          "value":37
+                        }, 
+                        {
+                         "name":"spriteResource",
+                         "type":"string",
+                         "value":"npc2"
                         }],
                  "rotation":0,
                  "type":"Npc",
@@ -746,8 +786,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":37,
- "nextobjectid":58,
+ "nextlayerid":38,
+ "nextobjectid":62,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

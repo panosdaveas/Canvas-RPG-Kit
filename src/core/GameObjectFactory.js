@@ -105,23 +105,29 @@ export class GameObjectFactory {
 
   _createNpc(tiledObject) {
     // Parse NPC configuration from properties
+    const spriteResource = this._getProperty(tiledObject, "spriteResource");
+    const facingDirection = this._getProperty(tiledObject, "facingDirection");
+
     const textContent = this._getProperty(tiledObject, "message") ||
                        this._getProperty(tiledObject, "dialogue") ||
+                       this._getProperty(tiledObject, "content") ||
                        "...";
 
     const portraitFrame = this._getProperty(tiledObject, "portraitFrame") || 0;
 
-    const textConfig = {
+    const config = {
       content: [
         {
           string: textContent,
           addsFlag: null
         }
       ],
-      portraitFrame: portraitFrame
+      portraitFrame: portraitFrame,
+      spriteResource: spriteResource,
+      facingDirection: facingDirection,
     };
 
-    return new Npc(tiledObject.worldX, tiledObject.worldY, textConfig);
+    return new Npc(tiledObject.worldX, tiledObject.worldY, config);
   }
 
   _createExit(tiledObject) {
