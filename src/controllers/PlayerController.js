@@ -2,6 +2,8 @@ import { Controller } from "./Controller.js";
 import { DOWN, LEFT, RIGHT, UP } from "../Input.js";
 import { isSpaceFree } from "../helpers/grid.js";
 import { events } from "../Events.js";
+import { Character } from "../objects/Character/Character.js";
+import { Npc } from "../objects/Character/types/Npc/Npc.js";
 
 /**
  * Controller for player-controlled characters (Hero).
@@ -56,7 +58,14 @@ export class PlayerController extends Controller {
     });
     console.log("ACTION WITH:", objAtPosition);
     if (objAtPosition) {
+      if (objAtPosition instanceof Character) {
+        const oppositeDirection = character.getOppositeDirection();
+        objAtPosition.facingDirection = oppositeDirection;
+        objAtPosition.playIdleAnimation();
+      }
+      setTimeout(() => {
       events.emit("HERO_REQUESTS_ACTION", objAtPosition);
+      }, 200);
     }
   }
 

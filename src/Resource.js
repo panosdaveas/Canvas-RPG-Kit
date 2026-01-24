@@ -16,6 +16,7 @@ class Resources {
       // NPCs
       knight: "/sprites/knight-sheet-1.png",
       npcs: "/sprites/npcs.png",
+      npcs_animated: "/sprites/Npc.png",
       // HUD
       textBox: "/sprites/text-box.png",
       fontWhite: "/sprites/sprite-font-white.png",

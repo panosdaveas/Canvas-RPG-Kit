@@ -2,6 +2,8 @@ import { Character } from "../../Character.js";
 import { Vector2 } from "../../../../Vector2.js";
 import { resources } from "../../../../Resource.js";
 import { storyFlags } from "../../../../StoryFlags.js";
+import { events } from "../../../../Events.js";
+import { createHeroAnimations } from "../../characterAnimations.js";
 
 export class Npc extends Character {
   /**
@@ -19,8 +21,8 @@ export class Npc extends Character {
   constructor(x, y, config = {}) {
     super({
       position: new Vector2(x, y),
-      spriteResource: config.spriteResource ?? resources.images.npcs,
-      animations: config.animations ?? null,
+      spriteResource: config.spriteResource ?? resources.images.npcs_animated,
+      animations: createHeroAnimations(),
       frameSize: config.frameSize ?? new Vector2(32, 32),
       hFrames: config.hFrames ?? 3,
       vFrames: config.vFrames ?? 8,
@@ -34,6 +36,13 @@ export class Npc extends Character {
     this.textContent = config.content;
     this.textPortraitFrame = config.portraitFrame;
   }
+
+  // ready() {
+  //   events.on("HERO_REQUESTS_ACTION"), this, () => {
+  //     const.
+  //     this.facingDirection
+  //   }
+  // }
 
   /**
    * Get dialogue content, respecting story flags

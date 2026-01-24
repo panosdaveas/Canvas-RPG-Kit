@@ -67,6 +67,10 @@ export class Character extends GameObject {
     this.currentAnimation = null;
   }
 
+  ready() {
+    this.playIdleAnimation();
+  }
+
   /**
    * Set the controller for this character
    * @param {Controller} controller - Controller instance
@@ -134,5 +138,10 @@ export class Character extends GameObject {
 
     // Move toward destination
     moveTowards(this, this.destinationPosition, this.speed);
+  }
+
+  getOppositeDirection(direction = this.facingDirection) {
+    const opposites = { LEFT: RIGHT, RIGHT: LEFT, UP: DOWN, DOWN: UP}
+    return opposites[direction];
   }
 }
