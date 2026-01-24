@@ -5,7 +5,7 @@ import {Inventory} from "../Inventory/Inventory.js";
 import {events} from "../../Events.js";
 import {SpriteTextString} from "../SpriteTextString/SpriteTextString.js";
 import {storyFlags} from "../../StoryFlags.js";
-import {Hero} from "../Hero/Hero.js";
+import {Hero} from "../Character/types/Hero/Hero.js";
 import {gridCells} from "../../helpers/grid.js";
 import {CANVAS, CULLING, TILE_SIZE} from "../../Constants.js";
 import {globalState} from "../../GlobalState.js";

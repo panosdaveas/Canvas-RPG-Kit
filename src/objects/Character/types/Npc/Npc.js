@@ -1,0 +1,56 @@
+import { Character } from "../../Character.js";
+import { Vector2 } from "../../../../Vector2.js";
+import { resources } from "../../../../Resource.js";
+import { storyFlags } from "../../../../StoryFlags.js";
+
+export class Npc extends Character {
+  /**
+   * @param {number} x - X position
+   * @param {number} y - Y position
+   * @param {Object} config - NPC configuration
+   * @param {Array} [config.content] - Dialogue content array
+   * @param {number} [config.portraitFrame] - Portrait frame for dialogue
+   * @param {Object} [config.spriteResource] - Custom sprite resource
+   * @param {Animations} [config.animations] - Animations (null for static)
+   * @param {number} [config.frame] - Static frame to display
+   * @param {number} [config.hFrames] - Horizontal frames in sprite sheet
+   * @param {number} [config.vFrames] - Vertical frames in sprite sheet
+   */
+  constructor(x, y, config = {}) {
+    super({
+      position: new Vector2(x, y),
+      spriteResource: config.spriteResource ?? resources.images.npcs,
+      animations: config.animations ?? null,
+      frameSize: config.frameSize ?? new Vector2(32, 32),
+      hFrames: config.hFrames ?? 3,
+      vFrames: config.vFrames ?? 8,
+      frame: config.frame ?? 1,
+      bodyOffset: new Vector2(-8, -20),
+      shadowOffset: new Vector2(-8, -18),
+      isSolid: true
+    });
+
+    // NPC-specific: dialogue content
+    this.textContent = config.content;
+    this.textPortraitFrame = config.portraitFrame;
+  }
+
+  /**
+   * Get dialogue content, respecting story flags
+   * @returns {Object|null} Content object with portraitFrame, string, and optional addsFlag
+   */
+  getContent() {
+    // Maybe expand with story flag logic, etc
+    const match = storyFlags.getRelevantScenario(this.textContent);
+    if (!match) {
+      console.warn("No matches found in this list!", this.textContent);
+      return null;
+    }
+
+    return {
+      portraitFrame: this.textPortraitFrame,
+      string: match.string,
+      addsFlag: match.addsFlag ?? null
+    };
+  }
+}

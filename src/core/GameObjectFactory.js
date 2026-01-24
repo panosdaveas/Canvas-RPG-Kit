@@ -1,4 +1,4 @@
-import { Npc } from "../objects/Npc/Npc.js";
+import { Npc } from "../objects/Character/types/Npc/Npc.js";
 import { Exit } from "../objects/Exit/Exit.js";
 import { Sign } from "../objects/Sign/Sign.js";
 import { Chest } from "../objects/Chest/Chest.js";

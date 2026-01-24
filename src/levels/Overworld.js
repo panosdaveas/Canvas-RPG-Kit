@@ -4,7 +4,7 @@ import { Vector2 } from "../Vector2.js";
 import { events } from "../Events.js";
 import { gridCells } from "../helpers/grid.js";
 import { SimpleLevel } from "../objects/Level/types/SimpleLevel.js";
-import { Npc } from "../objects/Npc/Npc.js";
+import { Npc } from "../objects/Character/types/Npc/Npc.js";
 import { getSpawnPlayerFromMap, getWorldNameFromPath, resolveMapPath } from "../helpers/mapUtils.js";
 import { globalState } from "../GlobalState.js";
 

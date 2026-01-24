@@ -7,7 +7,7 @@ import {Exit } from "../objects/Exit/Exit.js";
 import {Rod} from "../objects/Rod/Rod.js";
 import {events} from "../Events.js";
 import {OutdoorLevel1} from "./OutdoorLevel1.js";
-import {Npc} from "../objects/Npc/Npc.js";
+import {Npc} from "../objects/Character/types/Npc/Npc.js";
 import {TALKED_TO_A, TALKED_TO_B} from "../StoryFlags.js";
 
 const DEFAULT_HERO_POSITION = new Vector2(gridCells(6), gridCells(5))
