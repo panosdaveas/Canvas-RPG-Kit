@@ -77,13 +77,19 @@ export class Main extends GameObject {
       this.setLevel(level, finalPosition);
     })
 
-    events.on("HERO_ACTION_FINISHED", this, () => {
+    events.on("HERO_ACTION_FINISHED", this, (withObject) => {
       this.hero.isLocked = false;
+      if (withObject?.isLocked !== undefined) {
+        withObject.isLocked = false;
+      }
     })
 
     // Launch Text Box handler
     events.on("HERO_REQUESTS_ACTION", this, (withObject) => {
       this.hero.isLocked = true;
+      if (withObject?.isLocked !== undefined) {
+        withObject.isLocked = true;
+      }
 
       if (typeof withObject.getContent === "function") {
         const content = withObject.getContent();
@@ -112,7 +118,7 @@ export class Main extends GameObject {
           textbox.destroy();
           this._hudDirty = true; // Re-render HUD without textbox
           events.off(endingSub)
-          events.emit("HERO_ACTION_FINISHED");
+          events.emit("HERO_ACTION_FINISHED", withObject);
         })
       }
     })

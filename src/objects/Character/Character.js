@@ -70,12 +70,6 @@ export class Character extends GameObject {
 
   ready() {
     this.playIdleAnimation();
-    events.on("HERO_REQUESTS_ACTION", this, () => {
-      this.isLocked = true;
-    })
-    events.on("HERO_ACTION_FINISHED", this, () => {
-      this.isLocked = false;
-    })
   }
 
   /**
