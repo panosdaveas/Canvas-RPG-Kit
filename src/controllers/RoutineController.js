@@ -302,7 +302,7 @@ export class RoutineController extends Controller {
         this.currentCommandIndex = this.direction === 1 ? 0 : this.commands.length - 1;
       } else if (this.pingPong) {
         this.direction *= -1;
-        this.currentCommandIndex += this.direction;
+        // Stay at current index to re-execute it with inverted direction
       } else {
         this.isFinished = true;
       }

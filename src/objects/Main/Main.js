@@ -46,12 +46,9 @@ export class Main extends GameObject {
     // Initialize sorted objects with hero
     this._rebuildSortedObjects();
 
-    // Mark Y-sort dirty when hero's Y position changes
-    events.on("HERO_POSITION", this, (position) => {
-      if (this._lastHeroY !== position.y) {
-        this._lastHeroY = position.y;
-        this._ySortDirty = true;
-      }
+    // Mark Y-sort dirty when any character's Y position changes
+    events.on("YSORT_DIRTY", this, () => {
+      this._ySortDirty = true;
     });
 
     // Mark HUD dirty when HUD content changes

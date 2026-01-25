@@ -137,8 +137,16 @@ export class Character extends GameObject {
       this.controller.update(delta, root);
     }
 
+    // Track Y position before move
+    const prevY = this.position.y;
+
     // Move toward destination
     moveTowards(this, this.destinationPosition, this.speed);
+
+    // Mark y-sort dirty if Y position changed
+    if (this.position.y !== prevY) {
+      events.emit("YSORT_DIRTY");
+    }
   }
 
   getOppositeDirection(direction = this.facingDirection) {

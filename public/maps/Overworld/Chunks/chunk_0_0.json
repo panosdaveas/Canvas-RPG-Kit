@@ -667,7 +667,7 @@
                         {
                          "name":"commands",
                          "type":"string",
-                         "value":"MOVE(DOWN, 2)\nIDLE(1000)\nFACE(RIGHT)\nIDLE(1000)\nMOVE(LEFT, 3)\nIDLE(1000)\n"
+                         "value":"IDLE(2000)\nMOVE(DOWN, 2)\nIDLE(2000)\nFACE(RIGHT)\nIDLE(1000)\nMOVE(LEFT, 4)\nIDLE(1000)\nFACE(DOWN)\nIDLE(2000)\n\n"
                         }, 
                         {
                          "name":"content",
