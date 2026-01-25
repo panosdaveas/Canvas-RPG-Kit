@@ -66,7 +66,7 @@ export class PlayerController extends Controller {
       }
       setTimeout(() => {
       events.emit("HERO_REQUESTS_ACTION", objAtPosition);
-      }, 200);
+      }, 200); // play idle animation towards player's direction 150ms , then start action
     }
   }
 

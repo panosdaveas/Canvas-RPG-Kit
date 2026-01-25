@@ -159,11 +159,7 @@ export class GameObjectFactory {
     const itemType = this._getProperty(tiledObject, "itemType") || "GOLD";
     return new Chest(tiledObject.worldX, tiledObject.worldY, itemType);
   }
-  //
-  // _createEnemy(tiledObject) {
-  //   const enemyType = this._getProperty(tiledObject, "enemyType") || "SLIME";
-  //   return new Enemy(tiledObject.worldX, tiledObject.worldY, enemyType);
-  // }
+
 }
 
 // Export a singleton instance for convenience
