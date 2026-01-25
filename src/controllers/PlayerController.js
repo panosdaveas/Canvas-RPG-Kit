@@ -62,6 +62,7 @@ export class PlayerController extends Controller {
         const oppositeDirection = character.getOppositeDirection();
         objAtPosition.facingDirection = oppositeDirection;
         objAtPosition.playIdleAnimation();
+        objAtPosition.isLocked = true; // Lock immediately to prevent controller from overwriting
       }
       setTimeout(() => {
       events.emit("HERO_REQUESTS_ACTION", objAtPosition);
