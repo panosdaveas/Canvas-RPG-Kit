@@ -727,7 +727,7 @@
                         {
                          "name":"commands",
                          "type":"string",
-                         "value":""
+                         "value":"IDLE(3000)\nFACE(DOWN)\nIDLE(2000)\nFACE(RIGHT)\nIDLE(2000)\nFACE(UP)\nIDLE(2000)\nFACE(LEFT)"
                         }, 
                         {
                          "name":"content",
