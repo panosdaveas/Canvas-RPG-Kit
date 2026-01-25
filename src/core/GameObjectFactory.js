@@ -125,6 +125,7 @@ export class GameObjectFactory {
       portraitFrame: portraitFrame,
       spriteResource: spriteResource,
       facingDirection: facingDirection,
+      pathObject: tiledObject._pathObject || null,
     };
 
     return new Npc(tiledObject.worldX, tiledObject.worldY, config);

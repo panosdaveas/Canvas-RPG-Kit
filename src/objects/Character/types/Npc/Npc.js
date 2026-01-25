@@ -34,19 +34,28 @@ export class Npc extends Character {
       isSolid: true,
     });
 
-    // this.setController(new PathController(this, {
-    //   path: [
-    //     new Vector2(this.position.x, this.position.y),  // Start position    
-    //   ],
-    //   loop: true,
-    //   speed: 0.5
-    // }));             
-
     // NPC-specific: dialogue content
     this.facingDirection = config.facingDirection;
     this.textContent = config.content;
     this.textPortraitFrame = config.portraitFrame;
-    this.path = config.path || null;
+
+    this.setController(new PathController(this, {
+      path: [
+        new Vector2(this.position.x, this.position.y),  // Start position
+        new Vector2(this.position.x-64, this.position.y),  // Start position
+      ],
+      loop: true,
+      speed: 0.5,
+      waitTime: 1000,
+    })); 
+
+    // Set up path controller if a path object was provided
+    // if (config.pathObject) {
+    //   const pathController = PathController.fromTiledPath(this, config.pathObject);
+    //   if (pathController) {
+    //     this.setController(pathController);
+    //   }
+    // }
   }
 
   /**

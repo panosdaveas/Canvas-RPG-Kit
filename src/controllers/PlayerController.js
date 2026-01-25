@@ -117,7 +117,11 @@ export class PlayerController extends Controller {
     const spaceIsFree = isSpaceFree(root.level?.walls, nextX, nextY);
 
     const solidBodyAtSpace = root.level?.children.find(c => {
-      return c.isSolid && c.position.x === nextX && c.position.y === nextY;
+      if (!c.isSolid) return false;
+      // Check destinationPosition, fall back to position for static objects
+      const checkX = c.destinationPosition?.x ?? c.position.x;
+      const checkY = c.destinationPosition?.y ?? c.position.y;
+      return checkX === nextX && checkY === nextY;
     });
     if (spaceIsFree && !solidBodyAtSpace) {
       character.destinationPosition.x = nextX;

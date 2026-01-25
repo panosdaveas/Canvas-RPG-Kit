@@ -85,7 +85,6 @@ export class Main extends GameObject {
     events.on("HERO_REQUESTS_ACTION", this, (withObject) => {
       this.hero.isLocked = true;
 
-
       if (typeof withObject.getContent === "function") {
         const content = withObject.getContent();
 

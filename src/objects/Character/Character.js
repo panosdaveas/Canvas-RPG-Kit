@@ -4,6 +4,7 @@ import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
 import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
 import { moveTowards } from "../../helpers/moveTowards.js";
+import { events } from "../../Events.js";
 
 /**
  * Base class for all character types (Hero, NPC, enemies, etc.)
@@ -39,7 +40,7 @@ export class Character extends GameObject {
     this.controller = null;
 
     // Solid flag for collision
-    this.isSolid = config.isSolid ?? false;
+    this.isSolid = config.isSolid ?? true;
 
     // Create shadow sprite
     const shadowOffset = config.shadowOffset ?? new Vector2(-8, -18);
@@ -69,6 +70,12 @@ export class Character extends GameObject {
 
   ready() {
     this.playIdleAnimation();
+    events.on("HERO_REQUESTS_ACTION", this, () => {
+      this.isLocked = true;
+    })
+    events.on("HERO_ACTION_FINISHED", this, () => {
+      this.isLocked = false;
+    })
   }
 
   /**

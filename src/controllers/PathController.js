@@ -54,8 +54,18 @@ export class PathController extends Controller {
       return;
     }
 
-    // Check if arrived at current waypoint
-    if (character.hasArrivedAtDestination()) {
+    // Only act when arrived at current tile
+    if (!character.hasArrivedAtDestination()) {
+      return;
+    }
+
+    // Check if arrived at current waypoint (use destinationPosition for consistency)
+    const targetWaypoint = this.path[this.currentWaypointIndex];
+    const atWaypoint = targetWaypoint &&
+      character.destinationPosition.x === targetWaypoint.x &&
+      character.destinationPosition.y === targetWaypoint.y;
+
+    if (atWaypoint) {
       // Start waiting if configured
       if (this.waitTime > 0) {
         this.isWaiting = true;
@@ -67,7 +77,7 @@ export class PathController extends Controller {
       this.advanceToNextWaypoint();
     }
 
-    // Move toward current waypoint
+    // Move toward current waypoint (one tile at a time)
     this.moveTowardWaypoint(root);
   }
 
@@ -100,9 +110,19 @@ export class PathController extends Controller {
       return;
     }
 
-    // Calculate direction to target
-    const dx = targetWaypoint.x - character.position.x;
-    const dy = targetWaypoint.y - character.position.y;
+    // Use destinationPosition (grid-aligned) for all calculations
+    const currentX = character.destinationPosition.x;
+    const currentY = character.destinationPosition.y;
+
+    // Calculate direction to target waypoint
+    const dx = targetWaypoint.x - currentX;
+    const dy = targetWaypoint.y - currentY;
+
+    // Already at waypoint
+    if (dx === 0 && dy === 0) {
+      character.playIdleAnimation();
+      return;
+    }
 
     // Determine facing direction based on movement
     let facingDirection = character.facingDirection;
@@ -112,32 +132,41 @@ export class PathController extends Controller {
       facingDirection = dy > 0 ? DOWN : UP;
     }
 
-    // Update character facing and animation
     character.facingDirection = facingDirection;
+    character.playWalkAnimation(facingDirection);
 
-    // Only move if not at destination
-    if (dx !== 0 || dy !== 0) {
-      character.playWalkAnimation(facingDirection);
+    // Move one tile at a time toward waypoint
+    const gridSize = 16;
+    let nextX = currentX;
+    let nextY = currentY;
 
-      // Set destination to waypoint
-      // Collision checking can be added here if needed
-      const nextX = targetWaypoint.x;
-      const nextY = targetWaypoint.y;
-
-      // Optional: Check collision (for now, assume path is valid)
-      const spaceIsFree = isSpaceFree(root.level?.walls, nextX, nextY);
-      const solidBodyAtSpace = root.level?.children.find(c => {
-        return c.isSolid && c !== character && c.position.x === nextX && c.position.y === nextY;
-      });
-
-      if (spaceIsFree && !solidBodyAtSpace) {
-        character.destinationPosition.x = nextX;
-        character.destinationPosition.y = nextY;
-      } else {
-        // Path blocked, wait and retry
-        character.playIdleAnimation();
-      }
+    if (Math.abs(dx) > Math.abs(dy)) {
+      nextX += Math.sign(dx) * gridSize;
     } else {
+      nextY += Math.sign(dy) * gridSize;
+    }
+
+    // Check collision at next tile
+    const spaceIsFree = isSpaceFree(root.level?.walls, nextX, nextY);
+
+    // Check level children
+    const levelBodyAtSpace = root.level?.children.find(c => {
+      if (!c.isSolid || c === character) return false;
+      const checkX = c.destinationPosition?.x ?? c.position.x;
+      const checkY = c.destinationPosition?.y ?? c.position.y;
+      return checkX === nextX && checkY === nextY;
+    });
+
+    // Check hero (hero is child of Main, not level)
+    const heroAtSpace = root.hero &&
+      root.hero.destinationPosition.x === nextX &&
+      root.hero.destinationPosition.y === nextY;
+
+    if (spaceIsFree && !levelBodyAtSpace && !heroAtSpace) {
+      character.destinationPosition.x = nextX;
+      character.destinationPosition.y = nextY;
+    } else {
+      // Path blocked, wait and retry
       character.playIdleAnimation();
     }
   }

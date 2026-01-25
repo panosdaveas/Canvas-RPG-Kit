@@ -660,44 +660,6 @@
          "objects":[
                 {
                  "height":0,
-                 "id":35,
-                 "name":"npc_1",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"content",
-                         "type":"string",
-                         "value":"Hi!"
-                        }, 
-                        {
-                         "name":"facingDirection",
-                         "type":"string",
-                         "value":"DOWN"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":0
-                        }, 
-                        {
-                         "name":"spawn",
-                         "type":"object",
-                         "value":35
-                        }, 
-                        {
-                         "name":"spriteResource",
-                         "type":"string",
-                         "value":"npc1"
-                        }],
-                 "rotation":0,
-                 "type":"Npc",
-                 "visible":true,
-                 "width":0,
-                 "x":240,
-                 "y":272
-                }, 
-                {
-                 "height":0,
                  "id":37,
                  "name":"npc_2",
                  "point":true,
@@ -810,8 +772,23 @@
                         }],
                  "properties":[
                         {
-                         "name":"trace",
-                         "type":"object",
+                         "name":"loop",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"pingPong",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"speed",
+                         "type":"float",
+                         "value":0.5
+                        }, 
+                        {
+                         "name":"waitTime",
+                         "type":"int",
                          "value":0
                         }],
                  "rotation":0,
