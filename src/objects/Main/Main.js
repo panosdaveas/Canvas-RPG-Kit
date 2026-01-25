@@ -77,50 +77,56 @@ export class Main extends GameObject {
       this.setLevel(level, finalPosition);
     })
 
-    events.on("HERO_ACTION_FINISHED", this, (withObject) => {
-      this.hero.isLocked = false;
-      if (withObject?.isLocked !== undefined) {
-        withObject.isLocked = false;
-      }
-    })
-
-    // Launch Text Box handler
-    events.on("HERO_REQUESTS_ACTION", this, (withObject) => {
+    // Handle hero actions with automatic lock/unlock
+    events.on("HERO_REQUESTS_ACTION", this, async (withObject) => {
+      // Lock hero and target
       this.hero.isLocked = true;
       if (withObject?.isLocked !== undefined) {
         withObject.isLocked = true;
       }
 
-      if (typeof withObject.getContent === "function") {
-        const content = withObject.getContent();
-
-        if (!content) {
-          return;
-        }
-
-        console.log(content)
-        // Potentially add a story flag
-        if (content.addsFlag) {
-          console.log("ADD FLAG", content.addsFlag)
-          storyFlags.add(content.addsFlag);
-        }
-
-        // Show the textbox
-        const textbox = new SpriteTextString({
-          portraitFrame: content.portraitFrame,
-          string: content.string
-        });
-        this.addChild(textbox);
-        events.emit("START_TEXT_BOX");
-
-        // Unsubscribe from this text box after it's destroyed
-        const endingSub = events.on("END_TEXT_BOX", this, () => {
-          textbox.destroy();
-          this._hudDirty = true; // Re-render HUD without textbox
-          events.off(endingSub)
-          events.emit("HERO_ACTION_FINISHED", withObject);
-        })
+      // Run the appropriate action (waits for completion)
+      if (typeof withObject?.getContent === "function") {
+        await this.runTextBoxAction(withObject);
       }
+
+      // Unlock hero and target
+      this.hero.isLocked = false;
+      if (withObject?.isLocked !== undefined) {
+        withObject.isLocked = false;
+      }
+    })
+  }
+
+  runTextBoxAction(withObject) {
+    return new Promise((resolve) => {
+      const content = withObject.getContent();
+
+      if (!content) {
+        resolve();
+        return;
+      }
+
+      // Potentially add a story flag
+      if (content.addsFlag) {
+        storyFlags.add(content.addsFlag);
+      }
+
+      // Show the textbox
+      const textbox = new SpriteTextString({
+        portraitFrame: content.portraitFrame,
+        string: content.string
+      });
+      this.addChild(textbox);
+      events.emit("START_TEXT_BOX");
+
+      // When text box ends, resolve the promise
+      const endingSub = events.on("END_TEXT_BOX", this, () => {
+        textbox.destroy();
+        this._hudDirty = true;
+        events.off(endingSub);
+        resolve();
+      })
     })
   }
 
