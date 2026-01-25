@@ -492,7 +492,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3087, 3087, 3087, 3087, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -665,6 +665,11 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"commands",
+                         "type":"string",
+                         "value":"MOVE(DOWN, 2)\nIDLE(1000)\nFACE(RIGHT)\nIDLE(1000)\nMOVE(LEFT, 3)\nIDLE(1000)\n"
+                        }, 
+                        {
                          "name":"content",
                          "type":"string",
                          "value":""
@@ -675,9 +680,14 @@
                          "value":"LEFT"
                         }, 
                         {
-                         "name":"path",
-                         "type":"object",
-                         "value":72
+                         "name":"loop",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"pingPong",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"spawn",
@@ -706,6 +716,54 @@
                  "visible":true,
                  "width":16,
                  "x":384,
+                 "y":288
+                }, 
+                {
+                 "height":0,
+                 "id":73,
+                 "name":"npc1",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"commands",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":"Hey traveller!"
+                        }, 
+                        {
+                         "name":"facingDirection",
+                         "type":"string",
+                         "value":"RIGHT"
+                        }, 
+                        {
+                         "name":"loop",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"pingPong",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"spawn",
+                         "type":"object",
+                         "value":73
+                        }, 
+                        {
+                         "name":"spriteResource",
+                         "type":"string",
+                         "value":"npc1"
+                        }],
+                 "rotation":0,
+                 "type":"Npc",
+                 "visible":true,
+                 "width":0,
+                 "x":336,
                  "y":288
                 }],
          "opacity":1,
@@ -747,65 +805,9 @@
          "visible":true,
          "x":0,
          "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":38,
-         "name":"Paths",
-         "objects":[
-                {
-                 "height":0,
-                 "id":72,
-                 "name":"Path1",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":32
-                        }, 
-                        {
-                         "x":-144,
-                         "y":32
-                        }],
-                 "properties":[
-                        {
-                         "name":"loop",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"pingPong",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"speed",
-                         "type":"float",
-                         "value":0.5
-                        }, 
-                        {
-                         "name":"waitTime",
-                         "type":"int",
-                         "value":0
-                        }],
-                 "rotation":0,
-                 "type":"Path",
-                 "visible":true,
-                 "width":0,
-                 "x":384,
-                 "y":272
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
         }],
  "nextlayerid":39,
- "nextobjectid":73,
+ "nextobjectid":74,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

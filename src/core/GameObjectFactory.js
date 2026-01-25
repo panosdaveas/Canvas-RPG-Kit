@@ -115,6 +115,11 @@ export class GameObjectFactory {
 
     const portraitFrame = this._getProperty(tiledObject, "portraitFrame") || 0;
 
+    // Routine-based movement
+    const routine = this._getProperty(tiledObject, "commands");
+    const loop = this._getProperty(tiledObject, "loop") ?? false;
+    const pingPong = this._getProperty(tiledObject, "pingPong") ?? false;
+
     const config = {
       content: [
         {
@@ -125,7 +130,9 @@ export class GameObjectFactory {
       portraitFrame: portraitFrame,
       spriteResource: spriteResource,
       facingDirection: facingDirection,
-      pathObject: tiledObject._pathObject || null,
+      routine: routine,
+      loop: loop,
+      pingPong: pingPong,
     };
 
     return new Npc(tiledObject.worldX, tiledObject.worldY, config);

@@ -49,28 +49,7 @@ export class ChunkedLevel extends Level {
     const key = `${chunkX},${chunkY}`;
     const spawnedObjects = [];
 
-    // Build a map of path objects by ID for quick lookup
-    const pathsById = new Map();
-    for (const obj of tiledObjects) {
-      if (obj.layerName === "Paths" && obj.polyline) {
-        pathsById.set(obj.id, obj);
-      }
-    }
-
     for (const tiledObject of tiledObjects) {
-      // Skip hero spawn points - hero is managed by Main
-      // Skip path objects - they're referenced by NPCs, not spawned directly
-      if (tiledObject.layerName === "Paths") {
-        continue;
-      }
-
-      // Check if this object references a path (for NPCs)
-      const pathId = this._getProperty(tiledObject, "path");
-      if (pathId && pathsById.has(pathId)) {
-        // Attach the raw path object for the factory to use
-        tiledObject._pathObject = pathsById.get(pathId);
-      }
-
       // Use factory to create game object from Tiled data
       const gameObject = this.gameObjectFactory.create(tiledObject);
 

@@ -2,9 +2,8 @@ import { Character } from "../../Character.js";
 import { Vector2 } from "../../../../Vector2.js";
 import { resources } from "../../../../Resource.js";
 import { storyFlags } from "../../../../StoryFlags.js";
-import { events } from "../../../../Events.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
-import { PathController } from "../../../../controllers/PathController.js"
+import { RoutineController } from "../../../../controllers/RoutineController.js"
 
 export class Npc extends Character {
   /**
@@ -39,23 +38,14 @@ export class Npc extends Character {
     this.textContent = config.content;
     this.textPortraitFrame = config.portraitFrame;
 
-    this.setController(new PathController(this, {
-      path: [
-        new Vector2(this.position.x, this.position.y),  // Start position
-        new Vector2(this.position.x-64, this.position.y),  // Start position
-      ],
-      loop: true,
-      speed: 0.5,
-      waitTime: 1000,
-    })); 
-
-    // Set up path controller if a path object was provided
-    // if (config.pathObject) {
-    //   const pathController = PathController.fromTiledPath(this, config.pathObject);
-    //   if (pathController) {
-    //     this.setController(pathController);
-    //   }
-    // }
+    // Set up routine controller if a routine was provided
+    if (config.routine) {
+      this.setController(new RoutineController(this, {
+        routine: config.routine,
+        loop: config.loop ?? false,
+        pingPong: config.pingPong ?? false
+      }));
+    }
   }
 
   /**
