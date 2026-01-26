@@ -3,6 +3,7 @@ class Resources {
     // Everything we plan to download
     this.toLoad = {
       hero: "/sprites/hero.png",
+      heroine: "/sprites/Girl-Sheet.png",
       shadow: "/sprites/shadow.png",
       drone:"/sprites/drone.png",
       rod: "/sprites/rod.png",
