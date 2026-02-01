@@ -48,6 +48,7 @@ export class Character extends GameObject {
       resource: resources.images.shadow,
       frameSize: new Vector2(32, 32),
       position: shadowOffset,
+      drawOrder: 0,
     });
     this.addChild(this.shadow);
 
@@ -60,7 +61,8 @@ export class Character extends GameObject {
       vFrames: config.vFrames ?? 8,
       frame: config.frame ?? 1,
       position: bodyOffset,
-      animations: config.animations ?? null
+      animations: config.animations ?? null,
+      drawOrder: 2,
     });
     this.addChild(this.body);
 

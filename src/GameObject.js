@@ -2,13 +2,14 @@ import { Vector2 } from "./Vector2.js";
 import { events } from "./Events.js";
 
 export class GameObject {
-  constructor({ position }) {
+  constructor({ position, drawOrder }) {
     this.position = position ?? new Vector2(0, 0);
     this.children = [];
     this.parent = null;
     this.hasReadyBeenCalled = false;
     this.isSolid = false;
     this.drawLayer = null;
+    this.drawOrder = drawOrder ?? 0;
   }
 
   // First entry point of the loop
@@ -48,15 +49,29 @@ export class GameObject {
     this.getDrawChildrenOrdered().forEach((child) => child.draw(ctx, drawPosX, drawPosY));
   }
 
+  // getDrawChildrenOrdered() {
+  //   return [...this.children].sort((a, b) => {
+
+  //     if (b.drawLayer === "FLOOR") {
+  //       return 1;
+  //     }
+
+  //     return a.position.y > b.position.y ? 1 : -1
+  //   })
+  // }
+
   getDrawChildrenOrdered() {
     return [...this.children].sort((a, b) => {
-
       if (b.drawLayer === "FLOOR") {
         return 1;
       }
-
-      return a.position.y > b.position.y ? 1 : -1
-    })
+      // Primary: explicit draw order (lower = behind, higher = front)
+      if (a.drawOrder !== b.drawOrder) {
+        return a.drawOrder - b.drawOrder;
+      }
+      // Secondary: y position for objects with same drawOrder
+      return a.position.y - b.position.y;
+    });
   }
 
   drawImage(ctx, drawPosX, drawPosY) {
