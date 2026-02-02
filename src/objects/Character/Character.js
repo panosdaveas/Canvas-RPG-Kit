@@ -48,8 +48,8 @@ export class Character extends GameObject {
       resource: resources.images.shadow,
       frameSize: new Vector2(32, 32),
       position: shadowOffset,
-      drawOrder: 0,
     });
+    this.shadow.drawOrder = 0;
     this.addChild(this.shadow);
 
     // Create body sprite
@@ -62,9 +62,17 @@ export class Character extends GameObject {
       frame: config.frame ?? 1,
       position: bodyOffset,
       animations: config.animations ?? null,
-      drawOrder: 2,
     });
+    this.body.drawOrder = 2;
     this.addChild(this.body);
+
+    this.dagger = new Sprite({
+      resource: resources.images.dagger,
+      frameSize: new Vector2(16, 16),
+      position: new Vector2(0,0),
+    })
+    this.dagger.drawOrder = 1;
+    this.addChild(this.dagger);
 
     // Track current animation for debugging/state checks
     this.currentAnimation = null;

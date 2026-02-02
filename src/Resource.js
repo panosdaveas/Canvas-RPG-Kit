@@ -28,6 +28,8 @@ class Resources {
       interiorTileset: "/maps/Interior/Tilesets/indoor_tileset.png",
       // World Objects
       chest: "/sprites/chest.png",
+      // Weapons
+      dagger: "/sprites/weapons/dagger.png",
     };
 
     // A bucket to keep all of our images
