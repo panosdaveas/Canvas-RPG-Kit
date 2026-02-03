@@ -21,15 +21,15 @@ export const dagger = {
     ],
     stabUp: [
       { frame: 1, offset: { x: 0, y: -12 }, visible: true, damageActive: true },
-      { frame: 1, offset: { x: 0, y: -20 }, visible: true, damageActive: false }
+      { frame: 1, offset: { x: 0, y: -20 }, visible: false, damageActive: false }
     ],
     stabLeft: [
       { frame: 2, offset: { x: -8, y: -4 }, visible: true, damageActive: true },
-      { frame: 2, offset: { x: -16, y: -4 }, visible: true, damageActive: false }
+      { frame: 2, offset: { x: -16, y: -4 }, visible: false, damageActive: false }
     ],
     stabRight: [
       { frame: 0, offset: { x: 8, y: -4 }, visible: true, damageActive: true },
-      { frame: 0, offset: { x: 16, y: -4 }, visible: true, damageActive: false }
+      { frame: 0, offset: { x: 16, y: -4 }, visible: false, damageActive: false }
     ]
   }
 };

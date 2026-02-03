@@ -201,15 +201,20 @@ export class Character extends GameObject {
     const weaponFrames = this.equippedWeapon.animations?.[animName];
     if (!weaponFrames || weaponFrames.length === 0) return;
 
-    // Get current animation progress
+    // Get current animation and sync weapon frame with character frame times
     const pattern = this.body.animations?.patterns?.[animName];
     if (!pattern) return;
 
-    const progress = pattern.currentTime / pattern.duration;
-    const frameIndex = Math.min(
-      Math.floor(progress * weaponFrames.length),
-      weaponFrames.length - 1
-    );
+    // Find frame index based on character animation's frame times
+    const charFrames = pattern.animationConfig.frames;
+    let frameIndex = 0;
+    for (let i = charFrames.length - 1; i >= 0; i--) {
+      if (pattern.currentTime >= charFrames[i].time) {
+        frameIndex = i;
+        break;
+      }
+    }
+    frameIndex = Math.min(frameIndex, weaponFrames.length - 1);
 
     const frameData = weaponFrames[frameIndex];
 
@@ -218,18 +223,18 @@ export class Character extends GameObject {
     this.weaponSprite.position.x = frameData.offset.x;
     this.weaponSprite.position.y = frameData.offset.y;
 
-    // Show/hide based on visibility and facing direction
+    // Show/hide based on visibility
+    this.weaponSprite.visible = frameData.visible;
+
+    // When facing up, weapon draws behind player; otherwise in front
     if (frameData.visible) {
-      // When facing up, weapon draws behind player; otherwise in front
       this.weaponSprite.drawOrder = this.facingDirection === UP ? 1 : 3;
-    } else {
-      this.weaponSprite.drawOrder = -1;
     }
   }
 
   hideWeaponSprite() {
     if (this.weaponSprite) {
-      this.weaponSprite.drawOrder = -1;
+      this.weaponSprite.visible = false;
     }
   }
 

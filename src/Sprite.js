@@ -24,6 +24,7 @@ export class Sprite extends GameObject {
     this.scale = scale ?? 1;
     this.position = position ?? new Vector2(0, 0);
     this.animations = animations ?? null;
+    this.visible = true;
     this.buildFrameMap();
   }
 
@@ -49,7 +50,7 @@ export class Sprite extends GameObject {
   }
 
   drawImage(ctx, x, y) {
-    if (!this.resource.isLoaded) {
+    if (!this.visible || !this.resource.isLoaded) {
       return;
     }
 
