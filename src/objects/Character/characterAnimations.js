@@ -74,6 +74,27 @@ export const makeStabFrames = (rootFrame = 0) => {
   };
 };
 
+export const makeProjectileFrames = (rootFrame = 0) => {
+  return {
+    duration: 600,
+    loop: false,
+    frames: [
+      {
+        time: 0,
+        frame: rootFrame - 1,
+      },
+      {
+        time: 200,
+        frame: rootFrame,
+      },
+      {
+        time: 400,
+        frame: rootFrame - 1,
+      },
+    ]
+  };
+};
+
 /**
  * Create a complete set of character animations given frame offsets.
  *
@@ -127,6 +148,10 @@ export const HERO_FRAME_OFFSETS = {
   stabLeft: 22,
   stabUp: 19,
   stabRight: 16,
+  projectileDown: 13,
+  projectileLeft: 22,
+  projectileUp: 19,
+  projectileRight: 16,
 };
 
 export const HERO_EXTRA_ANIMATIONS = {
@@ -146,6 +171,10 @@ export const HERO_ATTACK_ANIMATIONS = {
   stabUp: makeStabFrames(HERO_FRAME_OFFSETS.stabUp),
   stabLeft: makeStabFrames(HERO_FRAME_OFFSETS.stabLeft),
   stabRight: makeStabFrames(HERO_FRAME_OFFSETS.stabRight),
+  projectileDown: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileDown),
+  projectileUp: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileUp),
+  projectileLeft: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileLeft),
+  projectileRight: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileRight),
 };
 
 /**

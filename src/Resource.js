@@ -30,6 +30,7 @@ class Resources {
       chest: "/sprites/chest.png",
       // Weapons
       dagger: "/sprites/weapons/dagger.png",
+      bow: "/sprites/weapons/bow.png",
     };
 
     // A bucket to keep all of our images

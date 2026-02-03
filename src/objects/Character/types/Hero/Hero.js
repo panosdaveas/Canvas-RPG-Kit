@@ -4,7 +4,7 @@ import { resources } from "../../../../Resource.js";
 import { events } from "../../../../Events.js";
 import { PlayerController } from "../../../../controllers/PlayerController.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
-import { dagger } from "../../../../combat/weapons/index.js";
+import { dagger, bow } from "../../../../combat/weapons/index.js";
 
 export class Hero extends Character {
   constructor(x, y) {
