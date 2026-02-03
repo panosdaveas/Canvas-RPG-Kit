@@ -28,6 +28,7 @@ export class Character extends GameObject {
     // Attack
     this.attackTimer = 0;
     this.attackBuffered = false;
+    this.attackRecoveryTimer = 0;
 
     // Controller
     this.controller = null;
@@ -82,6 +83,11 @@ export class Character extends GameObject {
     // Always process controller (input can buffer attack)
     this.controller?.update(delta, root);
 
+    // Tick recovery timer
+    if (this.attackRecoveryTimer > 0) {
+      this.attackRecoveryTimer -= delta;
+    }
+
     // --------------------
     // ATTACK STATE
     // --------------------
@@ -90,6 +96,7 @@ export class Character extends GameObject {
 
       if (this.attackTimer <= 0) {
         this.state = STATE_IDLE;
+        this.attackRecoveryTimer = 120; // Grace window before movement resumes
         this.playIdleAnimation();
       }
 

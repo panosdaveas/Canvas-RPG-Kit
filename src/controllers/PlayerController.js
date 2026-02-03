@@ -38,6 +38,14 @@ export class PlayerController extends Controller {
       return;
     }
 
+    // Recovery window: allow facing, suppress movement
+    if (character.attackRecoveryTimer > 0) {
+      if (input?.direction) {
+        character.facingDirection = input.direction;
+      }
+      return;
+    }
+
     // --------------------
     // DIRECTION HOLD LOGIC
     // --------------------

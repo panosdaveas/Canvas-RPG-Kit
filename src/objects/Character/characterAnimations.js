@@ -144,7 +144,7 @@ export const HERO_EXTRA_ANIMATIONS = {
     loop: false,
     frames: [
       { time: 0, frame: 16 },
-      { time: 150, frame: 15 }
+      // { time: 150, frame: 15 }
     ]
   }
 };
