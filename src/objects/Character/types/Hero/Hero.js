@@ -4,6 +4,7 @@ import { resources } from "../../../../Resource.js";
 import { events } from "../../../../Events.js";
 import { PlayerController } from "../../../../controllers/PlayerController.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
+import { dagger } from "../../../../combat/weapons/index.js";
 
 export class Hero extends Character {
   constructor(x, y) {
@@ -33,6 +34,9 @@ export class Hero extends Character {
   ready() {
     // Set up player controller
     this.setController(new PlayerController(this));
+
+    // Equip starting weapon
+    this.equip(dagger);
 
     // Listen for action finished events
     events.on("HERO_ACTION_FINISHED", this, () => {

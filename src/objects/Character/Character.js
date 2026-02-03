@@ -29,6 +29,7 @@ export class Character extends GameObject {
     this.attackTimer = 0;
     this.attackBuffered = false;
     this.attackRecoveryTimer = 0;
+    this.equippedWeapon = null;
 
     // Controller
     this.controller = null;
@@ -65,6 +66,12 @@ export class Character extends GameObject {
 
   setController(controller) {
     this.controller = controller;
+  }
+
+  equip(weapon) {
+    this.equippedWeapon = weapon;
+    // Weapon sprite can be added as child here for draw order
+    // this.addChild(weaponSprite);
   }
 
   hasArrivedAtDestination() {
@@ -153,7 +160,10 @@ export class Character extends GameObject {
   }
 
   startAttack() {
-    const anim = `stab${this.getDirectionName()}`;
+    if (!this.equippedWeapon) return;
+
+    const attackType = this.equippedWeapon.attackType;
+    const anim = `${attackType}${this.getDirectionName()}`;
     const pattern = this.body.animations?.patterns?.[anim];
     if (!pattern) return;
 
