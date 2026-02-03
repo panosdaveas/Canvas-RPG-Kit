@@ -9,6 +9,7 @@ import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 export const makeIdleFrames = (rootFrame = 0) => {
   return {
     duration: 450,
+    loop: true,
     frames: [
       {
         time: 0,
@@ -21,6 +22,7 @@ export const makeIdleFrames = (rootFrame = 0) => {
 export const makeWalkingFrames = (rootFrame = 0) => {
   return {
     duration: 600,
+    loop: true,
     frames: [
       {
         time: 0,
@@ -45,6 +47,7 @@ export const makeWalkingFrames = (rootFrame = 0) => {
 export const makeStandingFrames = (frame = 0) => {
   return {
     duration: 450,
+    loop: true,
     frames: [
       {
         time: 0,
@@ -117,30 +120,34 @@ export const HERO_EXTRA_ANIMATIONS = {
   },
   stabDown: {
     duration: 300,
+    loop: false,
     frames: [
       { time: 0, frame: 13 },
-      { time: 150, frame: 12 }
+      { time: 200, frame: 12 }
     ]
   },
   stabUp: {
     duration: 300,
+    loop: false,
     frames: [
       { time: 0, frame: 19 },
-      { time: 150, frame: 18 }
+      { time: 200, frame: 18 }
     ]
   },
   stabLeft: {
     duration: 300,
+    loop: false,
     frames: [
       { time: 0, frame: 22 },
-      { time: 150, frame: 21 }
+      { time: 200, frame: 21 }
     ]
   },
   stabRight: {
     duration: 300,
+    loop: false,
     frames: [
       { time: 0, frame: 16 },
-      // { time: 150, frame: 1 }
+      { time: 200, frame: 15 }
     ]
   }
 };

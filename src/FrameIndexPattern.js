@@ -3,6 +3,8 @@ export class FrameIndexPattern {
     this.currentTime = 0;
     this.animationConfig = animationConfig;
     this.duration = animationConfig.duration ?? 500;
+    this.loop = animationConfig.loop; // Explicit only, no default
+    this.finished = false;
   }
 
   get frame() {
@@ -18,7 +20,12 @@ export class FrameIndexPattern {
   step(delta) {
     this.currentTime += delta;
     if (this.currentTime >= this.duration) {
-      this.currentTime = 0;
+      if (this.loop) {
+        this.currentTime = 0;
+      } else {
+        this.currentTime = this.duration;
+        this.finished = true;
+      }
     }
   }
 
