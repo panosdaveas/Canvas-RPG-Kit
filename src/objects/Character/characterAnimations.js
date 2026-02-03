@@ -117,7 +117,6 @@ export const HERO_EXTRA_ANIMATIONS = {
   },
   stabDown: {
     duration: 300,
-    loop: false,
     frames: [
       { time: 0, frame: 13 },
       { time: 150, frame: 12 }
@@ -125,7 +124,6 @@ export const HERO_EXTRA_ANIMATIONS = {
   },
   stabUp: {
     duration: 300,
-    loop: false,
     frames: [
       { time: 0, frame: 19 },
       { time: 150, frame: 18 }
@@ -133,7 +131,6 @@ export const HERO_EXTRA_ANIMATIONS = {
   },
   stabLeft: {
     duration: 300,
-    loop: false,
     frames: [
       { time: 0, frame: 22 },
       { time: 150, frame: 21 }
@@ -141,10 +138,9 @@ export const HERO_EXTRA_ANIMATIONS = {
   },
   stabRight: {
     duration: 300,
-    loop: false,
     frames: [
       { time: 0, frame: 16 },
-      // { time: 150, frame: 15 }
+      // { time: 150, frame: 1 }
     ]
   }
 };
