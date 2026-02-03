@@ -111,8 +111,40 @@ export const HERO_EXTRA_ANIMATIONS = {
     frames: [
       {
         time: 0,
-        frame: 12
+        frame: 1
       }
+    ]
+  },
+  stabDown: {
+    duration: 300,
+    loop: false,
+    frames: [
+      { time: 0, frame: 13 },
+      { time: 150, frame: 12 }
+    ]
+  },
+  stabUp: {
+    duration: 300,
+    loop: false,
+    frames: [
+      { time: 0, frame: 19 },
+      { time: 150, frame: 18 }
+    ]
+  },
+  stabLeft: {
+    duration: 300,
+    loop: false,
+    frames: [
+      { time: 0, frame: 22 },
+      { time: 150, frame: 21 }
+    ]
+  },
+  stabRight: {
+    duration: 300,
+    loop: false,
+    frames: [
+      { time: 0, frame: 16 },
+      { time: 150, frame: 15 }
     ]
   }
 };

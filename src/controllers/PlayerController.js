@@ -2,22 +2,16 @@ import { Controller } from "./Controller.js";
 import { DOWN, LEFT, RIGHT, UP } from "../Input.js";
 import { isSpaceFree } from "../helpers/grid.js";
 import { events } from "../Events.js";
-import { Character } from "../objects/Character/Character.js";
-import { Npc } from "../objects/Character/types/Npc/Npc.js";
+import { Character, STATE_ATTACKING, STATE_IDLE } from "../objects/Character/Character.js";
 
-/**
- * Controller for player-controlled characters (Hero).
- * Handles keyboard input, movement with turn-in-place mechanic,
- * collision checking, and action button interactions.
- */
 export class PlayerController extends Controller {
   constructor(character) {
     super(character);
 
-    // Direction hold tracking for turn-in-place mechanic
     this.directionHeldTime = 0;
     this.lastDirection = null;
-    this.movementThreshold = 80; // ms - adjust this value to tune the feel
+    this.movementThreshold = 80;
+    this.gridSize = 16;
   }
 
   update(delta, root) {
@@ -29,23 +23,41 @@ export class PlayerController extends Controller {
       this.onAction(root);
     }
 
-    // Track how long direction is held
+    // --------------------
+    // ATTACK (highest priority)
+    // --------------------
+    if (input?.getActionJustPressed("KeyX")) {
+      character.attack();
+    }
+
+    // While attacking: allow facing change, nothing else
+    if (character.state === STATE_ATTACKING) {
+      if (input?.direction) {
+        character.facingDirection = input.direction;
+      }
+      return;
+    }
+
+    // --------------------
+    // DIRECTION HOLD LOGIC
+    // --------------------
     if (input?.direction) {
       if (input.direction === this.lastDirection) {
         this.directionHeldTime += delta;
       } else {
-        // Direction changed, reset timer
-        this.directionHeldTime = 0;
         this.lastDirection = input.direction;
+        this.directionHeldTime = 0;
       }
     } else {
-      // No direction held, reset
       this.directionHeldTime = 0;
       this.lastDirection = null;
     }
 
-    // Try to move if arrived at destination
-    if (character.hasArrivedAtDestination()) {
+    // Only initiate movement from IDLE and grid-aligned
+    if (
+      character.state === STATE_IDLE &&
+      character.hasArrivedAtDestination()
+    ) {
       this.tryMove(root);
     }
   }
@@ -62,69 +74,48 @@ export class PlayerController extends Controller {
         const oppositeDirection = character.getOppositeDirection();
         objAtPosition.facingDirection = oppositeDirection;
         objAtPosition.playIdleAnimation();
-        objAtPosition.isLocked = true; // Lock immediately to prevent controller from overwriting
+        objAtPosition.isLocked = true;
       }
       setTimeout(() => {
-      events.emit("HERO_REQUESTS_ACTION", objAtPosition);
-      }, 200); // play idle animation towards player's direction 150ms , then start action
+        events.emit("HERO_REQUESTS_ACTION", objAtPosition);
+      }, 200);
     }
   }
 
   tryMove(root) {
     const character = this.character;
-    const { input } = root;
+    const input = root.input;
 
-    if (!input.direction) {
+    if (!input?.direction) {
       character.playIdleAnimation();
       return;
     }
 
     let nextX = character.destinationPosition.x;
     let nextY = character.destinationPosition.y;
-    const gridSize = 16;
-    let intendedDirection = input.direction;
 
-    // Always update facing direction and animation immediately
-    if (intendedDirection === DOWN) {
-      character.playWalkAnimation(DOWN);
-      character.facingDirection = DOWN;
-      if (this.directionHeldTime >= this.movementThreshold) {
-        nextY += gridSize;
-      }
-    }
-    if (intendedDirection === UP) {
-      character.playWalkAnimation(UP);
-      character.facingDirection = UP;
-      if (this.directionHeldTime >= this.movementThreshold) {
-        nextY -= gridSize;
-      }
-    }
-    if (intendedDirection === LEFT) {
-      character.playWalkAnimation(LEFT);
-      character.facingDirection = LEFT;
-      if (this.directionHeldTime >= this.movementThreshold) {
-        nextX -= gridSize;
-      }
-    }
-    if (intendedDirection === RIGHT) {
-      character.playWalkAnimation(RIGHT);
-      character.facingDirection = RIGHT;
-      if (this.directionHeldTime >= this.movementThreshold) {
-        nextX += gridSize;
-      }
+    character.facingDirection = input.direction;
+    character.playWalkAnimation(input.direction);
+
+    if (this.directionHeldTime < this.movementThreshold) return;
+
+    switch (input.direction) {
+      case DOWN:  nextY += this.gridSize; break;
+      case UP:    nextY -= this.gridSize; break;
+      case LEFT:  nextX -= this.gridSize; break;
+      case RIGHT: nextX += this.gridSize; break;
     }
 
-    // Validate that the next destination is free
     const spaceIsFree = isSpaceFree(root.level?.walls, nextX, nextY);
 
-    const solidBodyAtSpace = root.level?.children.find(c => {
+    const solidAtTarget = root.level?.children.find(c => {
       if (!c.isSolid) return false;
-      // Check destinationPosition, fall back to position for static objects
-      const checkX = c.destinationPosition?.x ?? c.position.x;
-      const checkY = c.destinationPosition?.y ?? c.position.y;
-      return checkX === nextX && checkY === nextY;
+      const x = c.destinationPosition?.x ?? c.position.x;
+      const y = c.destinationPosition?.y ?? c.position.y;
+      return x === nextX && y === nextY;
     });
-    if (spaceIsFree && !solidBodyAtSpace) {
+
+    if (spaceIsFree && !solidAtTarget) {
       character.destinationPosition.x = nextX;
       character.destinationPosition.y = nextY;
     }

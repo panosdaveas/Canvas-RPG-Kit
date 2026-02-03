@@ -2,7 +2,8 @@ import { Level } from "./Level.js";
 import { ChunkManager } from "../../core/ChunkManager.js";
 import { gameObjectFactory } from "../../core/GameObjectFactory.js";
 import { events } from "../../Events.js";
-
+import { Rod } from "../Rod/Rod.js"
+import { gridCells } from "../../helpers/grid.js";
 /**
  * Level that uses chunk-based loading for large open worlds
  * Extends the base Level class with ChunkManager integration
@@ -29,6 +30,9 @@ export class ChunkedLevel extends Level {
 
     // Custom game object factory (can be overridden in subclass)
     this.gameObjectFactory = params.gameObjectFactory || gameObjectFactory;
+    
+    const rod = new Rod(gridCells(12), gridCells(12));
+    this.addChild(rod);
   }
 
   /**

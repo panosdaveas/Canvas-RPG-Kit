@@ -80,11 +80,13 @@ export class Hero extends Character {
 
     // Remove the item being held overhead
     if (this.itemPickupTime <= 0) {
-      this.itemPickupShell.destroy();
+      // this.itemPickupShell.destroy();
     }
   }
 
   onPickUpItem(data) {
+    this.destinationPosition = this.position.duplicate();
+    this.itemPickupTime = 500;
     // Implemented by subclass or via event handler
     // data should contain item info
   }
