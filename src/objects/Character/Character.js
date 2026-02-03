@@ -30,6 +30,7 @@ export class Character extends GameObject {
     this.attackBuffered = false;
     this.attackRecoveryTimer = 0;
     this.equippedWeapon = null;
+    this.weaponSprite = null;
 
     // Controller
     this.controller = null;
@@ -70,8 +71,21 @@ export class Character extends GameObject {
 
   equip(weapon) {
     this.equippedWeapon = weapon;
-    // Weapon sprite can be added as child here for draw order
-    // this.addChild(weaponSprite);
+
+    // Create weapon sprite from weapon data
+    const spriteConfig = weapon.sprite;
+    if (spriteConfig && resources.images[spriteConfig.resource]) {
+      this.weaponSprite = new Sprite({
+        resource: resources.images[spriteConfig.resource],
+        frameSize: new Vector2(spriteConfig.frameSize.x, spriteConfig.frameSize.y),
+        hFrames: spriteConfig.hFrames,
+        vFrames: spriteConfig.vFrames,
+        frame: 0,
+        position: new Vector2(0, 0),
+      });
+      this.weaponSprite.drawOrder = 3; // Above body
+      this.addChild(this.weaponSprite);
+    }
   }
 
   hasArrivedAtDestination() {
@@ -101,9 +115,13 @@ export class Character extends GameObject {
     if (this.state === STATE_ATTACKING) {
       this.attackTimer -= delta;
 
+      // Update weapon sprite
+      this.updateWeaponSprite();
+
       if (this.attackTimer <= 0) {
         this.state = STATE_IDLE;
         this.attackRecoveryTimer = 120; // Grace window before movement resumes
+        this.hideWeaponSprite();
         this.playIdleAnimation();
       }
 
@@ -173,6 +191,46 @@ export class Character extends GameObject {
     this.state = STATE_ATTACKING;
     this.attackTimer = pattern.duration;
     this.body.animations.play(anim);
+  }
+
+  updateWeaponSprite() {
+    if (!this.weaponSprite || !this.equippedWeapon) return;
+
+    const attackType = this.equippedWeapon.attackType;
+    const animName = `${attackType}${this.getDirectionName()}`;
+    const weaponFrames = this.equippedWeapon.animations?.[animName];
+    if (!weaponFrames || weaponFrames.length === 0) return;
+
+    // Get current animation progress
+    const pattern = this.body.animations?.patterns?.[animName];
+    if (!pattern) return;
+
+    const progress = pattern.currentTime / pattern.duration;
+    const frameIndex = Math.min(
+      Math.floor(progress * weaponFrames.length),
+      weaponFrames.length - 1
+    );
+
+    const frameData = weaponFrames[frameIndex];
+
+    // Update weapon sprite
+    this.weaponSprite.frame = frameData.frame;
+    this.weaponSprite.position.x = frameData.offset.x;
+    this.weaponSprite.position.y = frameData.offset.y;
+
+    // Show/hide based on visibility and facing direction
+    if (frameData.visible) {
+      // When facing up, weapon draws behind player; otherwise in front
+      this.weaponSprite.drawOrder = this.facingDirection === UP ? 1 : 3;
+    } else {
+      this.weaponSprite.drawOrder = -1;
+    }
+  }
+
+  hideWeaponSprite() {
+    if (this.weaponSprite) {
+      this.weaponSprite.drawOrder = -1;
+    }
   }
 
   // ====================
