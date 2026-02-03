@@ -26,19 +26,19 @@ export const makeWalkingFrames = (rootFrame = 0) => {
     frames: [
       {
         time: 0,
-        frame: rootFrame + 1
-      },
-      {
-        time: 150,
         frame: rootFrame
       },
       {
-        time: 300,
+        time: 150,
         frame: rootFrame + 1
       },
       {
-        time: 450,
+        time: 300,
         frame: rootFrame + 2
+      },
+      {
+        time: 450,
+        frame: rootFrame + 1
       }
     ]
   };
@@ -52,6 +52,23 @@ export const makeStandingFrames = (frame = 0) => {
       {
         time: 0,
         frame: frame,
+      }
+    ]
+  };
+};
+
+export const makeStabFrames = (rootFrame = 0) => {
+  return {
+    duration: 300,
+    loop: false,
+    frames: [
+      {
+        time: 0,
+        frame: rootFrame,
+      },
+      {
+        time: 200,
+        frame: rootFrame - 1,
       }
     ]
   };
@@ -106,6 +123,10 @@ export const HERO_FRAME_OFFSETS = {
   idleUp: 7,
   walkLeft: 9,
   idleLeft: 10,
+  stabDown: 13,
+  stabLeft: 22,
+  stabUp: 19,
+  stabRight: 16,
 };
 
 export const HERO_EXTRA_ANIMATIONS = {
@@ -118,45 +139,23 @@ export const HERO_EXTRA_ANIMATIONS = {
       }
     ]
   },
-  stabDown: {
-    duration: 300,
-    loop: false,
-    frames: [
-      { time: 0, frame: 13 },
-      { time: 200, frame: 12 }
-    ]
-  },
-  stabUp: {
-    duration: 300,
-    loop: false,
-    frames: [
-      { time: 0, frame: 19 },
-      { time: 200, frame: 18 }
-    ]
-  },
-  stabLeft: {
-    duration: 300,
-    loop: false,
-    frames: [
-      { time: 0, frame: 22 },
-      { time: 200, frame: 21 }
-    ]
-  },
-  stabRight: {
-    duration: 300,
-    loop: false,
-    frames: [
-      { time: 0, frame: 16 },
-      { time: 200, frame: 15 }
-    ]
-  }
+};
+
+export const HERO_ATTACK_ANIMATIONS = {
+  stabDown: makeStabFrames(HERO_FRAME_OFFSETS.stabDown),
+  stabUp: makeStabFrames(HERO_FRAME_OFFSETS.stabUp),
+  stabLeft: makeStabFrames(HERO_FRAME_OFFSETS.stabLeft),
+  stabRight: makeStabFrames(HERO_FRAME_OFFSETS.stabRight),
 };
 
 /**
  * Create hero animations using the hero sprite sheet layout
  */
 export function createHeroAnimations() {
-  return createCharacterAnimations(HERO_FRAME_OFFSETS, HERO_EXTRA_ANIMATIONS);
+  return createCharacterAnimations(HERO_FRAME_OFFSETS, {
+    ...HERO_EXTRA_ANIMATIONS,
+    ...HERO_ATTACK_ANIMATIONS,
+  });
 }
 
 /**

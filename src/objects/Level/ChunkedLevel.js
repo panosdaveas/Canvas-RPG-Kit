@@ -31,8 +31,6 @@ export class ChunkedLevel extends Level {
     // Custom game object factory (can be overridden in subclass)
     this.gameObjectFactory = params.gameObjectFactory || gameObjectFactory;
     
-    const rod = new Rod(gridCells(12), gridCells(12));
-    this.addChild(rod);
   }
 
   /**
