@@ -242,7 +242,12 @@ export class Main extends GameObject {
     // 2. Draw all game objects (hero, NPCs, level children, etc.) - Y-sorted
     // Only re-sort when positions have changed
     if (this._ySortDirty) {
-      this._sortedObjects.sort((a, b) => a.position.y - b.position.y);
+      this._sortedObjects.sort((a, b) => {
+        // Add small bias for hero so weapons render on top of other characters at same Y
+        const aY = a.position.y + (a === this.hero ? 0.1 : 0);
+        const bY = b.position.y + (b === this.hero ? 0.1 : 0);
+        return aY - bY;
+      });
       this._ySortDirty = false;
     }
 
