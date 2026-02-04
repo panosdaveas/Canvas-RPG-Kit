@@ -5,6 +5,7 @@ import { events } from "../../../../Events.js";
 import { PlayerController } from "../../../../controllers/PlayerController.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
 import { dagger, bow } from "../../../../combat/weapons/index.js";
+import { Input } from "../../../../Input.js";
 
 export class Hero extends Character {
   constructor(x, y) {
@@ -55,6 +56,12 @@ export class Hero extends Character {
       this.playIdleAnimation();
       return;
     }
+
+    //test manual animation
+    // if (this.parent.input?.getActionJustPressed("KeyC")) {
+    //   console.log("Key Pressed");
+    //   this.itemPickupTime = 400;
+    // }
 
     // Lock movement if celebrating an item pickup
     if (this.itemPickupTime > 0) {

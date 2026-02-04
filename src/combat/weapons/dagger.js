@@ -16,19 +16,19 @@ export const dagger = {
   },
   animations: {
     stabDown: [
-      { frame: 3, offset: { x: 0, y: 4 }, visible: true, damageActive: true },
+      { frame: 3, offset: { x: -2, y: 6 }, visible: true, damageActive: true },
       { frame: 3, offset: { x: -4, y: 0 }, visible: false, damageActive: false }
     ],
     stabUp: [
-      { frame: 1, offset: { x: 0, y: -12 }, visible: true, damageActive: true },
+      { frame: 1, offset: { x: 2, y: -16 }, visible: true, damageActive: true },
       { frame: 1, offset: { x: 0, y: -20 }, visible: false, damageActive: false }
     ],
     stabLeft: [
-      { frame: 2, offset: { x: -8, y: -4 }, visible: true, damageActive: true },
+      { frame: 2, offset: { x: -12, y: -4 }, visible: true, damageActive: true },
       { frame: 2, offset: { x: -16, y: -4 }, visible: false, damageActive: false }
     ],
     stabRight: [
-      { frame: 0, offset: { x: 8, y: -4 }, visible: true, damageActive: true },
+      { frame: 0, offset: { x: 12, y: -4 }, visible: true, damageActive: true },
       { frame: 0, offset: { x: 16, y: -4 }, visible: false, damageActive: false }
     ]
   }

@@ -53,7 +53,7 @@ export class Character extends GameObject {
       frameSize: config.frameSize ?? new Vector2(32, 32),
       hFrames: config.hFrames ?? 3,
       vFrames: config.vFrames ?? 8,
-      frame: config.frame ?? 1,
+      frame: config.frame ?? 0,
       position: config.bodyOffset ?? new Vector2(-8, -20),
       animations: config.animations ?? null,
     });
@@ -149,7 +149,7 @@ export class Character extends GameObject {
 
       if (this.state === STATE_MOVING) {
         this.state = STATE_IDLE;
-        this.playIdleAnimation();
+        // Let controller decide animation (it will call playIdleAnimation if no input)
       }
     } else {
       this.state = STATE_MOVING;

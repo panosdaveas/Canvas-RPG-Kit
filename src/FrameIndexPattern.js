@@ -2,7 +2,7 @@ export class FrameIndexPattern {
   constructor(animationConfig) {
     this.currentTime = 0;
     this.animationConfig = animationConfig;
-    this.duration = animationConfig.duration ?? 500;
+    this.duration = animationConfig.duration ?? 400;
     this.loop = animationConfig.loop; // Explicit only, no default
     this.finished = false;
   }
@@ -21,6 +21,7 @@ export class FrameIndexPattern {
     this.currentTime += delta;
     if (this.currentTime >= this.duration) {
       if (this.loop) {
+        // this.currentTime %= this.duration;
         this.currentTime = 0;
       } else {
         this.currentTime = this.duration;

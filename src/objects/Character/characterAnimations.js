@@ -21,7 +21,7 @@ export const makeIdleFrames = (rootFrame = 0) => {
 
 export const makeWalkingFrames = (rootFrame = 0) => {
   return {
-    duration: 600,
+    duration: 480,
     loop: true,
     frames: [
       {
@@ -29,15 +29,15 @@ export const makeWalkingFrames = (rootFrame = 0) => {
         frame: rootFrame
       },
       {
-        time: 150,
+        time: 120,
         frame: rootFrame + 1
       },
       {
-        time: 300,
+        time: 240,
         frame: rootFrame + 2
       },
       {
-        time: 450,
+        time: 360,
         frame: rootFrame + 1
       }
     ]
@@ -59,7 +59,7 @@ export const makeStandingFrames = (frame = 0) => {
 
 export const makeStabFrames = (rootFrame = 0) => {
   return {
-    duration: 300,
+    duration: 400,
     loop: false,
     frames: [
       {
@@ -137,12 +137,12 @@ export function createCharacterAnimations(frameOffsets, extraAnimations = {}) {
  */
 export const HERO_FRAME_OFFSETS = {
   walkDown: 0,
-  idleDown: 1,
   walkRight: 3,
-  idleRight: 4,
   walkUp: 6,
-  idleUp: 7,
   walkLeft: 9,
+  idleDown: 1,
+  idleRight: 4,
+  idleUp: 7,
   idleLeft: 10,
   stabDown: 13,
   stabLeft: 22,
@@ -196,10 +196,10 @@ export function createHeroAnimations() {
  */
 export function createStaticAnimations(frame = 0) {
   return createCharacterAnimations({
-    walkDown: frame - 1, // Walking frames use rootFrame + 1 as first frame
-    walkUp: frame - 1,
-    walkLeft: frame - 1,
-    walkRight: frame - 1,
+    walkDown: frame + 1, // Walking frames use rootFrame + 1 as first frame
+    walkUp: frame + 1,
+    walkLeft: frame + 1,
+    walkRight: frame + 1,
     idleDown: frame,
     idleUp: frame,
     idleLeft: frame,

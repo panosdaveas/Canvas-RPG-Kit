@@ -2,10 +2,10 @@
 export const TILE_SIZE = 16; // Pixels per grid cell
 
 export const CANVAS = {
-    // WIDTH: 360, // canvas width in pixels
-    // HEIGHT: 360, // canvas height in pixels
-    WIDTH: 480, // canvas width in pixels
-    HEIGHT: 270, // canvas height in pixels
+    WIDTH: 180, // canvas width in pixels
+    HEIGHT: 180, // canvas height in pixels
+    // WIDTH: 480, // canvas width in pixels
+    // HEIGHT: 270, // canvas height in pixels
 }
 
 // Chunk system configuration
@@ -20,8 +20,10 @@ export const TOTAL_WORLD_CHUNKS = 4;
 export const CAMERA = {
     DEFAULT_MAP_WIDTH: CHUNK_SIZE * TILE_SIZE * TOTAL_WORLD_CHUNKS/2, // default camera width in pixels
     DEFAULT_MAP_HEIGHT: CHUNK_SIZE * TILE_SIZE * TOTAL_WORLD_CHUNKS/2, // default camera height in pixels
-    DEAD_ZONE_WIDTH: TILE_SIZE,  // How far left/right hero can move before camera follows - change to 0 for instant follow
-    DEAD_ZONE_HEIGHT: TILE_SIZE, // How far up/down hero can move before camera follows
+    // DEAD_ZONE_WIDTH: TILE_SIZE,  // How far left/right hero can move before camera follows - change to 0 for instant follow
+    // DEAD_ZONE_HEIGHT: TILE_SIZE, // How far up/down hero can move before camera follows
+    DEAD_ZONE_WIDTH: 0,  // How far left/right hero can move before camera follows - change to 0 for instant follow
+    DEAD_ZONE_HEIGHT: 0, // How far up/down hero can move before camera follows
 }
 
 export const SPRITE = {
