@@ -29,6 +29,7 @@ export class Character extends GameObject {
     this.attackTimer = 0;
     this.attackBuffered = false;
     this.attackRecoveryTimer = 0;
+    this.attackDirection = null; // Locked direction during attack
     this.equippedWeapon = null;
     this.weaponSprite = null;
 
@@ -121,6 +122,7 @@ export class Character extends GameObject {
       if (this.attackTimer <= 0) {
         this.state = STATE_IDLE;
         this.attackRecoveryTimer = 120; // Grace window before movement resumes
+        this.attackDirection = null;
         this.hideWeaponSprite();
         this.playIdleAnimation();
       }
@@ -188,16 +190,19 @@ export class Character extends GameObject {
     // Kill movement completely
     this.destinationPosition = this.position.duplicate();
 
+    // Lock direction for the duration of the attack
+    this.attackDirection = this.facingDirection;
+
     this.state = STATE_ATTACKING;
     this.attackTimer = pattern.duration;
     this.body.animations.play(anim);
   }
 
   updateWeaponSprite() {
-    if (!this.weaponSprite || !this.equippedWeapon) return;
+    if (!this.weaponSprite || !this.equippedWeapon || !this.attackDirection) return;
 
     const attackType = this.equippedWeapon.attackType;
-    const animName = `${attackType}${this.getDirectionName()}`;
+    const animName = `${attackType}${this.getDirectionName(this.attackDirection)}`;
     const weaponFrames = this.equippedWeapon.animations?.[animName];
     if (!weaponFrames || weaponFrames.length === 0) return;
 
@@ -228,7 +233,7 @@ export class Character extends GameObject {
 
     // When facing up, weapon draws behind player; otherwise in front
     if (frameData.visible) {
-      this.weaponSprite.drawOrder = this.facingDirection === UP ? 1 : 3;
+      this.weaponSprite.drawOrder = this.attackDirection === UP ? 1 : 3;
     }
   }
 
