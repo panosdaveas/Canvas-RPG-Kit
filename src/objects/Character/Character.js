@@ -38,7 +38,6 @@ export class Character extends GameObject {
     this.controller = null;
 
     this.isSolid = config.isSolid ?? true;
-    this.isLocked = false;
 
     // Shadow
     this.shadow = new Sprite({
@@ -98,7 +97,7 @@ export class Character extends GameObject {
   }
 
   step(delta, root) {
-    if (this.isLocked) {
+    if (this.state === STATE_INTERACTING) {
       this.playIdleAnimation();
       return;
     }

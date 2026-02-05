@@ -6,6 +6,7 @@ import {events} from "../../Events.js";
 import {SpriteTextString} from "../SpriteTextString/SpriteTextString.js";
 import {storyFlags} from "../../StoryFlags.js";
 import {Hero} from "../Character/types/Hero/Hero.js";
+import {STATE_IDLE, STATE_INTERACTING} from "../Character/Character.js";
 import {gridCells} from "../../helpers/grid.js";
 import {CANVAS, CULLING, TILE_SIZE} from "../../Constants.js";
 import {globalState} from "../../GlobalState.js";
@@ -74,12 +75,12 @@ export class Main extends GameObject {
       this.setLevel(level, finalPosition);
     })
 
-    // Handle hero actions with automatic lock/unlock
+    // Handle hero actions with automatic state management
     events.on("HERO_REQUESTS_ACTION", this, async (withObject) => {
-      // Lock hero and target
-      this.hero.isLocked = true;
-      if (withObject?.isLocked !== undefined) {
-        withObject.isLocked = true;
+      // Set hero and target to interacting state
+      this.hero.state = STATE_INTERACTING;
+      if (withObject?.state !== undefined) {
+        withObject.state = STATE_INTERACTING;
       }
 
       // Run the appropriate action (waits for completion)
@@ -87,10 +88,10 @@ export class Main extends GameObject {
         await this.runTextBoxAction(withObject);
       }
 
-      // Unlock hero and target
-      this.hero.isLocked = false;
-      if (withObject?.isLocked !== undefined) {
-        withObject.isLocked = false;
+      // Return hero and target to idle state
+      this.hero.state = STATE_IDLE;
+      if (withObject?.state !== undefined) {
+        withObject.state = STATE_IDLE;
       }
     })
   }

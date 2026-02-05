@@ -1,4 +1,4 @@
-import { Character } from "../../Character.js";
+import { Character, STATE_IDLE, STATE_INTERACTING } from "../../Character.js";
 import { Vector2 } from "../../../../Vector2.js";
 import { resources } from "../../../../Resource.js";
 import { events } from "../../../../Events.js";
@@ -41,7 +41,7 @@ export class Hero extends Character {
 
     // Listen for action finished events
     events.on("HERO_ACTION_FINISHED", this, () => {
-      this.isLocked = false;
+      this.state = STATE_IDLE;
     });
 
     // Emit initial position so chunks load
@@ -51,8 +51,8 @@ export class Hero extends Character {
   }
 
   step(delta, root) {
-    // Don't do anything when locked
-    if (this.isLocked) {
+    // Don't do anything when interacting
+    if (this.state === STATE_INTERACTING) {
       this.playIdleAnimation();
       return;
     }
