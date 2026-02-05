@@ -2,7 +2,7 @@ import { Controller } from "./Controller.js";
 import { DOWN, LEFT, RIGHT, UP } from "../Input.js";
 import { isSpaceFree } from "../helpers/grid.js";
 import { events } from "../Events.js";
-import { Character, STATE_ATTACKING, STATE_IDLE } from "../objects/Character/Character.js";
+import { Character, STATE_ATTACKING, STATE_IDLE, STATE_INTERACTING } from "../objects/Character/Character.js";
 
 export class PlayerController extends Controller {
   constructor(character) {

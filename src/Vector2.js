@@ -1,4 +1,5 @@
 import {LEFT, RIGHT, UP, DOWN} from "./Input.js";
+import { TILE_SIZE } from "./Constants.js";
 
 export class Vector2 {
   constructor(x = 0, y = 0) {
@@ -17,10 +18,10 @@ export class Vector2 {
   toNeighbor(dir) {
     let x = this.x;
     let y = this.y;
-    if (dir === LEFT) { x -= 16 }
-    if (dir === RIGHT) { x += 16 }
-    if (dir === UP) { y -= 16 }
-    if (dir === DOWN) { y += 16 }
+    if (dir === LEFT) { x -= TILE_SIZE }
+    if (dir === RIGHT) { x += TILE_SIZE }
+    if (dir === UP) { y -= TILE_SIZE }
+    if (dir === DOWN) { y += TILE_SIZE }
     return new Vector2(x,y)
   }
 

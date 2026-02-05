@@ -10,6 +10,7 @@ import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
 export const STATE_IDLE = "IDLE";
 export const STATE_MOVING = "MOVING";
 export const STATE_ATTACKING = "ATTACKING";
+export const STATE_INTERACTING = "INTERACTING";
 
 export class Character extends GameObject {
   constructor(config = {}) {

@@ -17,6 +17,14 @@ export function getHitboxPositions(position, direction, hitbox) {
     // Single tile in facing direction
     positions.push(position.toNeighbor(direction));
   }
+  if (hitbox.shape === HITBOX_ARC) {
+    const newPos = position.toNeighbor(direction);
+    position.push(newPos);
+    newPos.y += 16;
+    position.push(newPos);
+    newPos.y -= 16;
+    position.push(newPos);
+  }
   // Add more shapes as needed
 
   return positions;
