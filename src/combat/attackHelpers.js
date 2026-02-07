@@ -1,3 +1,5 @@
+import { UP, DOWN, LEFT, RIGHT } from "../Input.js";
+
 // Hitbox shape constants
 export const HITBOX_FRONT = "front";     // 1 tile ahead
 export const HITBOX_ARC = "arc";         // 3 tiles in front arc

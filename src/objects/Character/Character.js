@@ -5,6 +5,8 @@ import { resources } from "../../Resource.js";
 import { events } from "../../Events.js";
 import { moveTowards } from "../../helpers/moveTowards.js";
 import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
+import { TILE_SIZE, DEBUG_LAYERS } from "../../Constants.js";
+import { getHitboxPositions } from "../../combat/attackHelpers.js";
 
 // States
 export const STATE_IDLE = "IDLE";
@@ -279,5 +281,31 @@ export class Character extends GameObject {
 
   getOppositeDirection(direction = this.facingDirection) {
     return { LEFT: RIGHT, RIGHT: LEFT, UP: DOWN, DOWN: UP }[direction];
+  }
+
+  drawImage(ctx, x, y) {
+    if (!DEBUG_LAYERS.DRAW_HITBOXES) return;
+    if (this.state !== STATE_ATTACKING) return;
+    if (!this.equippedWeapon?.hitbox) return;
+
+    const hitboxPositions = getHitboxPositions(
+      this.position,
+      this.attackDirection,
+      this.equippedWeapon.hitbox
+    );
+
+    ctx.save();
+    ctx.fillStyle = "rgba(255, 0, 0, 0.4)";
+    ctx.strokeStyle = "rgba(255, 0, 0, 0.8)";
+    ctx.lineWidth = 1;
+
+    for (const pos of hitboxPositions) {
+      const drawX = pos.x - this.position.x + x;
+      const drawY = pos.y - this.position.y + y;
+      ctx.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+      ctx.strokeRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+    }
+
+    ctx.restore();
   }
 }

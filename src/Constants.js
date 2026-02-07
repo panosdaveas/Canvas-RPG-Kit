@@ -45,6 +45,7 @@ export const DRAW_LAYER_HUD = "HUD";
 
 export const DEBUG_LAYERS = {
     DRAW_COLLISIONS: false, // Set to true to render collision layer tiles
+    DRAW_HITBOXES: true,    // Set to true to render weapon hitbox areas
 }
 
 

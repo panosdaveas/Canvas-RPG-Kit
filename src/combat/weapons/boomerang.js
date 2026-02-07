@@ -1,8 +1,8 @@
 import { THROW } from "../attackTypes.js";
 import { HITBOX_FRONT } from "../attackHelpers.js";
 
-const x = -24;
-const y = -32;
+const x = -12;
+const y = -20;
 
 export const boomerang = {
     id: "boomerang",
@@ -18,12 +18,12 @@ export const boomerang = {
     // Sprite configuration
     sprite: {
         resource: "boomerang",  // key in resources.images
-        frameSize: { x: 32, y: 32 },
+        frameSize: { x: 48, y: 48 },
         hFrames: 6,
         vFrames: 4,
     },
     animations: {
-        swingRight: [
+        throwRight: [
             { frame: 0, offset: { x, y }, visible: true, damageActive: true },
             { frame: 1, offset: { x, y }, visible: true, damageActive: true },
             { frame: 2, offset: { x, y }, visible: true, damageActive: true },
@@ -31,7 +31,7 @@ export const boomerang = {
             { frame: 4, offset: { x, y }, visible: true, damageActive: true },
             { frame: 5, offset: { x, y }, visible: true, damageActive: true },
         ],
-        swingUp: [
+        throwUp: [
             { frame: 6, offset: { x, y }, visible: true, damageActive: true },
             { frame: 7, offset: { x, y }, visible: true, damageActive: true },
             { frame: 8, offset: { x, y }, visible: true, damageActive: true },
@@ -39,7 +39,7 @@ export const boomerang = {
             { frame: 10, offset: { x, y }, visible: true, damageActive: true },
             { frame: 11, offset: { x, y }, visible: true, damageActive: true },
         ],
-        swingLeft: [
+        throwLeft: [
             { frame: 12, offset: { x, y }, visible: true, damageActive: true },
             { frame: 13, offset: { x, y }, visible: true, damageActive: true },
             { frame: 14, offset: { x, y }, visible: true, damageActive: true },
@@ -47,7 +47,7 @@ export const boomerang = {
             { frame: 16, offset: { x, y }, visible: true, damageActive: true },
             { frame: 17, offset: { x, y }, visible: true, damageActive: true },
         ],
-        swingDown: [
+        throwDown: [
             { frame: 18, offset: { x, y }, visible: true, damageActive: true },
             { frame: 19, offset: { x, y }, visible: true, damageActive: true },
             { frame: 20, offset: { x, y }, visible: true, damageActive: true },
