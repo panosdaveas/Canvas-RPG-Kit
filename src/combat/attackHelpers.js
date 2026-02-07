@@ -17,14 +17,22 @@ export function getHitboxPositions(position, direction, hitbox) {
     // Single tile in facing direction
     positions.push(position.toNeighbor(direction));
   }
+
   if (hitbox.shape === HITBOX_ARC) {
-    const newPos = position.toNeighbor(direction);
-    position.push(newPos);
-    newPos.y += 16;
-    position.push(newPos);
-    newPos.y -= 16;
-    position.push(newPos);
+    // Center (front)
+    positions.push(position.toNeighbor(direction));
+
+    if (direction === UP || direction === DOWN) {
+      positions.push(position.toNeighbor(direction).toNeighbor(LEFT));
+      positions.push(position.toNeighbor(direction).toNeighbor(RIGHT));
+    }
+
+    if (direction === LEFT || direction === RIGHT) {
+      positions.push(position.toNeighbor(direction).toNeighbor(UP));
+      positions.push(position.toNeighbor(direction).toNeighbor(DOWN));
+    }
   }
+
   // Add more shapes as needed
 
   return positions;

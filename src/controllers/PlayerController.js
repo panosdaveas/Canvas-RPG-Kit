@@ -3,6 +3,8 @@ import { DOWN, LEFT, RIGHT, UP } from "../Input.js";
 import { isSpaceFree } from "../helpers/grid.js";
 import { events } from "../Events.js";
 import { Character, STATE_ATTACKING, STATE_IDLE, STATE_INTERACTING } from "../objects/Character/Character.js";
+import { sword, bow, boomerang } from "../combat/weapons/index.js";
+
 
 export class PlayerController extends Controller {
   constructor(character) {
@@ -26,6 +28,33 @@ export class PlayerController extends Controller {
     // --------------------
     // ATTACK (highest priority)
     // --------------------
+
+    //equip weapon
+    //TODO: wait for attack to finish and then swap weapons
+    if (input?.getActionJustPressed("Digit1" || "1" || "Numpad1")) {
+      if (character.state != STATE_ATTACKING) {
+        character.unequip();
+        character.equip(sword);
+        console.log("Equiped", character.weaponSprite);
+      }
+    }
+
+    if (input?.getActionJustPressed("Digit2" || "2" || "Numpad2")) {
+      if (character.state != STATE_ATTACKING) {
+        character.unequip();
+        character.equip(bow);
+        console.log("Equiped", character.weaponSprite);
+      }
+    }
+
+    if (input?.getActionJustPressed("Digit3" || "3" || "Numpad3")) {
+      if (character.state != STATE_ATTACKING) {
+        character.unequip();
+        character.equip(boomerang);
+        console.log("Equiped", character.weaponSprite);
+      }
+    }
+
     if (input?.getActionJustPressed("KeyX")) {
       character.attack();
     }

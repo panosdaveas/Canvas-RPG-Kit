@@ -46,7 +46,7 @@ export class Character extends GameObject {
       position: config.shadowOffset ?? new Vector2(-8, -18),
     });
     this.shadow.drawOrder = 0;
-    this.addChild(this.shadow);
+    // this.addChild(this.shadow);
 
     // Body
     this.body = new Sprite({
@@ -75,8 +75,10 @@ export class Character extends GameObject {
 
     // Create weapon sprite from weapon data
     const spriteConfig = weapon.sprite;
+    console.log(weapon.sprite);
     if (spriteConfig && resources.images[spriteConfig.resource]) {
       this.weaponSprite = new Sprite({
+        id: weapon.id,
         resource: resources.images[spriteConfig.resource],
         frameSize: new Vector2(spriteConfig.frameSize.x, spriteConfig.frameSize.y),
         hFrames: spriteConfig.hFrames,
@@ -84,9 +86,15 @@ export class Character extends GameObject {
         frame: 0,
         position: new Vector2(0, 0),
       });
+      this.weaponSprite.visible = false;
       this.weaponSprite.drawOrder = 3; // Above body
       this.addChild(this.weaponSprite);
     }
+  }
+
+  unequip() {
+    this.removeChild(this.weaponSprite);
+    this.equippedWeapon = null;
   }
 
   hasArrivedAtDestination() {
@@ -225,6 +233,8 @@ export class Character extends GameObject {
 
     // Update weapon sprite
     this.weaponSprite.frame = frameData.frame;
+    // this.weaponSprite.position.x = this.body.position.x + frameData.offset.x - 16;
+    // this.weaponSprite.position.y = this.body.position.y + frameData.offset.y - 16;
     this.weaponSprite.position.x = frameData.offset.x;
     this.weaponSprite.position.y = frameData.offset.y;
 

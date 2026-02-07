@@ -3,6 +3,7 @@ import { GameObject } from "./GameObject.js";
 
 export class Sprite extends GameObject {
   constructor({
+    id,
     resource, // image we want to draw
     frameSize, // size of the crop of the image
     hFrames, // how the sprite arranged horizontally
@@ -15,6 +16,7 @@ export class Sprite extends GameObject {
     super({
       name
     });
+    this.id = id ?? null;
     this.resource = resource;
     this.frameSize = frameSize ?? new Vector2(16, 16);
     this.hFrames = hFrames ?? 1;

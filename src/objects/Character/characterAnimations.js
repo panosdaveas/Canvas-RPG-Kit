@@ -19,28 +19,17 @@ export const makeIdleFrames = (rootFrame = 0) => {
   };
 };
 
+const createWalkingFrames = (rootFrame, count = 10, step = 50) =>
+  Array.from({ length: count }, (_, i) => ({
+    time: i * step,
+    frame: rootFrame + i,
+  }));
+
 export const makeWalkingFrames = (rootFrame = 0) => {
   return {
-    duration: 480,
+    duration: 500,
     loop: true,
-    frames: [
-      {
-        time: 0,
-        frame: rootFrame
-      },
-      {
-        time: 120,
-        frame: rootFrame + 1
-      },
-      {
-        time: 240,
-        frame: rootFrame + 2
-      },
-      {
-        time: 360,
-        frame: rootFrame + 1
-      }
-    ]
+    frames: createWalkingFrames(rootFrame),
   };
 };
 
@@ -57,41 +46,45 @@ export const makeStandingFrames = (frame = 0) => {
   };
 };
 
-export const makeStabFrames = (rootFrame = 0) => {
+const createSwingFrames = (rootFrame, count = 8, step = 50) =>
+  Array.from({ length: count }, (_, i) => ({
+    time: i * step,
+    frame: rootFrame + i,
+  }));
+
+export const makeSwingFrames = (rootFrame = 0) => {
   return {
     duration: 400,
     loop: false,
-    frames: [
-      {
-        time: 0,
-        frame: rootFrame,
-      },
-      {
-        time: 200,
-        frame: rootFrame - 1,
-      }
-    ]
+    frames: createSwingFrames(rootFrame),
   };
 };
 
+const createProjectileFrames = (rootFrame, count = 10, step = 50) =>
+  Array.from({ length: count }, (_, i) => ({
+    time: i * step,
+    frame: rootFrame + i,
+  }));
+
 export const makeProjectileFrames = (rootFrame = 0) => {
   return {
-    duration: 600,
+    duration: 500,
     loop: false,
-    frames: [
-      {
-        time: 0,
-        frame: rootFrame - 1,
-      },
-      {
-        time: 200,
-        frame: rootFrame,
-      },
-      {
-        time: 400,
-        frame: rootFrame - 1,
-      },
-    ]
+    frames: createProjectileFrames(rootFrame),
+  };
+};
+
+const createThrowFrames = (rootFrame, count = 6, step = 80) =>
+  Array.from({ length: count }, (_, i) => ({
+    time: i * step,
+    frame: rootFrame + i,
+  }));
+
+export const makeThrowFrames = (rootFrame = 0) => {
+  return {
+    duration: 480,
+    loop: false,
+    frames: createThrowFrames(rootFrame),
   };
 };
 
@@ -136,22 +129,26 @@ export function createCharacterAnimations(frameOffsets, extraAnimations = {}) {
  * Layout: 3 columns (walk frames), 8 rows (directions + special)
  */
 export const HERO_FRAME_OFFSETS = {
-  walkDown: 0,
-  walkRight: 3,
-  walkUp: 6,
-  walkLeft: 9,
-  idleDown: 1,
-  idleRight: 4,
-  idleUp: 7,
-  idleLeft: 10,
-  stabDown: 13,
-  stabLeft: 22,
-  stabUp: 19,
-  stabRight: 16,
-  projectileDown: 13,
-  projectileLeft: 22,
-  projectileUp: 19,
-  projectileRight: 16,
+  idleRight: 0,
+  idleUp: 1,
+  idleLeft: 2,
+  idleDown: 3,
+  walkRight: 10,
+  walkUp: 20,
+  walkLeft: 30,
+  walkDown: 40,
+  swingRight: 50,
+  swingUp: 60,
+  swingLeft: 70,
+  swingDown: 80,
+  throwRight: 90,
+  throwUp: 100,
+  throwLeft: 110,
+  throwDown: 120,
+  projectileRight: 130,
+  projectileUp: 140,
+  projectileLeft: 150,
+  projectileDown: 160,
 };
 
 export const HERO_EXTRA_ANIMATIONS = {
@@ -167,14 +164,18 @@ export const HERO_EXTRA_ANIMATIONS = {
 };
 
 export const HERO_ATTACK_ANIMATIONS = {
-  stabDown: makeStabFrames(HERO_FRAME_OFFSETS.stabDown),
-  stabUp: makeStabFrames(HERO_FRAME_OFFSETS.stabUp),
-  stabLeft: makeStabFrames(HERO_FRAME_OFFSETS.stabLeft),
-  stabRight: makeStabFrames(HERO_FRAME_OFFSETS.stabRight),
+  swingDown: makeSwingFrames(HERO_FRAME_OFFSETS.swingDown),
+  swingUp: makeSwingFrames(HERO_FRAME_OFFSETS.swingUp),
+  swingLeft: makeSwingFrames(HERO_FRAME_OFFSETS.swingLeft),
+  swingRight: makeSwingFrames(HERO_FRAME_OFFSETS.swingRight),
   projectileDown: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileDown),
   projectileUp: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileUp),
   projectileLeft: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileLeft),
   projectileRight: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileRight),
+  throwDown: makeThrowFrames(HERO_FRAME_OFFSETS.throwDown),
+  throwUp: makeThrowFrames(HERO_FRAME_OFFSETS.throwUp),
+  throwLeft: makeThrowFrames(HERO_FRAME_OFFSETS.throwLeft),
+  throwRight: makeThrowFrames(HERO_FRAME_OFFSETS.throwRight),
 };
 
 /**
@@ -196,10 +197,10 @@ export function createHeroAnimations() {
  */
 export function createStaticAnimations(frame = 0) {
   return createCharacterAnimations({
-    walkDown: frame + 1, // Walking frames use rootFrame + 1 as first frame
-    walkUp: frame + 1,
-    walkLeft: frame + 1,
-    walkRight: frame + 1,
+    walkDown: frame, // Walking frames use rootFrame + 1 as first frame
+    walkUp: frame,
+    walkLeft: frame,
+    walkRight: frame,
     idleDown: frame,
     idleUp: frame,
     idleLeft: frame,

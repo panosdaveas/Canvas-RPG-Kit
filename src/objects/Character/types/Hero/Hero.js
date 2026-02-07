@@ -4,8 +4,7 @@ import { resources } from "../../../../Resource.js";
 import { events } from "../../../../Events.js";
 import { PlayerController } from "../../../../controllers/PlayerController.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
-import { dagger, bow } from "../../../../combat/weapons/index.js";
-import { Input } from "../../../../Input.js";
+import { sword, bow, boomerang } from "../../../../combat/weapons/index.js";
 
 export class Hero extends Character {
   constructor(x, y) {
@@ -14,10 +13,10 @@ export class Hero extends Character {
       spriteResource: resources.images.hero,
       animations: createHeroAnimations(),
       frameSize: new Vector2(32, 32),
-      hFrames: 3,
-      vFrames: 8,
+      hFrames: 10,
+      vFrames: 17,
       frame: 1,
-      bodyOffset: new Vector2(-8, -20),
+      bodyOffset: new Vector2(-8, -16),
       shadowOffset: new Vector2(-8, -18),
       isSolid: true
     });
@@ -37,7 +36,9 @@ export class Hero extends Character {
     this.setController(new PlayerController(this));
 
     // Equip starting weapon
-    this.equip(dagger);
+    // this.equip(sword);
+    // this.equip(boomerang);
+    // this.equip(bow);
 
     // Listen for action finished events
     events.on("HERO_ACTION_FINISHED", this, () => {
