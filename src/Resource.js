@@ -33,6 +33,7 @@ class Resources {
       bow: "/sprites/weapons/bow.png",
       sword: "/sprites/weapons/sword.png",
       boomerang: "/sprites/weapons/boomerang.png",
+      arrow: "/sprites/weapons/arrow.png",
     };
 
     // A bucket to keep all of our images

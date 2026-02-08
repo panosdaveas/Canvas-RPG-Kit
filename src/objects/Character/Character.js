@@ -7,6 +7,7 @@ import { moveTowards } from "../../helpers/moveTowards.js";
 import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
 import { TILE_SIZE, DEBUG_LAYERS } from "../../Constants.js";
 import { getHitboxPositions } from "../../combat/attackHelpers.js";
+import { Projectile } from "../Projectile/Projectile.js";
 
 // States
 export const STATE_IDLE = "IDLE";
@@ -35,6 +36,8 @@ export class Character extends GameObject {
     this.attackDirection = null; // Locked direction during attack
     this.equippedWeapon = null;
     this.weaponSprite = null;
+    this.projectileSprite = null;
+    this.projectileLaunched = false;
 
     // Controller
     this.controller = null;
@@ -77,7 +80,6 @@ export class Character extends GameObject {
 
     // Create weapon sprite from weapon data
     const spriteConfig = weapon.sprite;
-    console.log(weapon.sprite);
     if (spriteConfig && resources.images[spriteConfig.resource]) {
       this.weaponSprite = new Sprite({
         id: weapon.id,
@@ -92,10 +94,35 @@ export class Character extends GameObject {
       this.weaponSprite.drawOrder = 3; // Above body
       this.addChild(this.weaponSprite);
     }
+
+    // Create projectile sprite if weapon has projectile config
+    const projectileConfig = weapon.projectile;
+    if (projectileConfig?.sprite && resources.images[projectileConfig.sprite.resource]) {
+      const projSprite = projectileConfig.sprite;
+      this.projectileSprite = new Sprite({
+        id: projectileConfig.id,
+        resource: resources.images[projSprite.resource],
+        frameSize: new Vector2(projSprite.frameSize.x, projSprite.frameSize.y),
+        hFrames: projSprite.hFrames ?? 1,
+        vFrames: projSprite.vFrames ?? 1,
+        frame: 0,
+        position: new Vector2(0, 0),
+      });
+      this.projectileSprite.visible = false;
+      this.projectileSprite.drawOrder = 1;
+      this.addChild(this.projectileSprite);
+    }
   }
 
   unequip() {
-    this.removeChild(this.weaponSprite);
+    if (this.weaponSprite) {
+      this.removeChild(this.weaponSprite);
+      this.weaponSprite = null;
+    }
+    if (this.projectileSprite) {
+      this.removeChild(this.projectileSprite);
+      this.projectileSprite = null;
+    }
     this.equippedWeapon = null;
   }
 
@@ -203,6 +230,9 @@ export class Character extends GameObject {
     // Lock direction for the duration of the attack
     this.attackDirection = this.facingDirection;
 
+    // Reset projectile state for this attack
+    this.projectileLaunched = false;
+
     this.state = STATE_ATTACKING;
     this.attackTimer = pattern.duration;
     this.body.animations.play(anim);
@@ -235,8 +265,6 @@ export class Character extends GameObject {
 
     // Update weapon sprite
     this.weaponSprite.frame = frameData.frame;
-    // this.weaponSprite.position.x = this.body.position.x + frameData.offset.x - 16;
-    // this.weaponSprite.position.y = this.body.position.y + frameData.offset.y - 16;
     this.weaponSprite.position.x = frameData.offset.x;
     this.weaponSprite.position.y = frameData.offset.y;
 
@@ -247,11 +275,82 @@ export class Character extends GameObject {
     if (frameData.visible) {
       this.weaponSprite.drawOrder = this.attackDirection === UP ? 1 : 3;
     }
+
+    // Handle attached projectile visibility
+    this.updateProjectileSprite(frameData);
+
+    // Handle projectile launch
+    if (frameData.launch && !this.projectileLaunched) {
+      this.launchProjectile();
+    }
+  }
+
+  updateProjectileSprite(frameData) {
+    if (!this.projectileSprite || !this.equippedWeapon?.projectile) return;
+
+    const projectileConfig = this.equippedWeapon.projectile;
+
+    if (frameData.projectileVisible) {
+      // Show attached projectile and set frame based on direction
+      this.projectileSprite.visible = true;
+      this.projectileSprite.drawOrder = this.attackDirection === UP ? 1 : 3;
+
+      // Position projectile at weapon offset + projectile offset
+      const projOffset = projectileConfig.offset ?? { x: 0, y: 0 };
+      this.projectileSprite.position.x = frameData.offset.x + projOffset.x;
+      this.projectileSprite.position.y = frameData.offset.y + projOffset.y;
+
+      // Set frame based on direction
+      const flyAnim = `fly${this.getDirectionName(this.attackDirection)}`;
+      const flyFrames = projectileConfig.animations?.[flyAnim];
+      if (flyFrames && flyFrames.length > 0) {
+        this.projectileSprite.frame = flyFrames[0].frame;
+      }
+    } else {
+      this.projectileSprite.visible = false;
+    }
+  }
+
+  launchProjectile() {
+    if (!this.equippedWeapon?.projectile) return;
+
+    this.projectileLaunched = true;
+
+    // Hide attached projectile sprite
+    if (this.projectileSprite) {
+      this.projectileSprite.visible = false;
+    }
+
+    // Create flying projectile at character's position (collision uses grid position)
+    const projConfig = this.equippedWeapon.projectile;
+
+    // Use the same sprite offset as the attached arrow had
+    const spriteOffset = this.projectileSprite
+      ? { x: this.projectileSprite.position.x, y: this.projectileSprite.position.y }
+      : { x: 0, y: 0 };
+
+    const projectile = new Projectile({
+      position: this.position,
+      direction: this.attackDirection,
+      projectileConfig: projConfig,
+      damage: this.equippedWeapon.damage,
+      spriteOffset: spriteOffset,
+    });
+
+    // Add projectile to the level
+    const main = this.parent;
+    if (main?.level) {
+      main.level.addChild(projectile);
+      main.addToYSortedObjects(projectile);
+    }
   }
 
   hideWeaponSprite() {
     if (this.weaponSprite) {
       this.weaponSprite.visible = false;
+    }
+    if (this.projectileSprite) {
+      this.projectileSprite.visible = false;
     }
   }
 

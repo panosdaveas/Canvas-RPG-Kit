@@ -244,9 +244,9 @@ export class Main extends GameObject {
     // Only re-sort when positions have changed
     if (this._ySortDirty) {
       this._sortedObjects.sort((a, b) => {
-        // Add small bias for hero so weapons render on top of other characters at same Y
-        const aY = a.position.y + (a === this.hero ? 0.1 : 0);
-        const bY = b.position.y + (b === this.hero ? 0.1 : 0);
+        // Add small bias for hero and objects with ySortBias
+        const aY = a.position.y + (a === this.hero ? 0.1 : (a.ySortBias ?? 0));
+        const bY = b.position.y + (b === this.hero ? 0.1 : (b.ySortBias ?? 0));
         return aY - bY;
       });
       this._ySortDirty = false;
