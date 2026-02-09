@@ -1,8 +1,22 @@
 import { THROW } from "../attackTypes.js";
 import { HITBOX_FRONT } from "../attackHelpers.js";
 
-const x = -12;
-const y = -20;
+const x = -16;
+const y = -24;
+
+const makeFrames = (row, opts) =>
+    Array.from({ length: FRAMES_PER_SWING }, (_, i) => ({
+        frame: row * FRAMES_PER_SWING + i,
+        ...opts,
+    }));
+
+const common = {
+    offset: { x, y },
+    visible: true,
+    damageActive: true,
+};
+
+const FRAMES_PER_SWING = 17;
 
 export const boomerang = {
     id: "boomerang",
@@ -19,41 +33,13 @@ export const boomerang = {
     sprite: {
         resource: "boomerang",  // key in resources.images
         frameSize: { x: 48, y: 48 },
-        hFrames: 6,
+        hFrames: 17,
         vFrames: 4,
     },
     animations: {
-        throwRight: [
-            { frame: 0, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 1, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 2, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 3, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 4, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 5, offset: { x, y }, visible: true, damageActive: true },
-        ],
-        throwUp: [
-            { frame: 6, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 7, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 8, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 9, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 10, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 11, offset: { x, y }, visible: true, damageActive: true },
-        ],
-        throwLeft: [
-            { frame: 12, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 13, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 14, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 15, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 16, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 17, offset: { x, y }, visible: true, damageActive: true },
-        ],
-        throwDown: [
-            { frame: 18, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 19, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 20, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 21, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 22, offset: { x, y }, visible: true, damageActive: true },
-            { frame: 23, offset: { x, y }, visible: true, damageActive: true },
-        ]
-    }
+        throwRight: makeFrames(0, common),
+        throwUp: makeFrames(1, common),
+        throwLeft: makeFrames(2, common),
+        throwDown: makeFrames(3, common),
+    },
 };

@@ -4,6 +4,35 @@ import { HITBOX_FRONT } from "../attackHelpers.js";
 const x= -8;
 const y= -16;
 
+const makeFrames = (row, opts, overrides = {}) =>
+    Array.from({ length: FRAMES_PER_SWING }, (_, i) => ({
+        frame: row * FRAMES_PER_SWING + i,
+        ...opts,
+        ...(overrides[i] ?? {}),
+    }));
+
+const common = {
+    offset: { x, y },
+    visible: true,
+    damageActive: true,
+    launch: false,
+};
+
+const range = (from, to, props) =>
+    Object.fromEntries(
+        Array.from({ length: to - from + 1 }, (_, i) => [
+            from + i,
+            props,
+        ])
+    );
+
+const overrides = {
+    ...range(8, 42, { projectileVisible: true }),
+    36: { launch: true },
+};
+
+const FRAMES_PER_SWING = 52;
+
 export const bow = {
     id: "bow",
     name: "Bow",
@@ -19,7 +48,7 @@ export const bow = {
     sprite: {
         resource: "bow",  // key in resources.images
         frameSize: { x: 32, y: 32 },
-        hFrames: 10,
+        hFrames: 52,
         vFrames: 4,
     },
     // Projectile configuration
@@ -42,52 +71,12 @@ export const bow = {
         }
     },
     animations: {
-        projectileRight: [
-            { frame: 0, offset: { x, y }, visible: true },
-            { frame: 2, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 3, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 4, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 5, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 6, offset: { x, y }, visible: true, projectileVisible: true  },
-            { frame: 7, offset: { x, y }, visible: true, projectileVisible: true  },
-            { frame: 8, offset: { x, y }, visible: true, projectileVisible: true  },
-            { frame: 9, offset: { x, y }, visible: true, launch: true },
-        ],
-        projectileUp: [
-            { frame: 10, offset: { x, y }, visible: true },
-            { frame: 11, offset: { x, y }, visible: true , projectileVisible: true },
-            { frame: 12, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 13, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 14, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 15, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 16, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 17, offset: { x, y }, visible: true, projectileVisible: true, launch: true  },
-            { frame: 18, offset: { x, y }, visible: true },
-            { frame: 19, offset: { x, y }, visible: true, launch: true },
-        ],
-        projectileLeft: [
-            { frame: 20, offset: { x, y }, visible: true },
-            { frame: 21, offset: { x, y }, visible: true, projectileVisible: true  },
-            { frame: 22, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 23, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 24, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 25, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 26, offset: { x, y }, visible: true, projectileVisible: true},
-            { frame: 27, offset: { x, y }, visible: true, projectileVisible: true  },
-            { frame: 28, offset: { x, y }, visible: true, launch: true },
-            { frame: 29, offset: { x, y }, visible: true },
-        ],
-        projectileDown: [
-            { frame: 30, offset: { x, y }, visible: true },
-            { frame: 31, offset: { x, y }, visible: true, projectileVisible: true  },
-            { frame: 32, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 33, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 34, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 35, offset: { x, y }, visible: true, projectileVisible: true },
-            { frame: 36, offset: { x, y }, visible: true, projectileVisible: true  },
-            { frame: 37, offset: { x, y }, visible: true, projectileVisible: true  },
-            { frame: 38, offset: { x, y }, visible: true, projectileVisible: true  },
-            { frame: 39, offset: { x, y }, visible: true, launch: true },
-        ]
+        projectileRight: makeFrames(0, common, overrides),
+
+        projectileUp: makeFrames(1, common, overrides),
+
+        projectileLeft: makeFrames(2, common, overrides),
+
+        projectileDown: makeFrames(3, common, overrides),
     }
 };

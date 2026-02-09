@@ -13,7 +13,7 @@ export class Hero extends Character {
       spriteResource: resources.images.hero,
       animations: createHeroAnimations(),
       frameSize: new Vector2(32, 32),
-      hFrames: 10,
+      hFrames: 52,
       vFrames: 17,
       frame: 1,
       bodyOffset: new Vector2(-8, -16),

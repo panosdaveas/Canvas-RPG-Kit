@@ -359,7 +359,7 @@ export class Character extends GameObject {
   // ====================
 
   playIdleAnimation() {
-    if (this.state !== STATE_IDLE) return;
+    // if (this.state !== STATE_IDLE) return;
     this.body.animations?.play(`idle${this.getDirectionName()}`);
   }
 

@@ -46,7 +46,7 @@ export const makeStandingFrames = (frame = 0) => {
   };
 };
 
-const createSwingFrames = (rootFrame, count = 8, step = 50) =>
+const createSwingFrames = (rootFrame, count = 15, step = 25) =>
   Array.from({ length: count }, (_, i) => ({
     time: i * step,
     frame: rootFrame + i,
@@ -60,7 +60,7 @@ export const makeSwingFrames = (rootFrame = 0) => {
   };
 };
 
-const createProjectileFrames = (rootFrame, count = 10, step = 50) =>
+const createProjectileFrames = (rootFrame, count = 52, step = 15) =>
   Array.from({ length: count }, (_, i) => ({
     time: i * step,
     frame: rootFrame + i,
@@ -68,13 +68,13 @@ const createProjectileFrames = (rootFrame, count = 10, step = 50) =>
 
 export const makeProjectileFrames = (rootFrame = 0) => {
   return {
-    duration: 500,
+    duration: 780,
     loop: false,
     frames: createProjectileFrames(rootFrame),
   };
 };
 
-const createThrowFrames = (rootFrame, count = 6, step = 80) =>
+const createThrowFrames = (rootFrame, count = 17, step = 25) =>
   Array.from({ length: count }, (_, i) => ({
     time: i * step,
     frame: rootFrame + i,
@@ -82,7 +82,7 @@ const createThrowFrames = (rootFrame, count = 6, step = 80) =>
 
 export const makeThrowFrames = (rootFrame = 0) => {
   return {
-    duration: 480,
+    duration: 425,
     loop: false,
     frames: createThrowFrames(rootFrame),
   };
@@ -133,22 +133,22 @@ export const HERO_FRAME_OFFSETS = {
   idleUp: 1,
   idleLeft: 2,
   idleDown: 3,
-  walkRight: 10,
-  walkUp: 20,
-  walkLeft: 30,
-  walkDown: 40,
-  swingRight: 50,
-  swingUp: 60,
-  swingLeft: 70,
-  swingDown: 80,
-  throwRight: 90,
-  throwUp: 100,
-  throwLeft: 110,
-  throwDown: 120,
-  projectileRight: 130,
-  projectileUp: 140,
-  projectileLeft: 150,
-  projectileDown: 160,
+  walkRight: 52,
+  walkUp: 104,
+  walkLeft: 156,
+  walkDown: 208,
+  swingRight: 260,
+  swingUp: 312,
+  swingLeft: 364,
+  swingDown: 416,
+  throwRight: 468,
+  throwUp: 520,
+  throwLeft: 572,
+  throwDown: 624,
+  projectileRight: 676,
+  projectileUp: 728,
+  projectileLeft: 780,
+  projectileDown: 832,
 };
 
 export const HERO_EXTRA_ANIMATIONS = {
