@@ -56,7 +56,7 @@ export const bow = {
         id: "arrow",
         speed: 2,
         maxRange: 128,
-        offset: { x: 10, y: 10 }, // Offset relative to weapon sprite
+        offset: { x: 8, y: 8 }, // Offset relative to weapon sprite
         sprite: {
             resource: "arrow",
             frameSize: { x: 16, y: 16 },
