@@ -1,9 +1,10 @@
 import { Character } from "../../Character.js";
 import { Vector2 } from "../../../../Vector2.js";
 import { resources } from "../../../../Resource.js";
-import { DOWN, LEFT} from "../../../../Input.js";
+import { LEFT } from "../../../../Input.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
 import { sword, bow } from "../../../../combat/weapons/index.js";
+import { EnemyController } from "../../../../controllers/EnemyController.js";
 
 export class Enemy extends Character {
     constructor(x, y) {
@@ -19,13 +20,15 @@ export class Enemy extends Character {
             shadowOffset: new Vector2(-8, -18),
             isSolid: true,
             team: "enemy",
+            speed: 0.5,
         });
 
         this.facingDirection = LEFT;
-        // this.equip(sword);
-        this.equip(bow);
-        this.attackCooldown = 3000;
-        this.attackTimer_ = this.attackCooldown;
+        this.equip(sword);
+        this.setController(new EnemyController(this, {
+            detectionRange: 3,
+            attackRange: 1,
+        }));
     }
 
     draw(ctx, x, y) {
@@ -33,14 +36,5 @@ export class Enemy extends Character {
         ctx.filter = "saturate(0) brightness(0.7)";
         super.draw(ctx, x, y);
         ctx.restore();
-    }
-
-    step(delta, root) {
-        this.attackTimer_ -= delta;
-        if (this.attackTimer_ <= 0) {
-            this.attack();
-            this.attackTimer_ = this.attackCooldown;
-        }
-        super.step(delta, root);
     }
 }

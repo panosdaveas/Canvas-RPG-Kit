@@ -1,0 +1,91 @@
+import { Controller } from "./Controller.js";
+import { DOWN, LEFT, RIGHT, UP } from "../Input.js";
+import { STATE_IDLE } from "../objects/Character/Character.js";
+import { isTileFree } from "../helpers/grid.js";
+import { TILE_SIZE } from "../Constants.js";
+import { events } from "../Events.js";
+
+export class EnemyController extends Controller {
+  constructor(character, config = {}) {
+    super(character);
+    this.detectionRange = config.detectionRange ?? 5; // in tiles
+    this.attackRange = config.attackRange ?? 1; // in tiles
+    this.attackCooldown = config.attackCooldown ?? 1500;
+    this.attackTimer = 0;
+    this.heroPosition = null;
+
+    events.on("HERO_POSITION", this, (pos) => {
+      this.heroPosition = pos;
+    });
+  }
+
+  update(delta, root) {
+    const character = this.character;
+
+    if (this.attackTimer > 0) this.attackTimer -= delta;
+
+    // Only act when idle and grid-aligned
+    if (character.state !== STATE_IDLE || !character.hasArrivedAtDestination()) return;
+    if (!this.heroPosition) return;
+
+    const dx = this.heroPosition.x - character.position.x;
+    const dy = this.heroPosition.y - character.position.y;
+    const dist = (Math.abs(dx) + Math.abs(dy)) / TILE_SIZE;
+
+    if (dist > this.detectionRange) {
+      character.playIdleAnimation();
+      return;
+    }
+
+    // In attack range → must be aligned on same axis (cardinal only)
+    const absDx = Math.abs(dx) / TILE_SIZE;
+    const absDy = Math.abs(dy) / TILE_SIZE;
+    const aligned = (absDx === 0 && absDy <= this.attackRange)
+                 || (absDy === 0 && absDx <= this.attackRange);
+
+    if (aligned && this.attackTimer <= 0) {
+      character.facingDirection = this.directionToward(dx, dy);
+      character.playIdleAnimation();
+      character.attack();
+      this.attackTimer = this.attackCooldown;
+      return;
+    }
+
+    // Chase → try primary direction, fall back to secondary
+    const candidates = root.level?.children ? [...root.level.children] : [];
+    if (root.hero) candidates.push(root.hero);
+
+    const primary = this.directionToward(dx, dy);
+    const secondary = this.secondaryDirection(dx, dy);
+    const directions = secondary ? [primary, secondary] : [primary];
+
+    for (const dir of directions) {
+      const next = character.position.toNeighbor(dir);
+      if (isTileFree(root.level?.walls, candidates, next.x, next.y, character)) {
+        character.facingDirection = dir;
+        character.destinationPosition.x = next.x;
+        character.destinationPosition.y = next.y;
+        character.playWalkAnimation(dir);
+        return;
+      }
+    }
+
+    // All directions blocked
+    character.playIdleAnimation();
+  }
+
+  directionToward(dx, dy) {
+    if (Math.abs(dx) > Math.abs(dy)) {
+      return dx > 0 ? RIGHT : LEFT;
+    }
+    return dy > 0 ? DOWN : UP;
+  }
+
+  secondaryDirection(dx, dy) {
+    if (dx === 0 || dy === 0) return null;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      return dy > 0 ? DOWN : UP;
+    }
+    return dx > 0 ? RIGHT : LEFT;
+  }
+}
