@@ -55,7 +55,7 @@ export class AttackingState extends State {
         c.position.y === pos.y
       );
       if (target) {
-        target.takeHit(weapon.damage);
+        target.takeHit(weapon.damage, this.character.attackDirection);
         this.hasHit = true;
       }
     }

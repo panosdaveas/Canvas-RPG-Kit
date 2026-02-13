@@ -128,7 +128,7 @@ export class Projectile extends GameObject {
 
     if (hitTarget) {
       if (typeof hitTarget.takeHit === "function") {
-        hitTarget.takeHit(this.damage);
+        hitTarget.takeHit(this.damage, this.direction);
       }
       events.emit("PROJECTILE_HIT", {
         target: hitTarget,

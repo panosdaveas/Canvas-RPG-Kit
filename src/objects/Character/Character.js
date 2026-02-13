@@ -177,8 +177,9 @@ export class Character extends GameObject {
   // COMBAT API
   // ====================
 
-  takeHit(damage) {
+  takeHit(damage, attackDirection) {
     if (this.state === STATE_HIT) return;
+    this._hitDirection = attackDirection ?? null;
     this.state = STATE_HIT;
   }
 
