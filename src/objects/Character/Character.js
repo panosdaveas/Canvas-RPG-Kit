@@ -3,11 +3,16 @@ import { Vector2 } from "../../Vector2.js";
 import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
 import { events } from "../../Events.js";
-import { moveTowards } from "../../helpers/moveTowards.js";
 import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
 import { TILE_SIZE, DEBUG_LAYERS } from "../../Constants.js";
 import { getHitboxPositions } from "../../combat/attackHelpers.js";
 import { Projectile } from "../Projectile/Projectile.js";
+import { StateMachine } from "../../state/StateMachine.js";
+import { IdleState } from "../../state/states/IdleState.js";
+import { MovingState } from "../../state/states/MovingState.js";
+import { AttackingState } from "../../state/states/AttackingState.js";
+import { InteractingState } from "../../state/states/InteractingState.js";
+import { HitState, STATE_HIT } from "../../state/states/HitState.js";
 
 // States
 export const STATE_IDLE = "IDLE";
@@ -25,9 +30,6 @@ export class Character extends GameObject {
     this.facingDirection = config.facingDirection ?? DOWN;
     this.destinationPosition = this.position.duplicate();
     this.speed = config.speed ?? 1;
-
-    // State
-    this.state = STATE_IDLE;
 
     // Attack
     this.attackTimer = 0;
@@ -65,6 +67,27 @@ export class Character extends GameObject {
     });
     this.body.drawOrder = 2;
     this.addChild(this.body);
+
+    // State machine (after sprites are ready)
+    this._setupStateMachine();
+  }
+
+  _setupStateMachine() {
+    this.stateMachine = new StateMachine(this);
+    this.stateMachine.registerState(STATE_IDLE, new IdleState());
+    this.stateMachine.registerState(STATE_MOVING, new MovingState());
+    this.stateMachine.registerState(STATE_ATTACKING, new AttackingState());
+    this.stateMachine.registerState(STATE_INTERACTING, new InteractingState());
+    this.stateMachine.registerState(STATE_HIT, new HitState());
+    this.stateMachine.changeState(STATE_IDLE);
+  }
+
+  get state() {
+    return this.stateMachine.getCurrentStateName();
+  }
+
+  set state(stateName) {
+    this.stateMachine.changeState(stateName);
   }
 
   ready() {
@@ -134,75 +157,31 @@ export class Character extends GameObject {
   }
 
   step(delta, root) {
-    if (this.state === STATE_INTERACTING) {
-      this.playIdleAnimation();
-      return;
-    }
+    // Controller runs unless current state blocks it
+    if (!this.stateMachine.currentState?.blocksController) {
+      this.controller?.update(delta, root);
 
-    // Always process controller (input can buffer attack)
-    this.controller?.update(delta, root);
-
-    // Tick recovery timer
-    if (this.attackRecoveryTimer > 0) {
-      this.attackRecoveryTimer -= delta;
-    }
-
-    // --------------------
-    // ATTACK STATE
-    // --------------------
-    if (this.state === STATE_ATTACKING) {
-      this.attackTimer -= delta;
-
-      // Update weapon sprite
-      this.updateWeaponSprite();
-
-      if (this.attackTimer <= 0) {
-        this.state = STATE_IDLE;
-        this.attackRecoveryTimer = 120; // Grace window before movement resumes
-        this.attackDirection = null;
-        this.hideWeaponSprite();
-        this.playIdleAnimation();
+      if (this.attackRecoveryTimer > 0) {
+        this.attackRecoveryTimer -= delta;
       }
-
-      return;
     }
 
-    const prevY = this.position.y;
-
-    // --------------------
-    // MOVEMENT
-    // --------------------
-
-    moveTowards(this, this.destinationPosition, this.speed);
-
-    if (this.hasArrivedAtDestination()) {
-      // Snap exactly (prevents drift)
-      this.position.x = this.destinationPosition.x;
-      this.position.y = this.destinationPosition.y;
-
-      // Buffered attack fires immediately after move
-      if (this.attackBuffered) {
-        this.attackBuffered = false;
-        this.startAttack();
-        return;
-      }
-
-      if (this.state === STATE_MOVING) {
-        this.state = STATE_IDLE;
-        // Let controller decide animation (it will call playIdleAnimation if no input)
-      }
-    } else {
-      this.state = STATE_MOVING;
-    }
-
-    if (this.position.y !== prevY) {
-      events.emit("YSORT_DIRTY");
-    }
+    // Delegate to current state
+    this.stateMachine.update(delta, root);
   }
 
   // ====================
-  // ATTACK API
+  // COMBAT API
   // ====================
+
+  takeHit(damage) {
+    if (this.state === STATE_HIT) return;
+    this.state = STATE_HIT;
+  }
+
+  // --------------------
+  // ATTACK
+  // --------------------
 
   attack() {
     if (this.state === STATE_ATTACKING) return;

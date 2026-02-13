@@ -1,10 +1,11 @@
-import { Character, STATE_IDLE, STATE_INTERACTING } from "../../Character.js";
+import { Character, STATE_IDLE } from "../../Character.js";
 import { Vector2 } from "../../../../Vector2.js";
 import { resources } from "../../../../Resource.js";
 import { events } from "../../../../Events.js";
 import { PlayerController } from "../../../../controllers/PlayerController.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
 import { sword, bow, boomerang } from "../../../../combat/weapons/index.js";
+import { ItemPickupState, STATE_ITEM_PICKUP } from "../../../../state/states/ItemPickupState.js";
 
 export class Hero extends Character {
   constructor(x, y) {
@@ -31,6 +32,11 @@ export class Hero extends Character {
     });
   }
 
+  _setupStateMachine() {
+    super._setupStateMachine();
+    this.stateMachine.registerState(STATE_ITEM_PICKUP, new ItemPickupState());
+  }
+
   ready() {
     // Set up player controller
     this.setController(new PlayerController(this));
@@ -52,28 +58,7 @@ export class Hero extends Character {
   }
 
   step(delta, root) {
-    // Don't do anything when interacting
-    if (this.state === STATE_INTERACTING) {
-      this.playIdleAnimation();
-      return;
-    }
-
-    //test manual animation
-    // if (this.parent.input?.getActionJustPressed("KeyC")) {
-    //   console.log("Key Pressed");
-    //   this.itemPickupTime = 400;
-    // }
-
-    // Lock movement if celebrating an item pickup
-    if (this.itemPickupTime > 0) {
-      this.workOnItemPickup(delta);
-      return;
-    }
-
-    // Let the base Character class handle controller + movement
     super.step(delta, root);
-
-    // Emit position if changed
     this.tryEmitPosition();
   }
 
@@ -86,20 +71,8 @@ export class Hero extends Character {
     events.emit("HERO_POSITION", this.position);
   }
 
-  workOnItemPickup(delta) {
-    this.itemPickupTime -= delta;
-    this.body.animations.play("pickUpDown");
-
-    // Remove the item being held overhead
-    if (this.itemPickupTime <= 0) {
-      // this.itemPickupShell.destroy();
-    }
-  }
-
   onPickUpItem(data) {
-    this.destinationPosition = this.position.duplicate();
     this.itemPickupTime = 500;
-    // Implemented by subclass or via event handler
-    // data should contain item info
+    this.state = STATE_ITEM_PICKUP;
   }
 }
