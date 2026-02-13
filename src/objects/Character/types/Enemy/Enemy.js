@@ -24,10 +24,10 @@ export class Enemy extends Character {
         });
 
         this.facingDirection = LEFT;
-        this.equip(sword);
+        this.equip(bow);
         this.setController(new EnemyController(this, {
-            detectionRange: 3,
-            attackRange: 1,
+            detectionRange: 5,
+            attackRange: 10,
         }));
     }
 

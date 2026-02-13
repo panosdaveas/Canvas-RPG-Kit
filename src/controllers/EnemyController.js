@@ -43,21 +43,52 @@ export class EnemyController extends Controller {
     const aligned = (absDx === 0 && absDy <= this.attackRange)
                  || (absDy === 0 && absDx <= this.attackRange);
 
-    if (aligned && this.attackTimer <= 0) {
-      character.facingDirection = this.directionToward(dx, dy);
-      character.playIdleAnimation();
-      character.attack();
-      this.attackTimer = this.attackCooldown;
+    if (aligned) {
+      if (this.attackTimer <= 0) {
+        const attackDir = this.directionToward(dx, dy);
+        if (character.facingDirection !== attackDir) {
+          character.facingDirection = attackDir;
+          character.playIdleAnimation();
+          return;
+        }
+        character.attack();
+        this.attackTimer = this.attackCooldown;
+      } else {
+        character.playIdleAnimation();
+      }
       return;
     }
 
-    // Chase → try primary direction, fall back to secondary
     const candidates = root.level?.children ? [...root.level.children] : [];
     if (root.hero) candidates.push(root.hero);
 
+    // Within attack range but not aligned → try either axis to align
+    const inRange = absDx <= this.attackRange && absDy <= this.attackRange;
+    if (inRange) {
+      const primary = this.directionToward(dx, dy);
+      const secondary = this.secondaryDirection(dx, dy);
+      const directions = secondary ? [secondary, primary] : [primary];
+
+      for (const dir of directions) {
+        const next = character.position.toNeighbor(dir);
+        if (isTileFree(root.level?.walls, candidates, next.x, next.y, character)) {
+          character.facingDirection = dir;
+          character.destinationPosition.x = next.x;
+          character.destinationPosition.y = next.y;
+          character.playWalkAnimation(dir);
+          return;
+        }
+      }
+      character.playIdleAnimation();
+      return;
+    }
+
+    // Outside attack range → chase toward hero
     const primary = this.directionToward(dx, dy);
     const secondary = this.secondaryDirection(dx, dy);
-    const directions = secondary ? [primary, secondary] : [primary];
+    const directions = secondary
+      ? [primary, secondary]
+      : [primary, ...this.perpendicularDirections(primary)];
 
     for (const dir of directions) {
       const next = character.position.toNeighbor(dir);
@@ -87,5 +118,10 @@ export class EnemyController extends Controller {
       return dy > 0 ? DOWN : UP;
     }
     return dx > 0 ? RIGHT : LEFT;
+  }
+
+  perpendicularDirections(dir) {
+    if (dir === UP || dir === DOWN) return [RIGHT, LEFT];
+    return [DOWN, UP];
   }
 }
