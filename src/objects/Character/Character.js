@@ -172,6 +172,7 @@ export class Character extends GameObject {
     // --------------------
     // MOVEMENT
     // --------------------
+
     moveTowards(this, this.destinationPosition, this.speed);
 
     if (this.hasArrivedAtDestination()) {

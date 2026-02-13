@@ -1,4 +1,5 @@
 import { Npc } from "../objects/Character/types/Npc/Npc.js";
+import { Enemy } from "../objects/Character/types/Enemy/Enemy.js";
 import { Exit } from "../objects/Exit/Exit.js";
 import { Sign } from "../objects/Sign/Sign.js";
 import { Chest } from "../objects/Chest/Chest.js";
@@ -18,6 +19,10 @@ export class GameObjectFactory {
       // NPC characters
       "Npc": this._createNpc.bind(this),
       "npc": this._createNpc.bind(this),
+
+      //Enemy characters
+      "Enemy": this._createEnemy.bind(this),
+      "enemy": this._createEnemy.bind(this),
 
       // Exit/transition points
       "Exit": this._createExit.bind(this),
@@ -136,6 +141,41 @@ export class GameObjectFactory {
     };
 
     return new Npc(tiledObject.worldX, tiledObject.worldY, config);
+  }
+
+  _createEnemy(tiledObject) {
+    // Parse NPC configuration from properties
+    const spriteResource = this._getProperty(tiledObject, "spriteResource");
+    const facingDirection = this._getProperty(tiledObject, "facingDirection");
+
+    const textContent = this._getProperty(tiledObject, "message") ||
+      this._getProperty(tiledObject, "dialogue") ||
+      this._getProperty(tiledObject, "content") ||
+      "...";
+
+    const portraitFrame = this._getProperty(tiledObject, "portraitFrame") || 0;
+
+    // Routine-based movement
+    const routine = this._getProperty(tiledObject, "commands");
+    const loop = this._getProperty(tiledObject, "loop") ?? false;
+    const pingPong = this._getProperty(tiledObject, "pingPong") ?? false;
+
+    const config = {
+      content: [
+        {
+          string: textContent,
+          addsFlag: null
+        }
+      ],
+      portraitFrame: portraitFrame,
+      spriteResource: spriteResource,
+      facingDirection: facingDirection,
+      routine: routine,
+      loop: loop,
+      pingPong: pingPong,
+    };
+
+    return new Enemy(tiledObject.worldX, tiledObject.worldY, config);
   }
 
   _createExit(tiledObject) {

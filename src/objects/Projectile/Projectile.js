@@ -120,9 +120,9 @@ export class Projectile extends GameObject {
     });
 
     if (hitTarget) {
-      // if (hitTarget instanceof Character) {
-      //   console.log(hitTarget);
-      // }
+      if (hitTarget instanceof Character) {
+        console.log(hitTarget);
+      }
       // Emit hit event with damage info
       events.emit("PROJECTILE_HIT", {
         target: hitTarget,
