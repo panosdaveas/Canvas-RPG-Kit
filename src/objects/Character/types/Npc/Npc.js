@@ -31,6 +31,7 @@ export class Npc extends Character {
       bodyOffset: new Vector2(-8, -20),
       shadowOffset: new Vector2(-8, -18),
       isSolid: true,
+      team: "enemy",
     });
 
     // NPC-specific: dialogue content

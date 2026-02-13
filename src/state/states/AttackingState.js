@@ -53,7 +53,6 @@ export class AttackingState extends State {
       if (target) {
         target.takeHit(weapon.damage);
         this.hasHit = true;
-        return;
       }
     }
   }
