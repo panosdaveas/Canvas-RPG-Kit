@@ -27,3 +27,28 @@ export const isSpaceFree = (walls, x, y) => {
   const isWallPresent = walls.has(key);
   return !isWallPresent;
 }
+
+/**
+ * Check if a tile is free of walls and solid objects.
+ * @param {Set} walls - Wall collision set
+ * @param {Array} children - Array of game objects to check for solids
+ * @param {number} x - Target tile X
+ * @param {number} y - Target tile Y
+ * @param {GameObject} [exclude] - Object to skip (e.g. the moving character itself)
+ * @returns {boolean} true if the tile is walkable
+ */
+export function isTileFree(walls, children, x, y, exclude = null) {
+  if (walls && !isSpaceFree(walls, x, y)) return false;
+
+  if (children) {
+    const solid = children.find(c => {
+      if (c === exclude || !c.isSolid) return false;
+      const cx = c.destinationPosition?.x ?? c.position.x;
+      const cy = c.destinationPosition?.y ?? c.position.y;
+      return cx === x && cy === y;
+    });
+    if (solid) return false;
+  }
+
+  return true;
+}

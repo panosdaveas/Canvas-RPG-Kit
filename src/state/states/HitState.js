@@ -1,7 +1,7 @@
 import { State } from "../State.js";
 import { STATE_IDLE } from "../../objects/Character/Character.js";
 import { moveTowards } from "../../helpers/moveTowards.js";
-import { isSpaceFree } from "../../helpers/grid.js";
+import { isTileFree } from "../../helpers/grid.js";
 import { events } from "../../Events.js";
 
 export const STATE_HIT = "HIT";
@@ -79,18 +79,8 @@ export class HitState extends State {
     // Hero: parent is Main (has level.walls)
     const walls = this.character.parent?.walls
       ?? this.character.parent?.level?.walls;
-    if (walls && !isSpaceFree(walls, pos.x, pos.y)) return false;
-
-    // Check for solid characters/objects at the target tile
     const level = this.character.parent?.level ?? this.character.parent;
-    const solidAtTarget = level?.children?.find(c => {
-      if (c === this.character || !c.isSolid) return false;
-      const x = c.destinationPosition?.x ?? c.position.x;
-      const y = c.destinationPosition?.y ?? c.position.y;
-      return x === pos.x && y === pos.y;
-    });
-
-    return !solidAtTarget;
+    return isTileFree(walls, level?.children, pos.x, pos.y, this.character);
   }
 
   exit() {

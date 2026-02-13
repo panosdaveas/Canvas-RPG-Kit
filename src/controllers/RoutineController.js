@@ -1,6 +1,6 @@
 import { Controller } from "./Controller.js";
 import { DOWN, LEFT, RIGHT, UP } from "../Input.js";
-import { isSpaceFree } from "../helpers/grid.js";
+import { isSpaceFree, isTileFree } from "../helpers/grid.js";
 
 /**
  * Controller for NPCs that follow a command-based movement routine.
@@ -262,26 +262,16 @@ export class RoutineController extends Controller {
         case RIGHT: nextX += gridSize; break;
       }
 
-      // Check collision
-      const spaceIsFree = isSpaceFree(root.level?.walls, nextX, nextY);
+      // Check collision (include hero since it's not in level.children)
+      const candidates = root.level?.children ? [...root.level.children] : [];
+      if (root.hero) candidates.push(root.hero);
 
-      const levelBodyAtSpace = root.level?.children.find(c => {
-        if (!c.isSolid || c === character) return false;
-        const checkX = c.destinationPosition?.x ?? c.position.x;
-        const checkY = c.destinationPosition?.y ?? c.position.y;
-        return checkX === nextX && checkY === nextY;
-      });
-
-      const heroAtSpace = root.hero &&
-        root.hero.destinationPosition.x === nextX &&
-        root.hero.destinationPosition.y === nextY;
-
-      if (spaceIsFree && !levelBodyAtSpace && !heroAtSpace) {
+      if (isTileFree(root.level?.walls, candidates, nextX, nextY, character)) {
         character.destinationPosition.x = nextX;
         character.destinationPosition.y = nextY;
         character.playWalkAnimation(state.direction);
         state.isMoving = true;
-      } else if (!spaceIsFree) {
+      } else if (!isSpaceFree(root.level?.walls, nextX, nextY)) {
         // Blocked by wall - skip remaining moves in this command
         character.playIdleAnimation();
         return true;

@@ -43,7 +43,7 @@ export const bow = {
     ammo: "infinite",
     cooldown: null,
     attackType: PROJECTILE,
-    hitbox: { range: 1, shape: HITBOX_FRONT },
+    hitbox: { range: 0, shape: null },
     // Sprite configuration
     sprite: {
         resource: "bow",  // key in resources.images

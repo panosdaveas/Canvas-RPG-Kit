@@ -314,7 +314,7 @@ export class Character extends GameObject {
       : { x: 0, y: 0 };
 
     const projectile = new Projectile({
-      position: this.position,
+      position: this.position.toNeighbor(this.attackDirection),
       direction: this.attackDirection,
       projectileConfig: projConfig,
       damage: this.equippedWeapon.damage,

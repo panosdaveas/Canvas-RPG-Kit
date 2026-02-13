@@ -1,6 +1,6 @@
 import { Controller } from "./Controller.js";
 import { DOWN, LEFT, RIGHT, UP } from "../Input.js";
-import { isSpaceFree } from "../helpers/grid.js";
+import { isTileFree } from "../helpers/grid.js";
 import { events } from "../Events.js";
 import { Character, STATE_ATTACKING, STATE_IDLE, STATE_INTERACTING } from "../objects/Character/Character.js";
 import { sword, bow, boomerang } from "../combat/weapons/index.js";
@@ -143,16 +143,7 @@ export class PlayerController extends Controller {
       case RIGHT: nextX += this.gridSize; break;
     }
 
-    const spaceIsFree = isSpaceFree(root.level?.walls, nextX, nextY);
-
-    const solidAtTarget = root.level?.children.find(c => {
-      if (!c.isSolid) return false;
-      const x = c.destinationPosition?.x ?? c.position.x;
-      const y = c.destinationPosition?.y ?? c.position.y;
-      return x === nextX && y === nextY;
-    });
-
-    if (spaceIsFree && !solidAtTarget) {
+    if (isTileFree(root.level?.walls, root.level?.children, nextX, nextY)) {
       character.destinationPosition.x = nextX;
       character.destinationPosition.y = nextY;
     }

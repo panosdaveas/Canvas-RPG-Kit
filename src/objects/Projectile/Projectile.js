@@ -4,7 +4,7 @@ import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
 import { events } from "../../Events.js";
 import { UP, DOWN, LEFT, RIGHT } from "../../Input.js";
-import { isSpaceFree } from "../../helpers/grid.js";
+import { isTileFree } from "../../helpers/grid.js";
 import { TILE_SIZE, DEBUG_LAYERS } from "../../Constants.js";
 import { Character } from "../Character/Character.js";
 
@@ -102,39 +102,35 @@ export class Projectile extends GameObject {
     const level = this.parent;
     if (!level) return false;
 
-    // Snap position to grid for wall collision check
+    // Snap position to grid for collision check
     const gridX = Math.round(this.position.x / TILE_SIZE) * TILE_SIZE;
     const gridY = Math.round(this.position.y / TILE_SIZE) * TILE_SIZE;
-
-    // Check wall collision
-    if (level.walls && !isSpaceFree(level.walls, gridX, gridY)) {
-      this.destroyProjectile();
-      return true;
-    }
 
     // Build target list: level children + hero (hero is a child of Main, not level)
     const main = level.parent;
     const candidates = [...level.children];
     if (main?.hero) candidates.push(main.hero);
 
-    // Check collision with characters on opposing teams
-    const hitTarget = candidates.find(child => {
-      if (child === this || !child.isSolid) return false;
-      if (child.team === "neutral" || child.team === this.team) return false;
-      const dx = Math.abs(child.position.x - this.position.x);
-      const dy = Math.abs(child.position.y - this.position.y);
-      return dx < TILE_SIZE && dy < TILE_SIZE;
-    });
-
-    if (hitTarget) {
-      if (typeof hitTarget.takeHit === "function") {
-        hitTarget.takeHit(this.damage, this.direction);
-      }
-      events.emit("PROJECTILE_HIT", {
-        target: hitTarget,
-        damage: this.damage,
-        projectile: this,
+    // Check walls + solid objects
+    if (!isTileFree(level.walls, candidates, gridX, gridY)) {
+      // If the blocking object is an enemy, deal damage
+      const hitTarget = candidates.find(c => {
+        if (c === this || !c.isSolid) return false;
+        if (c.team === "neutral" || c.team === this.team) return false;
+        const cx = c.destinationPosition?.x ?? c.position.x;
+        const cy = c.destinationPosition?.y ?? c.position.y;
+        return cx === gridX && cy === gridY;
       });
+
+      if (hitTarget && typeof hitTarget.takeHit === "function") {
+        hitTarget.takeHit(this.damage, this.direction);
+        events.emit("PROJECTILE_HIT", {
+          target: hitTarget,
+          damage: this.damage,
+          projectile: this,
+        });
+      }
+
       this.destroyProjectile();
       return true;
     }
