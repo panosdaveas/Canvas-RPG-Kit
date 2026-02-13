@@ -41,6 +41,9 @@ export class Character extends GameObject {
     this.projectileSprite = null;
     this.projectileLaunched = false;
 
+    // Team (for combat targeting: "neutral", "player", "enemy")
+    this.team = config.team ?? "neutral";
+
     // Controller
     this.controller = null;
 
@@ -315,6 +318,7 @@ export class Character extends GameObject {
       projectileConfig: projConfig,
       damage: this.equippedWeapon.damage,
       spriteOffset: spriteOffset,
+      team: this.team,
     });
 
     // Add projectile to the level

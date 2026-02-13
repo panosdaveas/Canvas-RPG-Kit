@@ -19,7 +19,8 @@ export class Hero extends Character {
       frame: 1,
       bodyOffset: new Vector2(-8, -16),
       shadowOffset: new Vector2(-8, -18),
-      isSolid: true
+      isSolid: true,
+      team: "player"
     });
 
     // Hero-specific properties

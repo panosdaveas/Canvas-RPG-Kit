@@ -39,10 +39,14 @@ export class AttackingState extends State {
     const level = root.level;
     if (!level) return;
 
+    const myTeam = this.character.team;
+
     for (const pos of hitboxPositions) {
       const target = level.children.find(c =>
         c !== this.character &&
         typeof c.takeHit === "function" &&
+        c.team !== "neutral" &&
+        c.team !== myTeam &&
         c.position.x === pos.x &&
         c.position.y === pos.y
       );

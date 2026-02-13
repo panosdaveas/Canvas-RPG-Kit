@@ -9,7 +9,7 @@ import { TILE_SIZE, DEBUG_LAYERS } from "../../Constants.js";
 import { Character } from "../Character/Character.js";
 
 export class Projectile extends GameObject {
-  constructor({ position, direction, projectileConfig, damage, spriteOffset }) {
+  constructor({ position, direction, projectileConfig, damage, spriteOffset, team }) {
     super({
       position: position.duplicate(),
     });
@@ -18,6 +18,7 @@ export class Projectile extends GameObject {
     this.speed = projectileConfig.speed ?? 2;
     this.maxRange = projectileConfig.maxRange ?? 1000;
     this.damage = damage;
+    this.team = team ?? "neutral";
     this.distanceTraveled = 0;
     this.ySortBias = 0.1; // Render slightly in front of objects at same Y
 
@@ -111,16 +112,17 @@ export class Projectile extends GameObject {
       return true;
     }
 
-    // Check collision with solid objects (enemies, NPCs, etc.)
+    // Check collision with characters on opposing teams
     const hitTarget = level.children.find(child => {
       if (child === this || !child.isSolid) return false;
+      if (child.team === "neutral" || child.team === this.team) return false;
       const dx = Math.abs(child.position.x - this.position.x);
       const dy = Math.abs(child.position.y - this.position.y);
       return dx < TILE_SIZE && dy < TILE_SIZE;
     });
 
     if (hitTarget) {
-      if (hitTarget instanceof Character) {
+      if (typeof hitTarget.takeHit === "function") {
         hitTarget.takeHit(this.damage);
       }
       events.emit("PROJECTILE_HIT", {

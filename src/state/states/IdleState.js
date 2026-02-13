@@ -7,7 +7,9 @@ export class IdleState extends State {
   }
 
   enter() {
-    this.character.playIdleAnimation();
+    // this.character.playIdleAnimation();               
+    // Don't force idle animation here — the controller handles it.
+    // Forcing it would interrupt walk animations on every tile arrival.
   }
 
   update(delta, root) {
