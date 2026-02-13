@@ -5,6 +5,7 @@ import { events } from "../Events.js";
 import { gridCells } from "../helpers/grid.js";
 import { SimpleLevel } from "../objects/Level/types/SimpleLevel.js";
 import { Npc } from "../objects/Character/types/Npc/Npc.js";
+import { Enemy } from "../objects/Character/types/Enemy/Enemy.js";
 import { getSpawnPlayerFromMap, getWorldNameFromPath, resolveMapPath } from "../helpers/mapUtils.js";
 import { globalState } from "../GlobalState.js";
 
@@ -31,6 +32,9 @@ export class Overworld extends ChunkedLevel {
 
     // Define where the hero should spawn (Main will position the hero here)
     this.heroStartPosition = params.heroPosition ?? new Vector2(gridCells(15), gridCells(14));
+
+    // Test enemy
+    this.addChild(new Enemy(gridCells(18), gridCells(16)));
 
     // const npc1 = new Npc(gridCells(15), gridCells(16), {
     //   //content: "I am the first NPC!",

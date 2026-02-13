@@ -322,9 +322,15 @@ export class Character extends GameObject {
     });
 
     // Add projectile to the level
-    const main = this.parent;
-    if (main?.level) {
-      main.level.addChild(projectile);
+    // Hero's parent is Main, enemy's parent is the level
+    let main = this.parent;
+    let level = main?.level;
+    if (!level && main?.parent) {
+      level = main;
+      main = main.parent;
+    }
+    if (level && main) {
+      level.addChild(projectile);
       main.addToYSortedObjects(projectile);
     }
   }

@@ -112,8 +112,13 @@ export class Projectile extends GameObject {
       return true;
     }
 
+    // Build target list: level children + hero (hero is a child of Main, not level)
+    const main = level.parent;
+    const candidates = [...level.children];
+    if (main?.hero) candidates.push(main.hero);
+
     // Check collision with characters on opposing teams
-    const hitTarget = level.children.find(child => {
+    const hitTarget = candidates.find(child => {
       if (child === this || !child.isSolid) return false;
       if (child.team === "neutral" || child.team === this.team) return false;
       const dx = Math.abs(child.position.x - this.position.x);
