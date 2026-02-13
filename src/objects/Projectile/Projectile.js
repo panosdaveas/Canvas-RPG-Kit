@@ -8,6 +8,9 @@ import { isTileFree } from "../../helpers/grid.js";
 import { TILE_SIZE, DEBUG_LAYERS } from "../../Constants.js";
 import { Character } from "../Character/Character.js";
 
+
+// TODO: projectile-vs-projectile needs a weight/priority system to decide the outcome, now we only have melle intercepts projectile
+
 export class Projectile extends GameObject {
   constructor({ position, direction, projectileConfig, damage, spriteOffset, team }) {
     super({

@@ -12,10 +12,6 @@ TODO: calculate expected vs real draw calls per second
 
 TODO: packet collisions??
 
-BATTLE: Rock-Paper-Scissor | Enhanced | Combo of hand signs like jutsu / find scrolls to learn techniques
-
-BATTLE: Alchemy / elemental / material system / crafting ??
-
 ENGINE:
 1. Detection - Layers marked with static=true property in Tiled are identified during _parseLayers()                                                      
 2. Pre-rendering - The _cacheStaticLayers() method creates offscreen canvases (480x480px for 30x30 tile chunks) and draws all static layer tiles to them once at chunk initialization                                                  

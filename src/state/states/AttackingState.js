@@ -46,6 +46,22 @@ export class AttackingState extends State {
     const candidates = [...level.children];
     if (root.hero) candidates.push(root.hero);
 
+    // NOTE: code before intercepting projectiles
+    // for (const pos of hitboxPositions) {
+    //   const target = candidates.find(c =>
+    //     c !== this.character &&
+    //     typeof c.takeHit === "function" &&
+    //     c.team !== "neutral" &&
+    //     c.team !== myTeam &&
+    //     c.position.x === pos.x &&
+    //     c.position.y === pos.y
+    //   );
+    //   if (target) {
+    //     target.takeHit(weapon.damage, this.character.attackDirection);
+    //     this.hasHit = true;
+    //   }
+    // }
+
     for (const pos of hitboxPositions) {
       const target = candidates.find(c => {
         if (c === this.character) return false;

@@ -34,3 +34,28 @@ Two parallel structures: the hierarchy tree and a separate _sortedObjects array 
 
 Strength: Factory pattern with runtime registration
   Watch Out For: Dual tracking (hierarchy + sorted array)
+
+
+#Combat #ai #enemies
+
+behaviour:
+  1. chaser
+  2. Lurker
+  3. Zoner
+  4. Flanker
+  5. Area Denier
+
+state machine:
+  1. idle
+  2. seek
+  3. attack
+  4. cooldown
+  5. move
+  6. recover
+
+distance checks:
+  1. manhattan distance
+
+intent system:
+  . emnemy marks intented tiles
+
