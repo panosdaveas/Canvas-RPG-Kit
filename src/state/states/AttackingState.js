@@ -1,9 +1,15 @@
 import { State } from "../State.js";
 import { STATE_ATTACKING, STATE_IDLE } from "../../objects/Character/Character.js";
+import { getHitboxPositions } from "../../combat/attackHelpers.js";
 
 export class AttackingState extends State {
   constructor() {
     super(STATE_ATTACKING);
+    this.hasHit = false;
+  }
+
+  enter() {
+    this.hasHit = false;
   }
 
   update(delta, root) {
@@ -11,8 +17,40 @@ export class AttackingState extends State {
 
     this.character.updateWeaponSprite();
 
+    if (!this.hasHit) {
+      this.checkMeleeHit(root);
+    }
+
     if (this.character.attackTimer <= 0) {
       this.transitionTo(STATE_IDLE);
+    }
+  }
+
+  checkMeleeHit(root) {
+    const weapon = this.character.equippedWeapon;
+    if (!weapon?.hitbox) return;
+
+    const hitboxPositions = getHitboxPositions(
+      this.character.position,
+      this.character.attackDirection,
+      weapon.hitbox
+    );
+
+    const level = root.level;
+    if (!level) return;
+
+    for (const pos of hitboxPositions) {
+      const target = level.children.find(c =>
+        c !== this.character &&
+        typeof c.takeHit === "function" &&
+        c.position.x === pos.x &&
+        c.position.y === pos.y
+      );
+      if (target) {
+        target.takeHit(weapon.damage);
+        this.hasHit = true;
+        return;
+      }
     }
   }
 
