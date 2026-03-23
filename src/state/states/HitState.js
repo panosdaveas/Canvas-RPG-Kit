@@ -75,12 +75,8 @@ export class HitState extends State {
   }
 
   isWalkable(pos) {
-    // Enemy: parent is the level (has walls directly)
-    // Hero: parent is Main (has level.walls)
-    const walls = this.character.parent?.walls
-      ?? this.character.parent?.level?.walls;
-    const level = this.character.parent?.level ?? this.character.parent;
-    return isTileFree(walls, level?.children, pos.x, pos.y, this.character);
+    const level = this.character.parent;
+    return isTileFree(level?.walls, level?.children, pos.x, pos.y, this.character);
   }
 
   exit() {
