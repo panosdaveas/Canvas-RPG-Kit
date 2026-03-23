@@ -109,10 +109,7 @@ export class Projectile extends GameObject {
     const gridX = Math.round(this.position.x / TILE_SIZE) * TILE_SIZE;
     const gridY = Math.round(this.position.y / TILE_SIZE) * TILE_SIZE;
 
-    // Build target list: level children + hero (hero is a child of Main, not level)
-    const main = level.parent;
     const candidates = [...level.children];
-    if (main?.hero) candidates.push(main.hero);
 
     // Check walls + solid objects
     if (!isTileFree(level.walls, candidates, gridX, gridY)) {

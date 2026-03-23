@@ -60,7 +60,6 @@ export class EnemyController extends Controller {
     }
 
     const candidates = root.level?.children ? [...root.level.children] : [];
-    if (root.hero) candidates.push(root.hero);
 
     // Within attack range but not aligned → try either axis to align
     const inRange = absDx <= this.attackRange && absDy <= this.attackRange;

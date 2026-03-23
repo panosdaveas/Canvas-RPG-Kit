@@ -40,12 +40,12 @@ export class Main extends GameObject {
     const inventory = new Inventory()
     this.addChild(inventory);
 
-    // Create hero (persists across levels)
+    // Create hero (persists across levels, re-parented on level change)
     this.hero = new Hero(gridCells(15), gridCells(14));
-    this.addChild(this.hero);
-
-    // Initialize sorted objects with hero
-    this._rebuildSortedObjects();
+    if (this.level) {
+      this.level.addChild(this.hero);
+      this._rebuildSortedObjects();
+    }
 
     // Mark Y-sort dirty when any character's Y position changes
     events.on("YSORT_DIRTY", this, () => {
@@ -129,6 +129,11 @@ export class Main extends GameObject {
   }
 
   setLevel(newLevelInstance, heroPosition = null) {
+    // Detach hero from old level (preserves event subscriptions)
+    if (this.hero?.parent) {
+      this.hero.parent.detachChild(this.hero);
+    }
+
     if (this.level) {
       this.level.destroy();
     }
@@ -142,7 +147,11 @@ export class Main extends GameObject {
       this.hero.position.y = heroPosition.y;
       this.hero.destinationPosition.x = heroPosition.x;
       this.hero.destinationPosition.y = heroPosition.y;
-      // Emit position so camera and chunks update
+    }
+
+    // Add hero into the new level
+    if (this.hero) {
+      this.level.addChild(this.hero);
       events.emit("HERO_POSITION", this.hero.position);
     }
 
@@ -184,14 +193,7 @@ export class Main extends GameObject {
   _rebuildSortedObjects() {
     this._sortedObjects = [];
 
-    // Add Main's children (hero, etc.) - exclude HUD and Level itself
-    this.children.forEach(child => {
-      if (child.drawLayer !== "HUD" && child !== this.level) {
-        this._sortedObjects.push(child);
-      }
-    });
-
-    // Add Level's children (NPCs, spawned objects, etc.)
+    // All Y-sorted objects (hero, NPCs, enemies, etc.) live in level.children
     if (this.level) {
       this.level.children.forEach(child => {
         this._sortedObjects.push(child);

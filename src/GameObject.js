@@ -83,7 +83,13 @@ export class GameObject {
     this.children.forEach(child => {
       child.destroy();
     })
-    this.parent.removeChild(this)
+    this.parent?.removeChild(this)
+  }
+
+  // Remove from parent without unsubscribing events (for re-parenting)
+  detachChild(gameObject) {
+    this.children = this.children.filter(g => gameObject !== g);
+    gameObject.parent = null;
   }
 
   /* Other Game Objects are nestable inside this one */

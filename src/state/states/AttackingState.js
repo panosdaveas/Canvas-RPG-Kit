@@ -42,9 +42,7 @@ export class AttackingState extends State {
 
     const myTeam = this.character.team;
 
-    // Build target list: level children + hero (hero is a child of Main, not level)
     const candidates = [...level.children];
-    if (root.hero) candidates.push(root.hero);
 
     // NOTE: code before intercepting projectiles
     // for (const pos of hitboxPositions) {

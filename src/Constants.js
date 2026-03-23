@@ -2,8 +2,8 @@
 export const TILE_SIZE = 16; // Pixels per grid cell
 
 export const CANVAS = {
-    WIDTH: 180, // canvas width in pixels
-    HEIGHT: 180, // canvas height in pixels
+    WIDTH: 360, // canvas width in pixels
+    HEIGHT: 360, // canvas height in pixels
     // WIDTH: 480, // canvas width in pixels
     // HEIGHT: 270, // canvas height in pixels
 }

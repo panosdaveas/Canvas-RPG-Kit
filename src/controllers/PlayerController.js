@@ -31,7 +31,7 @@ export class PlayerController extends Controller {
 
     //equip weapon
     //TODO: wait for attack to finish and then swap weapons
-    if (input?.getActionJustPressed("Digit1" || "1" || "Numpad1")) {
+    if (input?.getActionJustPressed("Digit1") || input?.getActionJustPressed("Numpad1")) {
       if (character.state != STATE_ATTACKING) {
         character.unequip();
         character.equip(sword);
@@ -39,7 +39,7 @@ export class PlayerController extends Controller {
       }
     }
 
-    if (input?.getActionJustPressed("Digit2" || "2" || "Numpad2")) {
+    if (input?.getActionJustPressed("Digit2") || input?.getActionJustPressed("Numpad2")) {
       if (character.state != STATE_ATTACKING) {
         character.unequip();
         character.equip(bow);
@@ -47,7 +47,7 @@ export class PlayerController extends Controller {
       }
     }
 
-    if (input?.getActionJustPressed("Digit3" || "3" || "Numpad3")) {
+    if (input?.getActionJustPressed("Digit3") || input?.getActionJustPressed("Numpad3")) {
       if (character.state != STATE_ATTACKING) {
         character.unequip();
         character.equip(boomerang);
@@ -103,7 +103,7 @@ export class PlayerController extends Controller {
     const character = this.character;
     // Look for an object at the next space (according to where character is facing)
     const objAtPosition = root.level?.children.find(child => {
-      return child.position.matches(character.position.toNeighbor(character.facingDirection));
+      return child !== character && child.position.matches(character.position.toNeighbor(character.facingDirection));
     });
     console.log("ACTION WITH:", objAtPosition);
     if (objAtPosition) {
@@ -143,7 +143,7 @@ export class PlayerController extends Controller {
       case RIGHT: nextX += this.gridSize; break;
     }
 
-    if (isTileFree(root.level?.walls, root.level?.children, nextX, nextY)) {
+    if (isTileFree(root.level?.walls, root.level?.children, nextX, nextY, character)) {
       character.destinationPosition.x = nextX;
       character.destinationPosition.y = nextY;
     }

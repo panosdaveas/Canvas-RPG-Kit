@@ -262,9 +262,7 @@ export class RoutineController extends Controller {
         case RIGHT: nextX += gridSize; break;
       }
 
-      // Check collision (include hero since it's not in level.children)
       const candidates = root.level?.children ? [...root.level.children] : [];
-      if (root.hero) candidates.push(root.hero);
 
       if (isTileFree(root.level?.walls, candidates, nextX, nextY, character)) {
         character.destinationPosition.x = nextX;
