@@ -1,4 +1,5 @@
 export const STAB = "stab";
-export const SWING = "swing";
-export const THROW = "throw";
+export const SWORD = "sword";
+export const FIRE = "fire";
+export const BOW = "bow";
 export const PROJECTILE = "projectile";

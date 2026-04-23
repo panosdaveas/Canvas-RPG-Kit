@@ -247,8 +247,11 @@ export class Main extends GameObject {
     if (this._ySortDirty) {
       this._sortedObjects.sort((a, b) => {
         // Add small bias for hero and objects with ySortBias
-        const aY = a.position.y + (a === this.hero ? 0.1 : (a.ySortBias ?? 0));
-        const bY = b.position.y + (b === this.hero ? 0.1 : (b.ySortBias ?? 0));
+        //NOTE: maybe don't need the bias since the weapons / items are now baked 
+        // const aY = a.position.y + (a === this.hero ? 0.1 : (a.ySortBias ?? 0));
+        // const bY = b.position.y + (b === this.hero ? 0.1 : (b.ySortBias ?? 0));
+        const aY = a.position.y;
+        const bY = b.position.y;
         return aY - bY;
       });
       this._ySortDirty = false;

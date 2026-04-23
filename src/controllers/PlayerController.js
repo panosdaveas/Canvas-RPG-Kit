@@ -3,7 +3,7 @@ import { DOWN, LEFT, RIGHT, UP } from "../Input.js";
 import { isTileFree } from "../helpers/grid.js";
 import { events } from "../Events.js";
 import { Character, STATE_ATTACKING, STATE_IDLE, STATE_INTERACTING } from "../objects/Character/Character.js";
-import { sword, bow, boomerang } from "../combat/weapons/index.js";
+import { sword, bow, firearm } from "../combat/weapons/index.js";
 
 
 export class PlayerController extends Controller {
@@ -35,7 +35,7 @@ export class PlayerController extends Controller {
       if (character.state != STATE_ATTACKING) {
         character.unequip();
         character.equip(sword);
-        console.log("Equiped", character.weaponSprite);
+        console.log("Equipped", character.equippedWeapon?.id);
       }
     }
 
@@ -43,15 +43,15 @@ export class PlayerController extends Controller {
       if (character.state != STATE_ATTACKING) {
         character.unequip();
         character.equip(bow);
-        console.log("Equiped", character.weaponSprite);
+        console.log("Equipped", character.equippedWeapon?.id);
       }
     }
 
     if (input?.getActionJustPressed("Digit3") || input?.getActionJustPressed("Numpad3")) {
       if (character.state != STATE_ATTACKING) {
         character.unequip();
-        character.equip(boomerang);
-        console.log("Equiped", character.weaponSprite);
+        character.equip(firearm);
+        console.log("Equipped", character.equippedWeapon?.id);
       }
     }
 

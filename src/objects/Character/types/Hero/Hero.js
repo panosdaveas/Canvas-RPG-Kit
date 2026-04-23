@@ -4,7 +4,6 @@ import { resources } from "../../../../Resource.js";
 import { events } from "../../../../Events.js";
 import { PlayerController } from "../../../../controllers/PlayerController.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
-import { sword, bow, boomerang } from "../../../../combat/weapons/index.js";
 import { ItemPickupState, STATE_ITEM_PICKUP } from "../../../../state/states/ItemPickupState.js";
 
 export class Hero extends Character {
@@ -13,11 +12,11 @@ export class Hero extends Character {
       position: new Vector2(x, y),
       spriteResource: resources.images.hero,
       animations: createHeroAnimations(),
-      frameSize: new Vector2(32, 32),
-      hFrames: 52,
-      vFrames: 17,
+      frameSize: new Vector2(72, 72),
+      hFrames: 4,
+      vFrames: 16,
       frame: 1,
-      bodyOffset: new Vector2(-8, -16),
+      bodyOffset: new Vector2(-28, -36),
       shadowOffset: new Vector2(-8, -18),
       isSolid: true,
       team: "player"

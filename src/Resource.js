@@ -2,8 +2,7 @@ class Resources {
   constructor() {
     // Everything we plan to download
     this.toLoad = {
-      hero: "/sprites/hero_alt.png",
-      swing: "/sprites/hero_swing.png",
+      hero: "/sprites/protagonist.png",
       heroine: "/sprites/Girl-Sheet.png",
       shadow: "/sprites/shadow.png",
       drone:"/sprites/drone.png",
@@ -30,9 +29,6 @@ class Resources {
       // World Objects
       chest: "/sprites/chest.png",
       // Weapons
-      bow: "/sprites/weapons/bow.png",
-      sword: "/sprites/weapons/sword.png",
-      boomerang: "/sprites/weapons/boomerang.png",
       arrow: "/sprites/weapons/arrow.png",
     };
 

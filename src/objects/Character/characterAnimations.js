@@ -19,7 +19,7 @@ export const makeIdleFrames = (rootFrame = 0) => {
   };
 };
 
-const createWalkingFrames = (rootFrame, count = 10, step = 50) =>
+const createWalkingFrames = (rootFrame, count = 4, step = 150) =>
   Array.from({ length: count }, (_, i) => ({
     time: i * step,
     frame: rootFrame + i,
@@ -27,7 +27,7 @@ const createWalkingFrames = (rootFrame, count = 10, step = 50) =>
 
 export const makeWalkingFrames = (rootFrame = 0) => {
   return {
-    duration: 500,
+    duration: 600,
     loop: true,
     frames: createWalkingFrames(rootFrame),
   };
@@ -46,45 +46,45 @@ export const makeStandingFrames = (frame = 0) => {
   };
 };
 
-const createSwingFrames = (rootFrame, count = 15, step = 25) =>
+const createSwordFrames = (rootFrame, count = 4, step = 100) =>
   Array.from({ length: count }, (_, i) => ({
     time: i * step,
     frame: rootFrame + i,
   }));
 
-export const makeSwingFrames = (rootFrame = 0) => {
+export const makeSwordFrames = (rootFrame = 0) => {
   return {
     duration: 400,
     loop: false,
-    frames: createSwingFrames(rootFrame),
+    frames: createSwordFrames(rootFrame),
   };
 };
 
-const createProjectileFrames = (rootFrame, count = 52, step = 15) =>
+const createBowFrames = (rootFrame, count = 4, step = 100) =>
   Array.from({ length: count }, (_, i) => ({
     time: i * step,
     frame: rootFrame + i,
   }));
 
-export const makeProjectileFrames = (rootFrame = 0) => {
+export const makeBowFrames = (rootFrame = 0) => {
   return {
-    duration: 780,
+    duration: 400,
     loop: false,
-    frames: createProjectileFrames(rootFrame),
+    frames: createBowFrames(rootFrame),
   };
 };
 
-const createThrowFrames = (rootFrame, count = 17, step = 25) =>
+const createFireFrames = (rootFrame, count = 4, step = 100) =>
   Array.from({ length: count }, (_, i) => ({
     time: i * step,
     frame: rootFrame + i,
   }));
 
-export const makeThrowFrames = (rootFrame = 0) => {
+export const makeFireFrames = (rootFrame = 0) => {
   return {
-    duration: 425,
+    duration: 400,
     loop: false,
-    frames: createThrowFrames(rootFrame),
+    frames: createFireFrames(rootFrame),
   };
 };
 
@@ -129,26 +129,26 @@ export function createCharacterAnimations(frameOffsets, extraAnimations = {}) {
  * Layout: 3 columns (walk frames), 8 rows (directions + special)
  */
 export const HERO_FRAME_OFFSETS = {
-  idleRight: 0,
-  idleUp: 1,
-  idleLeft: 2,
-  idleDown: 3,
-  walkRight: 52,
-  walkUp: 104,
-  walkLeft: 156,
-  walkDown: 208,
-  swingRight: 260,
-  swingUp: 312,
-  swingLeft: 364,
-  swingDown: 416,
-  throwRight: 468,
-  throwUp: 520,
-  throwLeft: 572,
-  throwDown: 624,
-  projectileRight: 676,
-  projectileUp: 728,
-  projectileLeft: 780,
-  projectileDown: 832,
+  idleDown: 1,
+  idleLeft: 5,
+  idleRight: 9,
+  idleUp: 13,
+  walkDown: 0,
+  walkLeft: 4,
+  walkRight: 8,
+  walkUp: 12,
+  swordDown: 16,
+  swordLeft: 20,
+  swordRight: 24,
+  swordUp: 28,
+  bowDown: 32,
+  bowLeft: 36,
+  bowRight: 40,
+  bowUp: 44,
+  fireDown: 48,
+  fireLeft: 52,
+  fireRight: 56,
+  fireUp: 60,
 };
 
 export const HERO_EXTRA_ANIMATIONS = {
@@ -164,18 +164,18 @@ export const HERO_EXTRA_ANIMATIONS = {
 };
 
 export const HERO_ATTACK_ANIMATIONS = {
-  swingDown: makeSwingFrames(HERO_FRAME_OFFSETS.swingDown),
-  swingUp: makeSwingFrames(HERO_FRAME_OFFSETS.swingUp),
-  swingLeft: makeSwingFrames(HERO_FRAME_OFFSETS.swingLeft),
-  swingRight: makeSwingFrames(HERO_FRAME_OFFSETS.swingRight),
-  projectileDown: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileDown),
-  projectileUp: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileUp),
-  projectileLeft: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileLeft),
-  projectileRight: makeProjectileFrames(HERO_FRAME_OFFSETS.projectileRight),
-  throwDown: makeThrowFrames(HERO_FRAME_OFFSETS.throwDown),
-  throwUp: makeThrowFrames(HERO_FRAME_OFFSETS.throwUp),
-  throwLeft: makeThrowFrames(HERO_FRAME_OFFSETS.throwLeft),
-  throwRight: makeThrowFrames(HERO_FRAME_OFFSETS.throwRight),
+  swordDown: makeSwordFrames(HERO_FRAME_OFFSETS.swordDown),
+  swordUp: makeSwordFrames(HERO_FRAME_OFFSETS.swordUp),
+  swordLeft: makeSwordFrames(HERO_FRAME_OFFSETS.swordLeft),
+  swordRight: makeSwordFrames(HERO_FRAME_OFFSETS.swordRight),
+  bowDown: makeBowFrames(HERO_FRAME_OFFSETS.bowDown),
+  bowUp: makeBowFrames(HERO_FRAME_OFFSETS.bowUp),
+  bowLeft: makeBowFrames(HERO_FRAME_OFFSETS.bowLeft),
+  bowRight: makeBowFrames(HERO_FRAME_OFFSETS.bowRight),
+  fireDown: makeFireFrames(HERO_FRAME_OFFSETS.fireDown),
+  fireUp: makeFireFrames(HERO_FRAME_OFFSETS.fireUp),
+  fireLeft: makeFireFrames(HERO_FRAME_OFFSETS.fireLeft),
+  fireRight: makeFireFrames(HERO_FRAME_OFFSETS.fireRight),
 };
 
 /**

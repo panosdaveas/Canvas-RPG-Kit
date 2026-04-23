@@ -7,19 +7,28 @@ export class AttackingState extends State {
   constructor() {
     super(STATE_ATTACKING);
     this.hasHit = false;
+    this.hasLaunched = false;
   }
 
   enter() {
     this.hasHit = false;
+    this.hasLaunched = false;
   }
 
   update(delta, root) {
     this.character.attackTimer -= delta;
 
-    this.character.updateWeaponSprite();
-
     if (!this.hasHit) {
       this.checkMeleeHit(root);
+    }
+
+    const weapon = this.character.equippedWeapon;
+    if (!this.hasLaunched && weapon?.launchTime != null) {
+      const elapsed = this.character.attackDuration - this.character.attackTimer;
+      if (elapsed >= weapon.launchTime) {
+        this.character.launchProjectile();
+        this.hasLaunched = true;
+      }
     }
 
     if (this.character.attackTimer <= 0) {
@@ -83,7 +92,6 @@ export class AttackingState extends State {
   exit() {
     this.character.attackRecoveryTimer = 120;
     this.character.attackDirection = null;
-    this.character.hideWeaponSprite();
     this.character.playIdleAnimation();
   }
 }

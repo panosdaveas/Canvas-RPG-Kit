@@ -1,37 +1,4 @@
-import { PROJECTILE } from "../attackTypes.js";
-import { HITBOX_FRONT } from "../attackHelpers.js";
-
-const x= -8;
-const y= -16;
-
-const makeFrames = (row, opts, overrides = {}) =>
-    Array.from({ length: FRAMES_PER_SWING }, (_, i) => ({
-        frame: row * FRAMES_PER_SWING + i,
-        ...opts,
-        ...(overrides[i] ?? {}),
-    }));
-
-const common = {
-    offset: { x, y },
-    visible: true,
-    damageActive: true,
-    launch: false,
-};
-
-const range = (from, to, props) =>
-    Object.fromEntries(
-        Array.from({ length: to - from + 1 }, (_, i) => [
-            from + i,
-            props,
-        ])
-    );
-
-const overrides = {
-    ...range(8, 42, { projectileVisible: true }),
-    36: { launch: true },
-};
-
-const FRAMES_PER_SWING = 52;
+import { BOW } from "../attackTypes.js";
 
 export const bow = {
     id: "bow",
@@ -42,21 +9,15 @@ export const bow = {
     },
     ammo: "infinite",
     cooldown: null,
-    attackType: PROJECTILE,
+    attackType: BOW,
     hitbox: { range: 0, shape: null },
-    // Sprite configuration
-    sprite: {
-        resource: "bow",  // key in resources.images
-        frameSize: { x: 32, y: 32 },
-        hFrames: 52,
-        vFrames: 4,
-    },
-    // Projectile configuration
+    // ms into the attack animation when the arrow is released
+    launchTime: 400,
     projectile: {
         id: "arrow",
         speed: 2,
         maxRange: 128,
-        offset: { x: 8, y: 8 }, // Offset relative to weapon sprite
+        spriteOffset: { x: 0, y: -6 },
         sprite: {
             resource: "arrow",
             frameSize: { x: 16, y: 16 },
@@ -65,18 +26,9 @@ export const bow = {
         },
         animations: {
             flyRight: [{ frame: 0 }],
-            flyUp: [{ frame: 1 }],
-            flyLeft: [{ frame: 2 }],
-            flyDown: [{ frame: 3 }],
-        }
+            flyUp:    [{ frame: 1 }],
+            flyLeft:  [{ frame: 2 }],
+            flyDown:  [{ frame: 3 }],
+        },
     },
-    animations: {
-        projectileRight: makeFrames(0, common, overrides),
-
-        projectileUp: makeFrames(1, common, overrides),
-
-        projectileLeft: makeFrames(2, common, overrides),
-
-        projectileDown: makeFrames(3, common, overrides),
-    }
 };
