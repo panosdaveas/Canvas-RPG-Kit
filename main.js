@@ -35,11 +35,22 @@ async function startGame() {
   window.mainScene = mainScene; // Expose for debugging
   mainScene.setLevel(new Overworld());
 
+  let paused = false;
+
   // Establish update and draw loops
   const update = (delta) => {
-    mainScene.stepEntry(delta, mainScene);
+    // Escape uses lastKeys from the previous frame's input.update() — correct timing
+    if (mainScene.input?.getActionJustPressed("Escape")) {
+      paused = !paused;
+    }
+
+    if (!paused) {
+      mainScene.stepEntry(delta, mainScene);
+      screenEffects.update(delta);
+    }
+
+    // Always runs last so lastKeys reflects this frame for next frame's checks
     mainScene.input?.update();
-    screenEffects.update(delta);
   };
 
   const draw = () => {
@@ -68,9 +79,21 @@ async function startGame() {
 
     // Draw screen-space effects (fade, etc.) on top of everything
     screenEffects.draw(ctx);
-    
+
     // Draw HUD
     mainScene.drawHud(ctx);
+
+    if (paused) {
+      ctx.save();
+      ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 14px monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("PAUSED", canvas.width / 2, canvas.height / 2);
+      ctx.restore();
+    }
   }
 
   // Start the game!
