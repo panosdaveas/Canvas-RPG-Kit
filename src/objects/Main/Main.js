@@ -7,9 +7,11 @@ import {SpriteTextString} from "../SpriteTextString/SpriteTextString.js";
 import {storyFlags} from "../../StoryFlags.js";
 import {Hero} from "../Character/types/Hero/Hero.js";
 import {STATE_IDLE, STATE_INTERACTING} from "../Character/Character.js";
+import {STATE_ENTRY} from "../../state/states/EntryState.js";
 import {gridCells} from "../../helpers/grid.js";
 import {CANVAS, CULLING, TILE_SIZE} from "../../Constants.js";
 import {globalState} from "../../GlobalState.js";
+import {screenEffects} from "../../ScreenEffects.js";
 
 export class Main extends GameObject {
   constructor() {
@@ -72,7 +74,13 @@ export class Main extends GameObject {
         }
       }
 
-      this.setLevel(level, finalPosition);
+      screenEffects.fadeOut(300, () => {
+        this.setLevel(level, finalPosition);
+        if (this.hero) {
+          this.hero.state = STATE_ENTRY;
+        }
+        screenEffects.fadeIn(300);
+      });
     })
 
     // Handle hero actions with automatic state management

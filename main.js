@@ -4,6 +4,7 @@ import {GameLoop} from "./src/GameLoop.js";
 import {Main} from "./src/objects/Main/Main.js";
 import { Overworld } from './src/levels/Overworld.js';
 import {resources} from './src/Resource.js';
+import {screenEffects} from './src/ScreenEffects.js';
 
 // Grabbing the canvas to draw to
 const canvas = document.querySelector("#game-canvas");
@@ -38,6 +39,7 @@ async function startGame() {
   const update = (delta) => {
     mainScene.stepEntry(delta, mainScene);
     mainScene.input?.update();
+    screenEffects.update(delta);
   };
 
   const draw = () => {
@@ -64,6 +66,9 @@ async function startGame() {
 
     ctx.restore();
 
+    // Draw screen-space effects (fade, etc.) on top of everything
+    screenEffects.draw(ctx);
+    
     // Draw HUD
     mainScene.drawHud(ctx);
   }

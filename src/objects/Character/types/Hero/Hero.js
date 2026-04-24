@@ -5,6 +5,7 @@ import { events } from "../../../../Events.js";
 import { PlayerController } from "../../../../controllers/PlayerController.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
 import { ItemPickupState, STATE_ITEM_PICKUP } from "../../../../state/states/ItemPickupState.js";
+import { EntryState, STATE_ENTRY } from "../../../../state/states/EntryState.js";
 
 export class Hero extends Character {
   constructor(x, y) {
@@ -35,6 +36,7 @@ export class Hero extends Character {
   _setupStateMachine() {
     super._setupStateMachine();
     this.stateMachine.registerState(STATE_ITEM_PICKUP, new ItemPickupState());
+    this.stateMachine.registerState(STATE_ENTRY, new EntryState());
   }
 
   ready() {
