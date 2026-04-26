@@ -12,6 +12,7 @@ import {gridCells} from "../../helpers/grid.js";
 import {CANVAS, CULLING, TILE_SIZE} from "../../Constants.js";
 import {globalState} from "../../GlobalState.js";
 import {screenEffects} from "../../ScreenEffects.js";
+import {Companion} from "../Character/types/Companion/Companion.js";
 
 export class Main extends GameObject {
   constructor() {
@@ -20,6 +21,7 @@ export class Main extends GameObject {
     this.input = new Input()
     this.camera = new Camera()
     this.hero = null;
+    this.companion = null;
 
     // Y-sort optimization: only re-sort when needed
     this._sortedObjects = [];
@@ -35,6 +37,7 @@ export class Main extends GameObject {
 
     // Debug logging throttle
     this._lastLogTime = 0;
+
   }
 
   ready() {
@@ -44,8 +47,10 @@ export class Main extends GameObject {
 
     // Create hero (persists across levels, re-parented on level change)
     this.hero = new Hero(gridCells(15), gridCells(14));
+    this.companion = new Companion(gridCells(15), gridCells(13));
     if (this.level) {
       this.level.addChild(this.hero);
+      this.level.addChild(this.companion);
       this._rebuildSortedObjects();
     }
 
@@ -57,6 +62,16 @@ export class Main extends GameObject {
     // Mark HUD dirty when HUD content changes
     events.on("HUD_DIRTY", this, () => {
       this._hudDirty = true;
+    });
+
+    events.on("ENCOUNTER_START", this, () => {
+      this._pauseFlagged();
+    });
+
+    events.on("WEAPON_SELECTED", this, ({ weapon }) => {
+      this.hero?.equip(weapon);
+      this._resumeFlagged();
+      events.emit("HUD_DIRTY");
     });
 
     // Change Level handler
@@ -136,10 +151,25 @@ export class Main extends GameObject {
     })
   }
 
+  _pauseFlagged() {
+    this._sortedObjects.forEach(obj => {
+      if (obj.pauseOnEncounter) obj.paused = true;
+    });
+  }
+
+  _resumeFlagged() {
+    this._sortedObjects.forEach(obj => {
+      if (obj.pauseOnEncounter) obj.paused = false;
+    });
+  }
+
   setLevel(newLevelInstance, heroPosition = null) {
-    // Detach hero from old level (preserves event subscriptions)
+    // Detach hero and companion from old level (preserves event subscriptions)
     if (this.hero?.parent) {
       this.hero.parent.detachChild(this.hero);
+    }
+    if (this.companion?.parent) {
+      this.companion.parent.detachChild(this.companion);
     }
 
     if (this.level) {
@@ -160,6 +190,7 @@ export class Main extends GameObject {
     // Add hero into the new level
     if (this.hero) {
       this.level.addChild(this.hero);
+      this.level.addChild(this.companion);
       events.emit("HERO_POSITION", this.hero.position);
     }
 

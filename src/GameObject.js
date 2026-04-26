@@ -10,20 +10,20 @@ export class GameObject {
     this.isSolid = false;
     this.drawLayer = null;
     this.drawOrder = drawOrder ?? 0;
+    this.paused = false;
+    this.pauseOnEncounter = false;
   }
 
   // First entry point of the loop
   stepEntry(delta, root) {
-    // Call updates on all children first
-    this.children.forEach((child) => child.stepEntry(delta, root));
-
-    // Call ready on the first frame
     if (!this.hasReadyBeenCalled) {
       this.hasReadyBeenCalled = true;
       this.ready();
     }
 
-    // Call any implemented Step code
+    if (this.paused) return;
+
+    this.children.forEach((child) => child.stepEntry(delta, root));
     this.step(delta, root);
   }
 

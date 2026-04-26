@@ -24,6 +24,8 @@ export class Inventory extends GameObject {
       }
     ]
 
+    this._equippedWeapon = null;
+
     // React to Hero picking up an item
     events.on("HERO_PICKS_UP_ITEM", this, data => {
       this.nextId += 1;
@@ -31,6 +33,11 @@ export class Inventory extends GameObject {
         id: this.nextId,
         image: resources.images.rod
       })
+      this.renderInventory();
+    })
+
+    events.on("WEAPON_SELECTED", this, ({ weapon }) => {
+      this._equippedWeapon = weapon;
       this.renderInventory();
     })
 
@@ -44,20 +51,26 @@ export class Inventory extends GameObject {
   }
 
   renderInventory() {
-
-    // Remove stale drawings
     this.children.forEach(child => child.destroy())
 
-    // Draw fresh from the latest version of the list
     this.items.forEach((item, index) => {
       const sprite = new Sprite({
         resource: item.image,
-        position: new Vector2(index*12, 0)
+        position: new Vector2(index * 12, 0)
       })
       this.addChild(sprite);
     })
 
-    // Mark HUD dirty so it re-renders
+    if (this._equippedWeapon?.icon) {
+      const icon = this._equippedWeapon.icon;
+      const weaponSprite = new Sprite({
+        resource: resources.images[icon.resource],
+        frameSize: new Vector2(icon.frameSize.x, icon.frameSize.y),
+        position: new Vector2(this.items.length * 12 + 8, 0)
+      })
+      this.addChild(weaponSprite);
+    }
+
     events.emit("HUD_DIRTY");
   }
 

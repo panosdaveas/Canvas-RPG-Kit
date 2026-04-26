@@ -13,9 +13,14 @@ export class EnemyController extends Controller {
     this.attackCooldown = config.attackCooldown ?? 1500;
     this.attackTimer = 0;
     this.heroPosition = null;
+    this._heroInRange = false;
 
     events.on("HERO_POSITION", this, (pos) => {
       this.heroPosition = pos;
+    });
+
+    events.on("WEAPON_UPEQUIPPED", this, () => {
+      this._heroInRange = false;
     });
   }
 
@@ -32,7 +37,13 @@ export class EnemyController extends Controller {
     const dy = this.heroPosition.y - character.position.y;
     const dist = (Math.abs(dx) + Math.abs(dy)) / TILE_SIZE;
 
-    if (dist > this.detectionRange) {
+    const inRange = dist <= this.detectionRange;
+    if (!this._heroInRange && inRange) {
+      events.emit("ENEMY_DETECTED", { enemy: character });
+    }
+    this._heroInRange = inRange;
+
+    if (!inRange) {
       character.playIdleAnimation();
       return;
     }
@@ -62,8 +73,8 @@ export class EnemyController extends Controller {
     const candidates = root.level?.children ? [...root.level.children] : [];
 
     // Within attack range but not aligned → try either axis to align
-    const inRange = absDx <= this.attackRange && absDy <= this.attackRange;
-    if (inRange) {
+    const inAttackRange = absDx <= this.attackRange && absDy <= this.attackRange;
+    if (inAttackRange) {
       const primary = this.directionToward(dx, dy);
       const secondary = this.secondaryDirection(dx, dy);
       const directions = secondary ? [secondary, primary] : [primary];

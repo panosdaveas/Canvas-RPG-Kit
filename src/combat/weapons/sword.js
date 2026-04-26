@@ -12,4 +12,5 @@ export const sword = {
     cooldown: null,
     attackType: SWORD,
     hitbox: { range: 1, shape: HITBOX_ARC },
+    icon: { resource: "sword", frameSize: { x: 16, y: 16 } },
 };

@@ -31,6 +31,13 @@ export class PlayerController extends Controller {
 
     //equip weapon
     //TODO: wait for attack to finish and then swap weapons
+    if (input?.getActionJustPressed("Digit0") || input?.getActionJustPressed("Numpad0")) {
+      if (character.state != STATE_ATTACKING) {
+        character.unequip();
+        events.emit("WEAPON_UPEQUIPPED");
+      }
+    }
+
     if (input?.getActionJustPressed("Digit1") || input?.getActionJustPressed("Numpad1")) {
       if (character.state != STATE_ATTACKING) {
         character.unequip();

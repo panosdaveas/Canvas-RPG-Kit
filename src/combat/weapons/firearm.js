@@ -12,6 +12,7 @@ export const firearm = {
     cooldown: "10000",
     attackType: FIRE,
     hitbox: { range: 0, shape: null },
+    icon: { resource: "firearm", frameSize: { x: 16, y: 16 } },
     launchTime: 400,
     projectile: {
         id: "arrow",

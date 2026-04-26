@@ -52,7 +52,7 @@ export class Sprite extends GameObject {
   }
 
   drawImage(ctx, x, y) {
-    if (!this.visible || !this.resource.isLoaded) {
+    if (!this.visible || !this.resource?.isLoaded) {
       return;
     }
 

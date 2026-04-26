@@ -23,6 +23,8 @@ export class Hero extends Character {
       team: "player"
     });
 
+    this.pauseOnEncounter = true;
+
     // Hero-specific properties
     this.itemPickupTime = 0;
     this.itemPickupShell = null;
