@@ -8,6 +8,7 @@ import { Npc } from "../objects/Character/types/Npc/Npc.js";
 import { Enemy } from "../objects/Character/types/Enemy/Enemy.js";
 import { getSpawnPlayerFromMap, getWorldNameFromPath, resolveMapPath } from "../helpers/mapUtils.js";
 import { globalState } from "../GlobalState.js";
+import { Rod } from "../objects/Rod/Rod.js";
 
 /**
  * Example of a large open-world level using the chunk system
@@ -35,6 +36,7 @@ export class Overworld extends ChunkedLevel {
 
     // Test enemy
     this.addChild(new Enemy(gridCells(18), gridCells(20)));
+    this.addChild(new Rod(gridCells(21), gridCells(14)));
 
     // const npc1 = new Npc(gridCells(15), gridCells(16), {
     //   //content: "I am the first NPC!",

@@ -8,14 +8,14 @@ export const firearm = {
         hp: 10,
         effects: null,
     },
-    ammo: "infinite",
+    ammo: 2,
     cooldown: "10000",
     attackType: FIRE,
     hitbox: { range: 0, shape: null },
     launchTime: 400,
     projectile: {
         id: "arrow",
-        speed: 2,
+        speed: 4,
         maxRange: 128,
         spriteOffset: { x: 0, y: -6 },
         sprite: {

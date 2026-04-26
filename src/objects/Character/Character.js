@@ -38,6 +38,7 @@ export class Character extends GameObject {
     this.attackRecoveryTimer = 0; //NOTE: i can set it to 80?
     this.attackDirection = null; // Locked direction during attack
     this.equippedWeapon = null;
+    this.ammo = null;
 
     // Team (for combat targeting: "neutral", "player", "enemy")
     this.team = config.team ?? "neutral";
@@ -101,6 +102,7 @@ export class Character extends GameObject {
 
   equip(weapon) {
     this.equippedWeapon = weapon;
+    this.ammo = this.equippedWeapon.ammo;
   }
 
   unequip() {
@@ -178,6 +180,7 @@ export class Character extends GameObject {
   launchProjectile() {
     if (!this.equippedWeapon?.projectile) return;
 
+    if (this.ammo > 0 || this.ammo == "infinite"){
     const projConfig = this.equippedWeapon.projectile;
     const projectile = new Projectile({
       position: this.position.toNeighbor(this.attackDirection),
@@ -188,11 +191,20 @@ export class Character extends GameObject {
       team: this.team,
     });
 
-    const level = this.parent;
-    const main = level?.parent;
-    if (level && main) {
-      level.addChild(projectile);
-      main.addToYSortedObjects(projectile);
+      const level = this.parent;
+      const main = level?.parent;
+      if (level && main) {
+        level.addChild(projectile);
+        main.addToYSortedObjects(projectile);
+      }
+      if (this.ammo > 0) {
+        this.ammo -= 1;
+      }
+      // if (this.ammo == 0) {
+      //   this.unequip();
+      // }
+      console.log("AMMO=", this.ammo);
+      events.emit("AMMO_DECREASE", this.ammo)
     }
   }
 
