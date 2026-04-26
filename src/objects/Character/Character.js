@@ -180,7 +180,11 @@ export class Character extends GameObject {
   launchProjectile() {
     if (!this.equippedWeapon?.projectile) return;
 
-    if (this.ammo > 0 || this.ammo == "infinite"){
+    if (this.ammo <= 0) {
+      // this.unequip();
+      return
+    }; 
+
     const projConfig = this.equippedWeapon.projectile;
     const projectile = new Projectile({
       position: this.position.toNeighbor(this.attackDirection),
@@ -197,12 +201,8 @@ export class Character extends GameObject {
         level.addChild(projectile);
         main.addToYSortedObjects(projectile);
       }
-      if (this.ammo > 0) {
-        this.ammo -= 1;
-      }
-      // if (this.ammo == 0) {
-      //   this.unequip();
-      // }
+    if (this.ammo != "infinite"){
+      this.ammo -= 1;
       console.log("AMMO=", this.ammo);
       events.emit("AMMO_DECREASE", this.ammo)
     }

@@ -22,13 +22,13 @@ export class Npc extends Character {
   constructor(x, y, config = {}) {
     super({
       position: new Vector2(x, y),
-      spriteResource: resources.images[config.spriteResource] ?? resources.images.npc1,
+      spriteResource: resources.images[config.spriteResource] ?? resources.images.hero,
       animations: createHeroAnimations(),
-      frameSize: config.frameSize ?? new Vector2(32, 32),
-      hFrames: config.hFrames ?? 3,
-      vFrames: config.vFrames ?? 8,
+      frameSize: config.frameSize ?? new Vector2(72, 72),
+      hFrames: config.hFrames ?? 4,
+      vFrames: config.vFrames ?? 16,
       frame: config.frame ?? 1,
-      bodyOffset: new Vector2(-8, -20),
+      bodyOffset: new Vector2(-28, -36),
       shadowOffset: new Vector2(-8, -18),
       isSolid: true,
     });
@@ -65,5 +65,12 @@ export class Npc extends Character {
       string: match.string,
       addsFlag: match.addsFlag ?? null
     };
+  }
+
+  draw(ctx, x, y) {
+    ctx.save();
+    ctx.filter = "saturate(0) brightness(2)";
+    super.draw(ctx, x, y);
+    ctx.restore();
   }
 }

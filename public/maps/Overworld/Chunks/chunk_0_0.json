@@ -685,7 +685,7 @@
                         {
                          "name":"spriteResource",
                          "type":"string",
-                         "value":"npc2"
+                         "value":"hero"
                         }],
                  "rotation":0,
                  "type":"Npc",
@@ -745,7 +745,7 @@
                         {
                          "name":"spriteResource",
                          "type":"string",
-                         "value":"npc1"
+                         "value":"hero"
                         }],
                  "rotation":0,
                  "type":"Npc",

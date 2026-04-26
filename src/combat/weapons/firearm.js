@@ -8,7 +8,7 @@ export const firearm = {
         hp: 10,
         effects: null,
     },
-    ammo: 2,
+    ammo: "infinite",
     cooldown: "10000",
     attackType: FIRE,
     hitbox: { range: 0, shape: null },
