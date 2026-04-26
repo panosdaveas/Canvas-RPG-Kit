@@ -25,7 +25,7 @@ async function startGame() {
   drawLoadingScreen();
 
   // Wait for all images to load
-  await resources.allLoaded();
+  await resources.allLoaded(); //NOTE: do we need to load them all on init? 
   console.log("All resources loaded!");
 
   // Establish the root scene
@@ -67,6 +67,7 @@ async function startGame() {
     }
 
     // Disable image smoothing for crisp pixel art (with vendor prefixes)
+    // handled in the css file
     // ctx.imageSmoothingEnabled = false;
     // ctx.webkitImageSmoothingEnabled = false;
     // ctx.mozImageSmoothingEnabled = false;

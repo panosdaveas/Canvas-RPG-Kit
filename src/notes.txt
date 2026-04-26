@@ -59,3 +59,5 @@ distance checks:
 intent system:
   . emnemy marks intented tiles
 
+#Combat
+maybe add shake effect when hit ?
