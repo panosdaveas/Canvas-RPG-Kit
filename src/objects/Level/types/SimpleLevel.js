@@ -83,6 +83,8 @@ export class SimpleLevel extends Level {
    * Load the single map file and parse it
    */
   async initialize() {
+    if (this._initialized) return;
+    this._initialized = true;
     try {
       // Fetch the map JSON directly
       const response = await fetch(this.mapPath);

@@ -4,7 +4,7 @@ import { CompanionController } from "../../../../controllers/CompanionController
 import { resources } from "../../../../Resource.js";
 import { Sprite } from "../../../../Sprite.js";
 import { events } from "../../../../Events.js";
-import { sword, bow, firearm } from "../../../../combat/weapons/index.js";
+import * as weapons from "../../../../combat/weapons/index.js";
 
 const BOUNCE_DURATION = 2000;
 
@@ -20,19 +20,18 @@ export class Companion extends Character {
       resource: resources.images.companion,
       position: new Vector2(0, -4)
     });
-    this.addChild(this._visualSprite);
+    // this.addChild(this._visualSprite);
 
     // Companion stays active during encounter to run its animation
     this.pauseOnEncounter = false;
 
     this._encounterActive = false;
-    this._heroHasWeapon = false;
-    this._weaponPool = [sword, bow, firearm];
+    this._weaponPool = Object.values(weapons);
     this._bounceTimer = 0;
   }
 
   ready() {
-    this.setController(new CompanionController(this, { followDistance: 1 }));
+    // this.setController(new CompanionController(this, { followDistance: 1 }));
 
     events.on("WEAPON_UPEQUIPPED", this, () => {
       this._heroHasWeapon = false;

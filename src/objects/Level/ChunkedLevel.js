@@ -38,9 +38,9 @@ export class ChunkedLevel extends Level {
    * This is async because we need to load world metadata
    */
   async initialize() {
+    if (this._initialized) return;
+    this._initialized = true;
     await this.chunkManager.initialize();
-
-    // Now that metadata is loaded, trigger a chunk update with current camera position
     this.chunkManager.update(this.cameraPosition.x, this.cameraPosition.y);
   }
 

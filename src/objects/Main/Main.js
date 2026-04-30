@@ -47,7 +47,7 @@ export class Main extends GameObject {
 
     // Create hero (persists across levels, re-parented on level change)
     this.hero = new Hero(gridCells(15), gridCells(14));
-    this.companion = new Companion(gridCells(15), gridCells(13));
+    this.companion = new Companion(gridCells(15), gridCells(14));
     if (this.level) {
       this.level.addChild(this.hero);
       this.level.addChild(this.companion);
@@ -79,23 +79,33 @@ export class Main extends GameObject {
     events.on("CHANGE_LEVEL", this, (data) => {
       const { level, heroPosition, useSavedPosition } = data;
 
-      // If returning to overworld, use the saved position from GlobalState
-      let finalPosition = heroPosition;
-      if (useSavedPosition) {
-        const savedPosition = globalState.getOverworldPosition();
-        if (savedPosition) {
-          finalPosition = savedPosition;
-          console.log("Using saved overworld position:", finalPosition);
-        }
+      // Block input and show idle briefly before the transition
+      if (this.hero) {
+        this.hero.state = STATE_INTERACTING;
       }
 
-      screenEffects.fadeOut(300, () => {
-        this.setLevel(level, finalPosition);
-        if (this.hero) {
-          this.hero.state = STATE_ENTRY;
+      setTimeout(() => {
+        // If returning to overworld, use the saved position from GlobalState
+        let finalPosition = heroPosition;
+        if (useSavedPosition) {
+          const savedPosition = globalState.getOverworldPosition();
+          if (savedPosition) {
+            finalPosition = savedPosition;
+            console.log("Using saved overworld position:", finalPosition);
+          }
         }
-        screenEffects.fadeIn(300);
-      });
+
+        screenEffects.fadeOut(300, async () => {
+          screenEffects.holdBlack();
+          this.setLevel(level, finalPosition);
+          await level.initialize();
+          if (this.hero) {
+            this.hero.state = STATE_ENTRY;
+          }
+          screenEffects.releaseBlack();
+          screenEffects.fadeIn(300);
+        });
+      }, 100);
     })
 
     // Handle hero actions with automatic state management

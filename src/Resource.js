@@ -6,15 +6,8 @@ class Resources {
       companion: "/sprites/rod.png",
       heroine: "/sprites/Girl-Sheet.png",
       shadow: "/sprites/shadow.png",
-      drone:"/sprites/drone.png",
       rod: "/sprites/rod.png",
       exit: "/sprites/exit.png",
-      // Outdoor
-      sky: "/sprites/sky.png",
-      ground: "/sprites/ground.png",
-      // Cave
-      cave: "/sprites/cave.png",
-      caveGround: "/sprites/cave-ground.png",
       // NPCs
       knight: "/sprites/knight-sheet-1.png",
       npc1: "/sprites/npcs/npc1.png",

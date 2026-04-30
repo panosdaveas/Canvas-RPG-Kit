@@ -33,7 +33,11 @@ class FadeEffect {
 class ScreenEffects {
   constructor() {
     this._queue = [];
+    this._blackHeld = false;
   }
+
+  holdBlack() { this._blackHeld = true; }
+  releaseBlack() { this._blackHeld = false; }
 
   // Fade to black, then call onComplete
   fadeOut(duration, onComplete) {
@@ -60,6 +64,13 @@ class ScreenEffects {
   }
 
   draw(ctx) {
+    if (this._blackHeld) {
+      ctx.save();
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.restore();
+      return;
+    }
     if (this._queue.length === 0) return;
     this._queue[0].draw(ctx);
   }
