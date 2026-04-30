@@ -42,7 +42,7 @@ export class PlayerController extends Controller {
       if (character.state != STATE_ATTACKING) {
         character.unequip();
         character.equip(sword);
-        console.log("Equipped", character.equippedWeapon?.id);
+        events.emit("WEAPON_SELECTED", { weapon: sword });
       }
     }
 
@@ -50,7 +50,7 @@ export class PlayerController extends Controller {
       if (character.state != STATE_ATTACKING) {
         character.unequip();
         character.equip(bow);
-        console.log("Equipped", character.equippedWeapon?.id);
+        events.emit("WEAPON_SELECTED", { weapon: bow });
       }
     }
 
@@ -58,7 +58,7 @@ export class PlayerController extends Controller {
       if (character.state != STATE_ATTACKING) {
         character.unequip();
         character.equip(firearm);
-        console.log("Equipped", character.equippedWeapon?.id);
+        events.emit("WEAPON_SELECTED", { weapon: firearm });
       }
     }
 

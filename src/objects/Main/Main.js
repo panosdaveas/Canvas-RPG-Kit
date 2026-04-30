@@ -68,10 +68,11 @@ export class Main extends GameObject {
       this._pauseFlagged();
     });
 
-    events.on("WEAPON_SELECTED", this, ({ weapon }) => {
-      this.hero?.equip(weapon);
+    events.on("WEAPON_SELECTED", this, ({ weapon } = {}) => {
+      if (weapon) this.hero?.equip(weapon);
       this._resumeFlagged();
       events.emit("HUD_DIRTY");
+      console.log("Weapon selected:", weapon.id);
     });
 
     // Change Level handler
