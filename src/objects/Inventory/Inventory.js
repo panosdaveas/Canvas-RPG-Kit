@@ -36,6 +36,7 @@ export class Inventory extends GameObject {
       this.renderInventory();
     })
 
+    // React to hero equipping weapon
     events.on("WEAPON_SELECTED", this, ({ weapon }) => {
       this._equippedWeapon = weapon;
       this.renderInventory();

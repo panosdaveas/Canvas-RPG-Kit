@@ -153,8 +153,10 @@ export class Projectile extends GameObject {
     ctx.save();
 
     // Draw collision box at projectile position (green)
-    ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.strokeStyle = "rgba(0, 255, 0, 1)";
+    ctx.fillStyle = "rgba(255, 0, 0, 0.4)";
+    ctx.strokeStyle = "rgba(255, 0, 0, 0.8)";
+    // ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
+    // ctx.strokeStyle = "rgba(0, 255, 0, 1)";
     ctx.lineWidth = 1;
     ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
     ctx.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
