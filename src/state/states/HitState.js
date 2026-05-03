@@ -1,7 +1,7 @@
 import { State } from "../State.js";
 import { STATE_IDLE } from "../../objects/Character/Character.js";
 import { moveTowards } from "../../helpers/moveTowards.js";
-import { isTileFree } from "../../helpers/grid.js";
+import { isTileFree, snapToGrid } from "../../helpers/grid.js";
 import { events } from "../../Events.js";
 
 export const STATE_HIT = "HIT";
@@ -9,7 +9,6 @@ export const STATE_HIT = "HIT";
 const KNOCKBACK_SPEED = 2;
 const RECOVERY_TIME = 150;
 const FLASH_INTERVAL = 60;
-const GRID_SIZE = 16;
 
 export class HitState extends State {
   constructor() {
@@ -26,8 +25,8 @@ export class HitState extends State {
     this.recoveryTimer = RECOVERY_TIME;
 
     // Snap to grid first — ensures knockback destination is also grid-aligned
-    this.character.position.x = Math.round(this.character.position.x / GRID_SIZE) * GRID_SIZE;
-    this.character.position.y = Math.round(this.character.position.y / GRID_SIZE) * GRID_SIZE;
+    this.character.position.x = snapToGrid(this.character.position.x);
+    this.character.position.y = snapToGrid(this.character.position.y);
 
     // Knockback: one tile in the attacker's direction
     const hitDir = this.character._hitDirection;

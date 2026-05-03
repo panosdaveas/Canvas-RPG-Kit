@@ -1,6 +1,10 @@
+import { TILE_SIZE } from "../Constants.js";
+
 export const gridCells = n => {
-  return n * 16;
+  return n * TILE_SIZE;
 }
+
+export const snapToGrid = (value) => Math.round(value / TILE_SIZE) * TILE_SIZE;
 
 /**
  * Encode x,y coordinates into a single 32-bit number for efficient Set storage.

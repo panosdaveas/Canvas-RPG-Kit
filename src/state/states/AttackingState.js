@@ -1,7 +1,7 @@
 import { State } from "../State.js";
 import { STATE_ATTACKING, STATE_IDLE } from "../../objects/Character/Character.js";
 import { getHitboxPositions } from "../../combat/attackHelpers.js";
-import { TILE_SIZE } from "../../Constants.js";
+import { snapToGrid } from "../../helpers/grid.js";
 
 export class AttackingState extends State {
   constructor() {
@@ -74,8 +74,8 @@ export class AttackingState extends State {
         if (c === this.character) return false;
         if (c.team === "neutral" || c.team === myTeam) return false;
         if (typeof c.takeHit !== "function" && typeof c.destroyProjectile !== "function") return false;
-        const cx = Math.round(c.position.x / TILE_SIZE) * TILE_SIZE;
-        const cy = Math.round(c.position.y / TILE_SIZE) * TILE_SIZE;
+        const cx = snapToGrid(c.position.x);
+        const cy = snapToGrid(c.position.y);
         return cx === pos.x && cy === pos.y;
       });
       if (target) {

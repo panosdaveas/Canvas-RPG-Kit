@@ -4,8 +4,8 @@ import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
 import { events } from "../../Events.js";
 import { UP, DOWN, LEFT, RIGHT } from "../../Input.js";
-import { isTileFree } from "../../helpers/grid.js";
-import { TILE_SIZE, DEBUG_LAYERS } from "../../Constants.js";
+import { isTileFree, snapToGrid } from "../../helpers/grid.js";
+import { DEBUG_LAYERS, TILE_SIZE } from "../../Constants.js";
 import { Character } from "../Character/Character.js";
 
 
@@ -106,8 +106,8 @@ export class Projectile extends GameObject {
     if (!level) return false;
 
     // Snap position to grid for collision check
-    const gridX = Math.round(this.position.x / TILE_SIZE) * TILE_SIZE;
-    const gridY = Math.round(this.position.y / TILE_SIZE) * TILE_SIZE;
+    const gridX = snapToGrid(this.position.x);
+    const gridY = snapToGrid(this.position.y);
 
     const candidates = [...level.children];
 
