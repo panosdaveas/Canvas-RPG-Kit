@@ -34,7 +34,6 @@ export class Npc extends Character {
     });
 
     // NPC-specific: dialogue content
-    this.pauseOnEncounter = true;
     this.facingDirection = config.facingDirection;
     this.textContent = config.content;
     this.textPortraitFrame = config.portraitFrame;

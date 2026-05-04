@@ -2,15 +2,15 @@
 
  Static layer caching - Pre-render static layers to off-screen canvas - done!
 
-TODO: add transition at level change. maybe freeze the player for a duration, or animate move
+TODO: add transition at level change. maybe freeze the player for a duration, or animate move -ok
 
-TODO: check css file - disable crist-edges - check how to scale canvas in css / compare to html canvas size
+TODO: check css file - disable crist-edges - check how to scale canvas in css / compare to html canvas size -ok
 
-TODO: animated tiles / seperate from static layers / alternatively, TiledChunk could detect which tiles have animations and exclude them from static caching. 
+TODO: animated tiles / seperate from static layers / alternatively, TiledChunk could detect which tiles have animations and exclude them from static caching.  
 
-TODO: calculate expected vs real draw calls per second
+TODO: calculate expected vs real draw calls per second -ok
 
-TODO: packet collisions??
+TODO: packet collisions?? - -done
 
 ENGINE:
 1. Detection - Layers marked with static=true property in Tiled are identified during _parseLayers()                                                      
@@ -33,11 +33,11 @@ ENGINE:
   │ For terrain, permanent structures     │ For changing/animated content │     
   └───────────────────────────────────────┴──────────────────────────────
 
-NOTE: maybe use a different ratio for the off-screen canvas (16:9) - not squares! 
+NOTE: maybe use a different ratio for the off-screen canvas (16:9) - not square! 
 
 NOTE: draw HUD in a new canvas object
 
-NOTE: check on the collisions - we aggregate the tiles, but maybe we need packeting
+NOTE: check on the collisions - we aggregate the tiles, but maybe we need packeting -done
 
 NOTE: object layers do NOT participate in draw calls. They're purely data.
 

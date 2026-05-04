@@ -24,7 +24,6 @@ export class Enemy extends Character {
             speed: 0.5,
         });
 
-        this.pauseOnEncounter = true;
         this.facingDirection = LEFT;
         this.equip(bow);
         this.setController(new EnemyController(this, {

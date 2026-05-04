@@ -1,11 +1,11 @@
 1. Maps Parsing                                                                             
 
-  Two-tier system — solid design choice:                                                      
+  Two-tier system:                                                      
   - ChunkedLevel for open worlds: streams 30x30-tile chunks via ChunkManager based on camera  
   proximity, with a world.json manifest mapping coordinates to chunk files.                   
   - SimpleLevel for interiors: loads a single Tiled JSON map, no streaming overhead.          
                                                                                               
-  TiledChunk parsing is well thought out:                                                     
+  TiledChunk parsing:                                                     
   - Layers split into ground/collision/foreground by convention
   - Static layers pre-rendered to offscreen canvas (good perf win)
   - Animated tiles supported natively
@@ -61,3 +61,6 @@ intent system:
 
 #Combat
 maybe add shake effect when hit ?
+
+#Companion
+maybe "bake" it in the hero sprites and animations. Design-wise is it just player logic ??

@@ -5,10 +5,11 @@ import { resources } from "../../../../Resource.js";
 import { Sprite } from "../../../../Sprite.js";
 import { events } from "../../../../Events.js";
 import * as weapons from "../../../../combat/weapons/index.js";
+import { GameObject } from "../../../../GameObject.js";
 
 const BOUNCE_DURATION = 2000;
 
-export class Companion extends Character {
+export class Companion extends GameObject {
   constructor(x, y) {
     super({
       position: new Vector2(x, y),
