@@ -28,6 +28,8 @@ export class HitState extends State {
     this.character.position.x = snapToGrid(this.character.position.x);
     this.character.position.y = snapToGrid(this.character.position.y);
 
+    this.startY = this.character.position.y;
+
     // Knockback: one tile in the attacker's direction
     const hitDir = this.character._hitDirection;
     const knockbackTarget = hitDir
@@ -52,17 +54,16 @@ export class HitState extends State {
     }
 
     if (this.phase === "knockback") {
-      const prevY = this.character.position.y;
-
       moveTowards(this.character, this.character.destinationPosition, KNOCKBACK_SPEED);
-
-      if (this.character.position.y !== prevY) {
-        events.emit("YSORT_DIRTY");
-      }
 
       if (this.character.hasArrivedAtDestination()) {
         this.character.position.x = this.character.destinationPosition.x;
         this.character.position.y = this.character.destinationPosition.y;
+
+        if (this.character.position.y !== this.startY) {
+          events.emit("YSORT_DIRTY");
+        }
+
         this.phase = "recovery";
       }
     } else {

@@ -254,31 +254,26 @@ export class Main extends GameObject {
   }
 
   /**
-   * Check if a game object is within the visible viewport
-   * Uses viewport culling similar to tile rendering
+   * Compute viewport bounds in world space from the current canvas transform.
+   * Call once per frame; pass the result to _isInViewport for per-object checks.
    */
-  _isInViewport(gameObject, ctx) {
-    // Extract camera offset from canvas transform
+  _getViewportBounds(ctx) {
     const transform = ctx.getTransform();
-    const cameraX = -transform.e;  // Inverse of translation X
-    const cameraY = -transform.f;  // Inverse of translation Y
+    const cameraX = -transform.e;
+    const cameraY = -transform.f;
+    const buffer = CULLING.BUFFER_TILES * TILE_SIZE;
 
-    // Add buffer to prevent pop-in at viewport edges
-    const buffer = CULLING.BUFFER_TILES * TILE_SIZE; // pixels
+    return {
+      left: cameraX - buffer,
+      right: cameraX + CANVAS.WIDTH + buffer,
+      top: cameraY - buffer,
+      bottom: cameraY + CANVAS.HEIGHT + buffer,
+    };
+  }
 
-    // Calculate viewport bounds in world space
-    const viewLeft = cameraX - buffer;
-    const viewRight = cameraX + CANVAS.WIDTH + buffer;
-    const viewTop = cameraY - buffer;
-    const viewBottom = cameraY + CANVAS.HEIGHT + buffer;
-
-    // Check if object position is within viewport bounds
-    return (
-      gameObject.position.x >= viewLeft &&
-      gameObject.position.x <= viewRight &&
-      gameObject.position.y >= viewTop &&
-      gameObject.position.y <= viewBottom
-    );
+  _isInViewport(gameObject, bounds) {
+    const { x, y } = gameObject.position;
+    return x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom;
   }
 
   drawBackground(ctx) {
@@ -308,9 +303,10 @@ export class Main extends GameObject {
     }
 
     // Draw Y-sorted objects with viewport culling
+    const viewportBounds = this._getViewportBounds(ctx);
     let objectsDrawn = 0;
     this._sortedObjects.forEach(obj => {
-      if (this._isInViewport(obj, ctx)) {
+      if (this._isInViewport(obj, viewportBounds)) {
         obj.draw(ctx, 0, 0);
         objectsDrawn++;
       }

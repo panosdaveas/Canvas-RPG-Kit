@@ -24,23 +24,23 @@ export class EntryState extends State {
     this.character.destinationPosition.x = target.x;
     this.character.destinationPosition.y = target.y;
 
+    this.startY = startPos.y;
+
     this.character.playWalkAnimation(dir);
   }
 
   update(delta, root) {
-    const prevY = this.character.position.y;
-
     moveTowards(this.character, this.character.destinationPosition, this.character.speed);
 
     if (this.character.hasArrivedAtDestination()) {
       this.character.position.x = this.character.destinationPosition.x;
       this.character.position.y = this.character.destinationPosition.y;
-      this.transitionTo(STATE_IDLE);
-      return;
-    }
 
-    if (this.character.position.y !== prevY) {
-      events.emit("YSORT_DIRTY");
+      if (this.character.position.y !== this.startY) {
+        events.emit("YSORT_DIRTY");
+      }
+
+      this.transitionTo(STATE_IDLE);
     }
   }
 }

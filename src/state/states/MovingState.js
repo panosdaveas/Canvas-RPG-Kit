@@ -8,14 +8,20 @@ export class MovingState extends State {
     super(STATE_MOVING);
   }
 
-  update(delta, root) {
-    const prevY = this.character.position.y;
+  enter() {
+    this.startY = this.character.position.y;
+  }
 
+  update(delta, root) {
     moveTowards(this.character, this.character.destinationPosition, this.character.speed);
 
     if (this.character.hasArrivedAtDestination()) {
       this.character.position.x = this.character.destinationPosition.x;
       this.character.position.y = this.character.destinationPosition.y;
+
+      if (this.character.position.y !== this.startY) {
+        events.emit("YSORT_DIRTY");
+      }
 
       // Buffered attack fires immediately after arrival
       if (this.character.attackBuffered) {
@@ -25,10 +31,6 @@ export class MovingState extends State {
       }
 
       this.transitionTo(STATE_IDLE);
-    }
-
-    if (this.character.position.y !== prevY) {
-      events.emit("YSORT_DIRTY");
     }
   }
 }

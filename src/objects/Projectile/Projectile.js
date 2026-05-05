@@ -76,7 +76,7 @@ export class Projectile extends GameObject {
   }
 
   step(delta) {
-    const prevY = this.position.y;
+    const prevTileY = Math.floor(this.position.y / TILE_SIZE);
 
     // Move projectile
     this.position.x += this.velocity.x;
@@ -85,8 +85,9 @@ export class Projectile extends GameObject {
     // Track distance
     this.distanceTraveled += this.speed;
 
-    // Trigger Y-sort if Y position changed
-    if (this.position.y !== prevY) {
+    // Y-sort only when crossing a tile boundary — sub-tile sorts can't reorder
+    // against tile-aligned characters
+    if (Math.floor(this.position.y / TILE_SIZE) !== prevTileY) {
       events.emit("YSORT_DIRTY");
     }
 
