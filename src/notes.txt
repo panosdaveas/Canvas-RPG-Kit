@@ -64,3 +64,13 @@ maybe add shake effect when hit ?
 
 #Companion
 maybe "bake" it in the hero sprites and animations. Design-wise is it just player logic ??
+
+#states
+
+i need to take a look at the behaviour when the game enters the  
+  ENCOUNTER_START (in Companion class). in order to make it safe      
+  from animation bugs, i  am thinking it should be coorect if the     
+  player first enter into idle (or better interacting state) before   
+  the Companion animation begins. I am suggesting this, because       
+  sometimes the player may detect an enemy mid-move and it doesn't    
+  look quite cool         

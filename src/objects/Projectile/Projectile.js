@@ -23,7 +23,8 @@ export class Projectile extends GameObject {
     this.damage = damage;
     this.team = team ?? "neutral";
     this.distanceTraveled = 0;
-    this.ySortBias = 0.1; // Render slightly in front of objects at same Y
+    // this.ySortBias = 0.1; // Render slightly in front of objects at same Y
+    this.pauseOnEncounter = true;
 
     // Create sprite from projectile config
     const spriteConfig = projectileConfig.sprite;
