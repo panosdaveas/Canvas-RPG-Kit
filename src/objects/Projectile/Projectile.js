@@ -118,7 +118,10 @@ export class Projectile extends GameObject {
       // If the blocking object is an enemy, deal damage
       const hitTarget = candidates.find(c => {
         if (c === this || !c.isSolid) return false;
-        if (c.team === "neutral" || c.team === this.team) return false;
+        // enemy cannot hit enemy:
+        // if (c.team === "neutral" || c.team === this.team) return false;
+        // enemy can hit enemy:
+        if (c.team === "neutral" || (c.team === this.team && c.team === "player")) return false;
         const cx = c.destinationPosition?.x ?? c.position.x;
         const cy = c.destinationPosition?.y ?? c.position.y;
         return cx === gridX && cy === gridY;

@@ -8,8 +8,11 @@ import { events } from "../Events.js";
 export class EnemyController extends Controller {
   constructor(character, config = {}) {
     super(character);
-    this.detectionRange = config.detectionRange ?? 5; // in tiles
-    this.attackRange = config.attackRange ?? 1; // in tiles
+    // this.detectionRange = config.detectionRange ?? 5; // in tiles
+    this.detectionRange = character.weapon.projectile ? character.weapon.hitbox.range : character.weapon?.detectionRange; 
+    // this.detectionRange = Math.max(character.weapon.detectionRange, character.weapon.hitbox.range); // in tiles
+    this.attackRange = character.weapon.hitbox?.range ?? 1; // in tiles
+    // this.attackRange = config.attackRange ?? 1; // in tiles
     this.attackCooldown = config.attackCooldown ?? 1500;
     this.attackTimer = 0;
     this.heroPosition = null;

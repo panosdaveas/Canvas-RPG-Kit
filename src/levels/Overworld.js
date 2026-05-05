@@ -35,7 +35,8 @@ export class Overworld extends ChunkedLevel {
     this.heroStartPosition = params.heroPosition ?? new Vector2(gridCells(15), gridCells(14));
 
     // Test enemy
-    this.addChild(new Enemy(gridCells(18), gridCells(20)));
+    this.addChild(new Enemy({x: gridCells(18), y: gridCells(20), weapon: "bow"}));
+    this.addChild(new Enemy({x: gridCells(14), y: gridCells(21), weapon: "sword"}));
     this.addChild(new Rod(gridCells(21), gridCells(14)));
 
     // const npc1 = new Npc(gridCells(15), gridCells(16), {

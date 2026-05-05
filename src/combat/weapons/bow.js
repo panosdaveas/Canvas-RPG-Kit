@@ -10,7 +10,7 @@ export const bow = {
     ammo: "infinite",
     cooldown: null,
     attackType: BOW,
-    hitbox: { range: 0, shape: null },
+    hitbox: { range: 8, shape: null },
     // ms into the attack animation when the arrow is released
     icon: { resource: "bow", frameSize: { x: 16, y: 16 } },
     launchTime: 400,

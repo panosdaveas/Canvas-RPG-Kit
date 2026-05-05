@@ -3,13 +3,13 @@ import { Vector2 } from "../../../../Vector2.js";
 import { resources } from "../../../../Resource.js";
 import { LEFT } from "../../../../Input.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
-import { sword, bow } from "../../../../combat/weapons/index.js";
+import * as weapons from "../../../../combat/weapons/index.js";
 import { EnemyController } from "../../../../controllers/EnemyController.js";
 
 export class Enemy extends Character {
-    constructor(x, y) {
+    constructor(config = {}) {
         super({
-            position: new Vector2(x, y),
+            position: new Vector2(config.x, config.y),
             spriteResource: resources.images.hero,
             animations: createHeroAnimations(),
             frameSize: new Vector2(72, 72),
@@ -22,10 +22,18 @@ export class Enemy extends Character {
             isSolid: true,
             team: "enemy",
             speed: 0.5,
+            weapon: null,
         });
 
         this.facingDirection = LEFT;
-        this.equip(bow);
+        if (config.weapon == "bow") {
+            this.weapon = weapons.bow;
+            this.equip(this.weapon);
+        }
+        if (config.weapon == "sword") {
+            this.weapon = weapons.sword;
+            this.equip(this.weapon);
+        }
         this.setController(new EnemyController(this, {
             detectionRange: 5,
             attackRange: 10,
