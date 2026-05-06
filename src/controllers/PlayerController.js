@@ -14,6 +14,15 @@ export class PlayerController extends Controller {
     this.lastDirection = null;
     this.movementThreshold = 80;
     this.gridSize = 16;
+
+    //TODO: change: On equip, set movementThreshold in player controlle to 0. Reset when uequipp
+    events.on("WEAPON_SELECTED", this, () => {
+      this.movementThreshold = 0;
+    });
+
+    events.on("WEAPON_UPEQUIPPED", this, () => {
+      this.movementThreshold = 80;
+    })
   }
 
   update(delta, root) {
@@ -24,6 +33,7 @@ export class PlayerController extends Controller {
     if (input?.getActionJustPressed("Space")) {
       this.onAction(root);
     }
+
 
     // --------------------
     // ATTACK (highest priority)

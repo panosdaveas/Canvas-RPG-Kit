@@ -74,3 +74,6 @@ i need to take a look at the behaviour when the game enters the
   the Companion animation begins. I am suggesting this, because       
   sometimes the player may detect an enemy mid-move and it doesn't    
   look quite cool         
+
+#states #Combat
+On equip, set movementThreshold in player controlle to 0. Reset when uequipp

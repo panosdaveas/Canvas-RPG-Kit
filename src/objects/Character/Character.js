@@ -104,10 +104,13 @@ export class Character extends GameObject {
   equip(weapon) {
     this.equippedWeapon = weapon;
     this.ammo = this.equippedWeapon.ammo;
+    // this.controller?.movementThreshold = 0;
   }
 
   unequip() {
     this.equippedWeapon = null;
+    this.ammo = null;
+    // this.controller?.movementThreshold = 80;
   }
 
   hasArrivedAtDestination() {
