@@ -12,7 +12,6 @@ import {gridCells} from "../../helpers/grid.js";
 import {CANVAS, CULLING, TILE_SIZE} from "../../Constants.js";
 import {globalState} from "../../GlobalState.js";
 import {screenEffects} from "../../ScreenEffects.js";
-import {Companion} from "../Character/types/Companion/Companion.js";
 
 export class Main extends GameObject {
   constructor() {
@@ -21,7 +20,6 @@ export class Main extends GameObject {
     this.input = new Input()
     this.camera = new Camera()
     this.hero = null;
-    this.companion = null;
 
     // Y-sort optimization: only re-sort when needed
     this._sortedObjects = [];
@@ -45,12 +43,11 @@ export class Main extends GameObject {
     const inventory = new Inventory()
     this.addChild(inventory);
 
-    // Create hero (persists across levels, re-parented on level change)
+    // Create hero (persists across levels, re-parented on level change).
+    // The Companion lives as a child of Hero, so it travels along automatically.
     this.hero = new Hero(gridCells(15), gridCells(14));
-    this.companion = new Companion(gridCells(15), gridCells(14));
     if (this.level) {
       this.level.addChild(this.hero);
-      this.level.addChild(this.companion);
       this._rebuildSortedObjects();
     }
 
@@ -64,15 +61,14 @@ export class Main extends GameObject {
       this._hudDirty = true;
     });
 
-    events.on("ENCOUNTER_START", this, () => {
+    // Main is purely a world-state operator: it freezes / unfreezes flagged
+    // objects on demand. It doesn't care who emitted these or why.
+    events.on("WORLD_PAUSE", this, () => {
       this._pauseFlagged();
     });
 
-    events.on("WEAPON_SELECTED", this, ({ weapon } = {}) => {
-      if (weapon) this.hero?.equip(weapon);
+    events.on("WORLD_RESUME", this, () => {
       this._resumeFlagged();
-      events.emit("HUD_DIRTY");
-      console.log("Weapon selected:", weapon.id);
     });
 
     // Change Level handler
@@ -163,24 +159,24 @@ export class Main extends GameObject {
   }
 
   _pauseFlagged() {
+    // Use `suspended` (not `paused`) so child subtrees keep ticking — Hero is
+    // suspended on encounter but its Companion child still needs to animate.
     this._sortedObjects.forEach(obj => {
-      if (obj.pauseOnEncounter) obj.paused = true;
+      if (obj.suspendOnPause) obj.suspended = true;
     });
   }
 
   _resumeFlagged() {
     this._sortedObjects.forEach(obj => {
-      if (obj.pauseOnEncounter) obj.paused = false;
+      if (obj.suspendOnPause) obj.suspended = false;
     });
   }
 
   setLevel(newLevelInstance, heroPosition = null) {
-    // Detach hero and companion from old level (preserves event subscriptions)
+    // Detach hero from old level (preserves event subscriptions). Companion
+    // is Hero's child, so it travels along.
     if (this.hero?.parent) {
       this.hero.parent.detachChild(this.hero);
-    }
-    if (this.companion?.parent) {
-      this.companion.parent.detachChild(this.companion);
     }
 
     if (this.level) {
@@ -201,7 +197,6 @@ export class Main extends GameObject {
     // Add hero into the new level
     if (this.hero) {
       this.level.addChild(this.hero);
-      this.level.addChild(this.companion);
       events.emit("HERO_POSITION", this.hero.position);
     }
 

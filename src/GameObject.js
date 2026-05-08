@@ -11,7 +11,12 @@ export class GameObject {
     this.drawLayer = null;
     this.drawOrder = drawOrder ?? 0;
     this.paused = false;
-    this.pauseOnEncounter = false;
+    this.suspended = false;
+    this.suspendOnPause = false;
+    // When this object is suspended, its children halt with it by default.
+    // A child can set `ignoreParentSuspend = true` to keep ticking anyway —
+    // used by Companion so it animates while Hero is suspended.
+    this.ignoreParentSuspend = false;
   }
 
   // First entry point of the loop
@@ -21,9 +26,18 @@ export class GameObject {
       this.ready();
     }
 
+    // `paused` halts the entire subtree (this + descendants), no opt-out.
     if (this.paused) return;
 
-    this.children.forEach((child) => child.stepEntry(delta, root));
+    // `suspended` halts only this node's own step. Children freeze with us
+    // unless they explicitly opt out via `ignoreParentSuspend`.
+    this.children.forEach((child) => {
+      if (this.suspended && !child.ignoreParentSuspend) return;
+      child.stepEntry(delta, root);
+    });
+
+    if (this.suspended) return;
+
     this.step(delta, root);
   }
 

@@ -6,6 +6,7 @@ import { PlayerController } from "../../../../controllers/PlayerController.js";
 import { createHeroAnimations } from "../../characterAnimations.js";
 import { ItemPickupState, STATE_ITEM_PICKUP } from "../../../../state/states/ItemPickupState.js";
 import { EntryState, STATE_ENTRY } from "../../../../state/states/EntryState.js";
+import { Companion } from "../Companion/Companion.js";
 
 export class Hero extends Character {
   constructor(x, y) {
@@ -27,6 +28,11 @@ export class Hero extends Character {
     // Hero-specific properties
     this.itemPickupTime = 0;
     this.itemPickupShell = null;
+
+    // Companion is "baked into" Hero — lives as a child so it travels along
+    // on level transitions automatically. Inert until ACTIVATE_COMPANION fires.
+    this.companion = new Companion();
+    this.addChild(this.companion);
 
     // React to picking up an item
     events.on("HERO_PICKS_UP_ITEM", this, data => {
@@ -52,6 +58,14 @@ export class Hero extends Character {
     // Listen for action finished events
     events.on("HERO_ACTION_FINISHED", this, () => {
       this.state = STATE_IDLE;
+    });
+
+    // Self-equip on WEAPON_SELECTED so equip flows that don't have a direct
+    // Hero reference (e.g. Companion picking a weapon for us) still work.
+    // PlayerController also calls equip() directly for fast weapon hot-swap;
+    // the second equip via this listener is idempotent.
+    events.on("WEAPON_SELECTED", this, ({ weapon } = {}) => {
+      if (weapon) this.equip(weapon);
     });
 
     // Emit initial position so chunks load

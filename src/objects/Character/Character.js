@@ -30,7 +30,7 @@ export class Character extends GameObject {
     this.facingDirection = config.facingDirection ?? DOWN;
     this.destinationPosition = this.position.duplicate();
     this.speed = config.speed ?? 1;
-    this.pauseOnEncounter = true;
+    this.suspendOnPause = true;
 
     // Attack
     this.attackTimer = 0;
