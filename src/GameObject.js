@@ -83,6 +83,18 @@ export class GameObject {
     this.children.forEach(child => {
       child.destroy();
     })
+
+    // Deregister from any ancestor's Y-sort list (e.g. Main._sortedObjects).
+    // No-op for objects that were never registered.
+    let node = this.parent;
+    while (node) {
+      if (typeof node.removeFromYSortedObjects === 'function') {
+        node.removeFromYSortedObjects(this);
+        break;
+      }
+      node = node.parent;
+    }
+
     this.parent?.removeChild(this)
   }
 

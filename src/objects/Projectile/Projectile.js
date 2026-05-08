@@ -144,11 +144,7 @@ export class Projectile extends GameObject {
   }
 
   destroyProjectile() {
-    // Remove from Y-sorted objects (find Main via parent chain)
-    let main = this.parent?.parent;
-    if (main && typeof main.removeFromYSortedObjects === 'function') {
-      main.removeFromYSortedObjects(this);
-    }
+    // Y-sort cleanup is handled by GameObject.destroy() walking up the tree.
     this.destroy();
   }
 
