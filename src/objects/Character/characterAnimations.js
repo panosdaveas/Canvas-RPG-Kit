@@ -8,7 +8,7 @@ import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 
 export const makeIdleFrames = (rootFrame = 0) => {
   return {
-    duration: 450,
+    duration: 0,
     loop: true,
     frames: [
       {

@@ -1,0 +1,7 @@
+#combat #exit
+stay in fornt of an exit. when hit by an enemy and play the step back animation, the player goes through the exit and enters the new level. but when trying to exit back to the initial level, the position is wrong. 
+
+#rendering #ysorting
+Objects can appear between foreground & background. E.g. a sowrd animation shows the animation between a tree's static trunk and tree's foreground top.
+Is it pixel bleeding??
+
