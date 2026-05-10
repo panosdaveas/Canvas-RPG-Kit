@@ -92,7 +92,7 @@ export class AttackingState extends State {
   }
 
   exit() {
-    this.character.attackRecoveryTimer = 50;
+    this.character.attackRecoveryTimer = 40;
     this.character.attackDirection = null;
     this.character.playIdleAnimation();
   }
