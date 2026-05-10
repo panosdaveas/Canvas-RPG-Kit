@@ -83,3 +83,87 @@ attackRevoveryTimer hard resets on AttackingState to a value > 0. At the same ti
 
 #combat #story
 Perhaps in later stages, allow hot swap between the last 3 weapons spawned. when a weapon's ammo runs out then spawn a new one in its place
+
+#states #animations
+Pick_up_State: Drive the state off the animation (like AttackingState does), so the timer goes away too:
+
+enter() {
+  this.character.destinationPosition = this.character.position.duplicate();
+  this.character.body.animations.play(`pickup_${this.character.getDirectionKey()}`);
+}
+update() {
+  if (this.character.body.animations.isFinished()) this.transitionTo(STATE_IDLE);
+}
+
+
+# ============================================================================
+# aseprite-integration branch — staged adoption plan
+# ============================================================================
+
+#aseprite #phase1 DONE
+Projectile launch driven by tag User Data {"launchFrame": N} (0-based, tag-relative)
+- AttackingState reads animations.getUserData() and getFrameIndex()
+- weapon.launchTime removed from bow.js / firearm.js
+- 8 attack tags in protagonist_new.json carry "data": "{\"launchFrame\":3}"
+- Authored in Aseprite (Tag Properties → User Data) going forward; JSON-edited
+  for now until next re-export
+
+#aseprite #phase2 TODO — hitbox geometry from slices
+Goal: replace abstract weapon.hitbox = { range, shape } + getHitboxPositions() math
+with per-frame slice rectangles authored in Aseprite. Frame-accurate, geometry-accurate,
+re-tunable without code.
+
+Authoring (Aseprite):
+  - Create a Slice named "hitbox" per attack tag (or one shared slice with per-frame keys).
+  - Drag bounds to the area where damage should land (in sprite-local pixel space).
+  - Add slice keys ONLY on frames where the hitbox should be active. Frames without a
+    key → slice returns null → hitbox inactive that frame.
+
+Loader: already exposes everything via animations.getSliceAt("hitbox", frameIndex?).
+Returns { frame, bounds: {x,y,w,h}, center?, pivot? } or null.
+
+Consumer change (AttackingState.checkMeleeHit):
+  const slice = animations.getSliceAt("hitbox");
+  if (!slice) return;                       // no key on this frame → inactive
+  // sprite-local → world space
+  const worldX = character.position.x + character.body.position.x + slice.bounds.x;
+  const worldY = character.position.y + character.body.position.y + slice.bounds.y;
+  const w = slice.bounds.w, h = slice.bounds.h;
+  // overlap test against enemies in level.children at that AABB
+
+Removals once stable:
+  - weapon.hitbox field on every weapon
+  - HITBOX_FRONT / HITBOX_ARC constants
+  - getHitboxPositions() in attackHelpers.js
+  - the DEBUG_LAYERS.DRAW_HITBOXES path in Character.drawImage (or update it to draw
+    the slice rect directly — useful for debugging)
+
+Caveat: direction. The current hitbox math derives placement from attackDirection
+(1 tile ahead, or arc cross). Slice bounds are sprite-local; if your sword_down attack
+slice is to the south of the body and sword_up's is to the north, that's already
+direction-correct because the artist drew it that way. No extra math needed.
+
+#aseprite #phase3 TODO — everything else
+General pattern: tag User Data carries flat metadata, slices carry per-frame geometry.
+Consumer reads at the right state's update and reacts.
+
+Candidate uses:
+  - {"hitFrame": N} on melee attacks — separate from launchFrame, gates checkMeleeHit
+    so the swing's first frames don't damage on contact
+  - {"shake": { intensity, duration }} on heavy attacks → wire to a future camera shake
+  - {"audio": "cue_id"} on any tag → wire to a future audio system
+  - {"comboWindow": [from, to]} → frames during which a buffered next attack chains
+  - Slice "spawn" on bow/firearm → projectile spawns at slice center instead of
+    position.toNeighbor(direction). Frame-accurate spawn point follows the bow string
+    or muzzle.
+  - Slice "anchor_hand" → where to draw the equipped weapon icon on the body during
+    item display (if weapons ever render attached, not as separate sheets)
+
+Wiring pattern is identical across all of these:
+  const data = animations.getUserData();   // tag-level
+  const slice = animations.getSliceAt(name); // frame-level
+  if (data?.someField !== undefined) { ... }
+  if (slice) { use(slice.bounds) }
+
+No engine changes needed for any of these — the loader and Animations API already
+support it. Just author + add a read site in the relevant state/system.
