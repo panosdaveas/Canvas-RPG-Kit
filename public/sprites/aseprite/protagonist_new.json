@@ -528,14 +528,14 @@
    { "name": "sword_left", "from": 20, "to": 23, "direction": "forward", "color": "#000000ff" },
    { "name": "sword_right", "from": 24, "to": 27, "direction": "forward", "color": "#000000ff" },
    { "name": "sword_up", "from": 28, "to": 31, "direction": "forward", "color": "#000000ff" },
-   { "name": "bow_down", "from": 32, "to": 35, "direction": "forward", "color": "#000000ff" },
-   { "name": "bow_left", "from": 36, "to": 39, "direction": "forward", "color": "#000000ff" },
-   { "name": "bow_right", "from": 40, "to": 43, "direction": "forward", "color": "#000000ff" },
-   { "name": "bow_up", "from": 44, "to": 47, "direction": "forward", "color": "#000000ff" },
-   { "name": "firearm_down", "from": 48, "to": 51, "direction": "forward", "color": "#000000ff" },
-   { "name": "firearm_left", "from": 52, "to": 55, "direction": "forward", "color": "#000000ff" },
-   { "name": "firearm_right", "from": 56, "to": 59, "direction": "forward", "color": "#000000ff" },
-   { "name": "firearm_up", "from": 60, "to": 63, "direction": "forward", "color": "#000000ff" }
+   { "name": "bow_down", "from": 32, "to": 35, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
+   { "name": "bow_left", "from": 36, "to": 39, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
+   { "name": "bow_right", "from": 40, "to": 43, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
+   { "name": "bow_up", "from": 44, "to": 47, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
+   { "name": "firearm_down", "from": 48, "to": 51, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
+   { "name": "firearm_left", "from": 52, "to": 55, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
+   { "name": "firearm_right", "from": 56, "to": 59, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
+   { "name": "firearm_up", "from": 60, "to": 63, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" }
   ],
   "layers": [
    { "name": "Sprite Sheet", "opacity": 255, "blendMode": "normal" }

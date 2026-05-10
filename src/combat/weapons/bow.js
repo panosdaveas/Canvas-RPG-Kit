@@ -11,9 +11,9 @@ export const bow = {
     cooldown: null,
     attackType: BOW,
     hitbox: { range: 8, shape: null },
-    // ms into the attack animation when the arrow is released
+    // Projectile launch frame is driven by Aseprite tag User Data
+    // ({"launchFrame": N}) on bow_<dir> — see protagonist_new.json.
     icon: { resource: "bow", frameSize: { x: 16, y: 16 } },
-    launchTime: 400,
     projectile: {
         id: "arrow",
         speed: 2,

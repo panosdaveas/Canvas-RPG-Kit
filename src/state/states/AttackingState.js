@@ -20,11 +20,13 @@ export class AttackingState extends State {
       this.checkMeleeHit(root);
     }
 
-    // Projectile launch is timed against the animation's own clock.
+    // Projectile launch is driven by tag User Data: {"launchFrame": N},
+    // where N is the 0-based frame index *within the tag*. Authored in Aseprite
+    // (or hand-edited in the JSON) — gameplay code stays out of timing.
     const animations = this.character.body.animations;
-    const weapon = this.character.equippedWeapon;
-    if (!this.hasLaunched && weapon?.launchTime != null) {
-      if (animations.currentTime >= weapon.launchTime) {
+    const data = animations.getUserData();
+    if (!this.hasLaunched && data?.launchFrame !== undefined) {
+      if (animations.getFrameIndex() >= data.launchFrame) {
         this.character.launchProjectile();
         this.hasLaunched = true;
       }

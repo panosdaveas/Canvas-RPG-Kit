@@ -28,6 +28,20 @@ export class Animations {
     return this.patterns[this.activeKey]?.finished ?? false;
   }
 
+  /**
+   * Index of the active frame within the active tag (0-based, tag-relative).
+   * Useful for tag User Data triggers like {"launchFrame": 2}.
+   */
+  getFrameIndex() {
+    const pattern = this.patterns[this.activeKey];
+    if (!pattern) return 0;
+    const frames = pattern.animationConfig.frames;
+    for (let i = frames.length - 1; i >= 0; i--) {
+      if (pattern.currentTime >= frames[i].time) return i;
+    }
+    return 0;
+  }
+
   play(key, startAtTime = 0) {
     // Missing tag — warn once per key, keep current animation playing.
     // Lets the game survive a partial Aseprite export (e.g. no idle_* tags yet).
