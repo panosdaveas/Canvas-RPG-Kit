@@ -36,6 +36,15 @@ export class HitState extends State {
       ? this.character.position.toNeighbor(hitDir)
       : null;
 
+    // Notify external systems that the player avatar is taking a hit, so
+    // overlap-triggers (Exit, Rod) can suppress themselves and future
+    // health/audio/screen-shake systems can react. Gated on team because
+    // enemies also enter HitState — only Hero is the "hero" being hit.
+    // important! first notify other systems, THEN try to move
+    if (this.character.team === "player") {
+      events.emit("HERO_HIT_START", { direction: hitDir });
+    }
+
     if (knockbackTarget && this.isWalkable(knockbackTarget)) {
       this.character.destinationPosition = knockbackTarget;
     } else {
@@ -44,6 +53,7 @@ export class HitState extends State {
     }
 
     this.character.playIdleAnimation();
+
   }
 
   update(delta, root) {
@@ -82,5 +92,9 @@ export class HitState extends State {
   exit() {
     this.character.body.visible = true;
     this.character._hitDirection = null;
+
+    if (this.character.team === "player") {
+      events.emit("HERO_HIT_END");
+    }
   }
 }

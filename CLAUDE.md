@@ -53,7 +53,7 @@ Companion has its own internal `StateMachine` whose states *are* its activation 
 
 **Camera** — dead zone following, map boundary clamping, listens to `HERO_POSITION` events.
 
-**Events** — pub/sub with caller tracking. `unsubscribe(caller)` removes all subs for an object. Key events: `HERO_POSITION`, `YSORT_DIRTY`, `HUD_DIRTY`, `HERO_EXITS`, `CHANGE_LEVEL`, `HERO_REQUESTS_ACTION`, `HERO_PICKS_UP_ITEM`, `HERO_ACTION_FINISHED`, `START_TEXT_BOX`/`END_TEXT_BOX`, `ENEMY_DETECTED`, `WORLD_PAUSE` / `WORLD_RESUME` (Main suspends/resumes flagged objects), `ACTIVATE_COMPANION` / `DEACTIVATE_COMPANION` (with `{ mode }`), `WEAPON_SELECTED`, `WEAPON_UPEQUIPPED` (sic), `AMMO_DECREASE`.
+**Events** — pub/sub with caller tracking. `unsubscribe(caller)` removes all subs for an object. Key events: `HERO_POSITION`, `YSORT_DIRTY`, `HUD_DIRTY`, `HERO_EXITS`, `CHANGE_LEVEL`, `HERO_REQUESTS_ACTION`, `HERO_PICKS_UP_ITEM`, `HERO_ACTION_FINISHED`, `START_TEXT_BOX`/`END_TEXT_BOX`, `ENEMY_DETECTED`, `HERO_HIT_START` (with `{ direction }`) / `HERO_HIT_END` (emitted by `HitState` only when `character.team === "player"`), `WORLD_PAUSE` / `WORLD_RESUME` (Main suspends/resumes flagged objects), `ACTIVATE_COMPANION` / `DEACTIVATE_COMPANION` (with `{ mode }`), `WEAPON_SELECTED`, `WEAPON_UPEQUIPPED` (sic), `AMMO_DECREASE`.
 
 **Rendering** — `Main._sortedObjects` is the flat Y-sort list of level children. Re-sorted only when `_ySortDirty` is true; objects added via `addToYSortedObjects()`. Per-frame draw applies viewport culling (`_isInViewport`, with `CULLING.BUFFER_TILES` margin). HUD layer (`drawLayer === "HUD"`) renders to a cached offscreen canvas and only re-renders on `HUD_DIRTY`. Foreground (`drawLayer === "FOREGROUND"`) is drawn after objects but before HUD. Level draws ground chunks before objects, foreground chunks after.
 
@@ -100,6 +100,7 @@ Other systems can trigger non-encounter modes by emitting `ACTIVATE_COMPANION { 
 - HUD children must have `drawLayer = "HUD"` to render onto the cached HUD canvas; otherwise they will be drawn in the world Y-sort.
 - `suspendOnPause` is opt-in: Main only suspends (not `paused`) objects flagged with it on `WORLD_PAUSE`. The distinction matters — Hero is `suspended` so its Companion child still animates. Companion inherits the default `suspendOnPause = false` so it isn't suspended itself, even if it were ever in `_sortedObjects` (it isn't, being Hero's child).
 - `Main._sortedObjects` only holds direct children of the level. Companion is Hero's child, so it isn't in the list directly — it renders as part of Hero's draw recursion (with `drawOrder = 2` to sit in front of Hero's body).
+- Overlap-trigger objects (Exit, Rod, future pickups) listen for `HERO_HIT_START` / `HERO_HIT_END` and toggle a local `_ignoreHero` flag, so a knockback can't accidentally exit the level or grab an item. `Exit` additionally flips its own `isSolid` during the hit window so the knockback target is rejected by `HitState.isWalkable` and Hero stays put. `HitState.enter()` emits `HERO_HIT_START` **before** computing the knockback target, so listeners get a chance to flip `isSolid` first.
 
 ## Conventions
 
