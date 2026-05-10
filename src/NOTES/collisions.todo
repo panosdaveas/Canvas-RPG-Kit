@@ -5,7 +5,7 @@ Collisions Layer that acts 2-fold:
         Layers above it will render above the game objects (foreground layer)
     2. Pack smaller collision areas to larger collision areas (instead of hundreds of individual tiles) - map packing concept
 
-    resources: [https://youtu.be/k3262REZ2wY?t=235&si=lAQfyOIG3hGST6OH]
+    resources: [https://youtu.be/k3262rez2wy?t=235&si=laqfyoig3hgst6oh]
 
 
 

@@ -77,3 +77,9 @@ i need to take a look at the behaviour when the game enters the
 
 #states #Combat
 On equip, set movementThreshold in player controlle to 0. Reset when uequipp
+
+#combat #states
+attackRevoveryTimer hard resets on AttackingState to a value > 0. At the same time we set it =0 in the character class. Investigate more..
+
+#combat #story
+Perhaps in later stages, allow hot swap between the last 3 weapons spawned. when a weapon's ammo runs out then spawn a new one in its place

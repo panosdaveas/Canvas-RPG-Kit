@@ -15,7 +15,7 @@ export class PlayerController extends Controller {
     this.movementThreshold = 80;
     this.gridSize = 16;
 
-    //TODO: change: On equip, set movementThreshold in player controlle to 0. Reset when uequipp
+    //TODO: change: On equip, set movementThreshold in player controlle to 0. Reset when uequipp to have snappier movement during combat. outside of combat, it can feel more chill
     events.on("WEAPON_SELECTED", this, () => {
       this.movementThreshold = 0;
     });
@@ -40,7 +40,7 @@ export class PlayerController extends Controller {
     // --------------------
 
     //equip weapon
-    //TODO: wait for attack to finish and then swap weapons
+    //TODO: wait for attack to finish and then swap weapons - done
     if (input?.getActionJustPressed("Digit0") || input?.getActionJustPressed("Numpad0")) {
       if (character.state != STATE_ATTACKING) {
         character.unequip();

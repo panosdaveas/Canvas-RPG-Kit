@@ -19,7 +19,7 @@ export const makeIdleFrames = (rootFrame = 0) => {
   };
 };
 
-const createWalkingFrames = (rootFrame, count = 4, step = 120) =>
+const createWalkingFrames = (rootFrame, count = 4, step = 133) =>
   Array.from({ length: count }, (_, i) => ({
     time: i * step,
     frame: rootFrame + i,
@@ -27,7 +27,7 @@ const createWalkingFrames = (rootFrame, count = 4, step = 120) =>
 
 export const makeWalkingFrames = (rootFrame = 0) => {
   return {
-    duration: 480,
+    duration: 532,
     loop: true,
     frames: createWalkingFrames(rootFrame),
   };
