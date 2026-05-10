@@ -47,7 +47,7 @@ IDLE         | yes         | ✓        | ✓        | ✓       | All inputs
 MOVING       | yes         | ✓ cont.  | buffered | ✗       | Attack fires on tile arrival
 ATTACKING    | yes (self)  | ✗        | ✗        | ✗       | Facing change only;
              |             |          |          |         | PlayerController checks STATE_ATTACKING
-HIT          | NO 🔒       | ✗        | ✗        | ✗       | Then attackRecoveryTimer (150ms)
+HIT          | NO 🔒       | ✗        | ✗        | ✗       | 1-tile knockback + 150ms invuln flash
 INTERACTING  | NO 🔒       | ✗        | ✗        | ✗       | TextBox/dialogue owns input
 ITEM_PICKUP  | NO 🔒       | ✗        | ✗        | ✗       | Hero only
 ENTRY        | NO 🔒       | ✗        | ✗        | ✗       | Hero only; on level entry

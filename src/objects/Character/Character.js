@@ -124,6 +124,7 @@ export class Character extends GameObject {
     if (!this.stateMachine.currentState?.blocksController) {
       this.controller?.update(delta, root);
 
+      //currently set to 0 - never enters -- set in AttackingState
       if (this.attackRecoveryTimer > 0) {
         this.attackRecoveryTimer -= delta;
       }

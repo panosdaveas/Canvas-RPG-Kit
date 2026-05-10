@@ -85,6 +85,7 @@ export class PlayerController extends Controller {
     }
 
     // Recovery window: allow facing, suppress movement
+    // currently set to 0 - never enters
     if (character.attackRecoveryTimer > 0) {
       if (input?.direction) {
         character.facingDirection = input.direction;
