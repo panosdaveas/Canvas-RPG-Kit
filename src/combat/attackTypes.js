@@ -1,4 +1,4 @@
 export const SWORD = "sword";
-export const FIRE = "fire";
+export const FIREARM = "firearm";
 export const BOW = "bow";
 export const PROJECTILE = "projectile";

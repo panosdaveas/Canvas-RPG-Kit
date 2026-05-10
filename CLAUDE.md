@@ -20,14 +20,19 @@ src/
   controllers/     AI & input: PlayerController, EnemyController, RoutineController, CompanionController
   combat/          attackHelpers, attackTypes, weapons/ (sword, bow, firearm, arrow)
   core/            ChunkManager, TiledChunk, GameObjectFactory
+  loaders/         Asset parsers (currently: aseprite.js — JSON+sheet → Animations bundle)
   objects/         Main, Level, Character (Hero/Enemy/Npc/Companion), Projectile,
                    Exit, Chest, Sign, TextBox, SpriteTextString, Inventory, Rod
   helpers/         grid.js, moveTowards.js, levelConfig.js, mapUtils.js
   levels/          Overworld.js, CaveLevel1.js
   ScreenEffects.js Fade-out/in/holdBlack queue used during level transitions
   GlobalState.js   Cross-level persistence (e.g. saved overworld position)
-public/            Static assets (sprites, maps, fonts)
-dist/maps/         Tiled JSON map output
+public/
+  maps/            Tiled JSON output
+  sprites/         Loose PNG sprites
+  sprites/aseprite/  Aseprite exports (`<name>.json` + `<name>.png` pairs)
+  fonts/
+dist/maps/         (legacy — production build output)
 ```
 
 ### Key Systems
@@ -64,6 +69,8 @@ Companion has its own internal `StateMachine` whose states *are* its activation 
 **Combat**:
 - Hitbox types: `HITBOX_FRONT` (1 tile ahead), `HITBOX_ARC` (3-tile cross).
 - Weapons exported from `combat/weapons/index.js`: `sword` (melee arc), `bow` + `arrow` (projectile), `firearm` (projectile). No boomerang in the current build.
+- A weapon's `attackType` (string) **must match the Aseprite tag prefix**. `Character.startAttack()` builds the animation key as `${attackType}_${direction}` — e.g. `sword: { attackType: SWORD }` plays `sword_<dir>`. The exported constants (`SWORD`, `BOW`, `FIREARM` in `combat/attackTypes.js`) hold these strings.
+- `AttackingState` drives end + projectile-launch timing off the animation's clock — no parallel timers on Character. `body.animations.isFinished()` ends the state; `body.animations.currentTime >= weapon.launchTime` fires `launchProjectile()`.
 - `AttackingState.checkMeleeHit()` can hit characters (`takeHit`) **and** intercept incoming projectiles mid-air.
 - `HitState` — 1-tile knockback + flash recovery; `blocksController = true`.
 - `Character.attackRecoveryTimer` enforces a brief post-attack cooldown that suppresses movement in `PlayerController`.
@@ -85,13 +92,24 @@ Other systems can trigger non-encounter modes by emitting `ACTIVATE_COMPANION { 
 
 **GameObjectFactory** — registry pattern, spawns objects from Tiled object layer data. Register new types here.
 
-**Resources** — centralized image preloader; `Resources.allLoaded()` is a Promise used at boot.
+**Resources** — centralized asset preloader. Handles loose PNGs (`resources.images.<name>`) and Aseprite bundles (`resources.aseprite.<name>`). `Resources.allLoaded()` is a Promise that waits for both, used at boot. Exposed on `window.resources` for DevTools poking.
+
+**Animations / Aseprite pipeline** — character animations are data-driven from Aseprite JSON exports.
+- Source files: `public/sprites/aseprite/<name>.json` + `<name>.png`. Register a new bundle by adding to `Resources.toLoadAseprite`.
+- `src/loaders/aseprite.js` parses the JSON: each Aseprite tag becomes an animation pattern, slices become indexed regions, tag User Data is JSON-parsed if possible.
+- The bundle exposes `createAnimations()` — call once per Character (each instance needs its own playback state). Bundle also exposes `image`, `frameSize`, `hFrames`, `vFrames`, `slices`, `userData`, `frameRects`.
+- `Animations` API: `play(tagName)` (warns once and no-ops on missing tags), `frame`, `currentTime`, `duration`, `isFinished()`, `getSliceAt(name, frameIndex?)`, `getUserData(tagName?)`.
+- **Tag naming convention**: `<behavior>_<direction>`, snake_case. Direction is one of `down`/`up`/`left`/`right` (matches `Character.getDirectionKey()`).
+- **Loop default**: tags starting with `walk_` or `idle_` loop; everything else plays once. Override with tag User Data `{"loop": true}` or `{"loop": false}`.
+- **Idle synthesis**: if a `walk_<dir>` tag exists but no `idle_<dir>` tag, the loader synthesizes a 1-frame idle from `walk_<dir>` frame index 1 (the typical resting pose). Add an explicit `idle_<dir>` tag (any number of frames) to override the synthesis.
+- **Adding animations**: most cases require zero code — add the tag in Aseprite, re-export, call `body.animations.play("tag_name")` from wherever in your code (or rely on `Character.playWalkAnimation`/`playIdleAnimation`/`startAttack` which build keys by convention). Adding a new weapon also just needs `attackType` to match the new tag prefix. Adding a whole new sheet means dropping the files in `public/sprites/aseprite/` and registering the bundle in `Resource.js`.
 
 ## Important Gotchas
 
 - `_setupStateMachine()` is called inside `Character` constructor — Hero's override runs before Hero constructor body. Fine because it only registers states.
-- `startAttack()` sets `this.state = STATE_ATTACKING` then configures timer/animation — `AttackingState.enter()` must be a no-op.
+- `startAttack()` sets `this.state = STATE_ATTACKING` (which fires `AttackingState.enter()`), then plays the attack animation. `AttackingState.enter()` only resets `hasHit`/`hasLaunched` flags; it doesn't touch the animation or the character's position, so the order is safe.
 - `MovingState` can transition to `AttackingState` mid-update via buffered attack. Safe because JS is single-threaded.
+- Weapon's `attackType` string must match an Aseprite tag prefix. A mismatch causes `play()` to silently warn and the attack visually does nothing (the equip itself still works). Watch DevTools for `Animations: tag "<x>_down" not found` warnings.
 - Grid movement is cardinal-only, tile-locked with smooth interpolation via `moveTowards()`.
 - Attack can be buffered during movement and fires immediately on tile arrival.
 - **`Companion` extends `GameObject`, not `Character`** — it has its own internal `StateMachine` but no controller or combat hooks. If Companion ever needs to take damage or be attack-targeted, it needs to be promoted to a Character subclass.
@@ -112,6 +130,8 @@ Other systems can trigger non-encounter modes by emitting `ACTIVATE_COMPANION { 
 - Tile coordinates use `Vector2`; pixel positions derived via `gridCells()` helper.
 - New states that should freeze the controller must set `this.blocksController = true` in their constructor.
 - New objects that should still animate during a `WORLD_PAUSE` must keep `this.suspendOnPause = false` (the default for non-Characters). If they're a child of an object that does get suspended, they additionally need `this.ignoreParentSuspend = true` to keep ticking through the parent's freeze.
+- New animations: snake_case tag names of the form `<behavior>_<direction>`. Match `<behavior>` to a weapon's `attackType` if it's an attack animation. For one-shot animations outside the walk/idle convention, set tag User Data `{"loop": false}` if it's named in a way that doesn't already imply once-only.
+- Don't manually wire FrameIndexPattern instances anymore — let the Aseprite loader do it. If you need an animation that doesn't come from Aseprite (e.g., procedural), it's still fine to construct an `Animations` instance directly with hand-built patterns — just pass `{}` for slices and userData.
 
 ## Dev Commands
 
@@ -121,3 +141,4 @@ npm run build    # Production build to dist/
 ```
 
 Tiled map files go in `public/maps/` and are referenced from level configs.
+Aseprite exports go in `public/sprites/aseprite/` (`<name>.json` + `<name>.png`) and are registered in `Resource.toLoadAseprite`.

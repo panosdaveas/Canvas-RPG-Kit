@@ -2,7 +2,6 @@ import { Character } from "../../Character.js";
 import { Vector2 } from "../../../../Vector2.js";
 import { resources } from "../../../../Resource.js";
 import { storyFlags } from "../../../../StoryFlags.js";
-import { createHeroAnimations } from "../../characterAnimations.js";
 import { RoutineController } from "../../../../controllers/RoutineController.js"
 
 export class Npc extends Character {
@@ -20,14 +19,18 @@ export class Npc extends Character {
    * @param {number} [config.vFrames] - Vertical frames in sprite sheet
    */
   constructor(x, y, config = {}) {
+    // Shares the protagonist Aseprite bundle for now (same as before, when
+    // it used createHeroAnimations()). Will move to its own bundle once a
+    // dedicated NPC sheet is exported.
+    const aseprite = resources.aseprite.protagonist;
     super({
       position: new Vector2(x, y),
-      spriteResource: resources.images[config.spriteResource] ?? resources.images.hero,
-      animations: createHeroAnimations(),
-      frameSize: config.frameSize ?? new Vector2(72, 72),
-      hFrames: config.hFrames ?? 4,
-      vFrames: config.vFrames ?? 16,
-      frame: config.frame ?? 1,
+      spriteResource: resources.images[config.spriteResource] ?? aseprite.image,
+      animations: aseprite.createAnimations(),
+      frameSize: config.frameSize ?? new Vector2(aseprite.frameSize.w, aseprite.frameSize.h),
+      hFrames: config.hFrames ?? aseprite.hFrames,
+      vFrames: config.vFrames ?? aseprite.vFrames,
+      frame: config.frame ?? 0,
       bodyOffset: new Vector2(-28, -36),
       shadowOffset: new Vector2(-8, -18),
       isSolid: true,

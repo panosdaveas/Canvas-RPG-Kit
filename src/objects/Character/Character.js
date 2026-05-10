@@ -32,9 +32,8 @@ export class Character extends GameObject {
     this.speed = config.speed ?? 1;
     this.suspendOnPause = true;
 
-    // Attack
-    this.attackTimer = 0;
-    this.attackDuration = 0;
+    // Attack — animation drives end timing (body.animations.isFinished()),
+    // so we don't carry a parallel attackTimer/attackDuration here anymore.
     this.attackBuffered = false;
     this.attackRecoveryTimer = 0; //NOTE: i can set it to 80?
     this.attackDirection = null; // Locked direction during attack
@@ -62,7 +61,7 @@ export class Character extends GameObject {
     this.body = new Sprite({
       resource: config.spriteResource,
       frameSize: config.frameSize ?? new Vector2(32, 32),
-      hFrames: config.hFrames ?? 3,
+      hFrames: config.hFrames ?? 4,
       vFrames: config.vFrames ?? 8,
       frame: config.frame ?? 0,
       position: config.bodyOffset ?? new Vector2(-8, -20),
@@ -165,7 +164,7 @@ export class Character extends GameObject {
     if (!this.equippedWeapon) return;
 
     const attackType = this.equippedWeapon.attackType;
-    const anim = `${attackType}${this.getDirectionName()}`;
+    const anim = `${attackType}_${this.getDirectionKey()}`;
     const pattern = this.body.animations?.patterns?.[anim];
     if (!pattern) return;
 
@@ -176,8 +175,6 @@ export class Character extends GameObject {
     this.attackDirection = this.facingDirection;
 
     this.state = STATE_ATTACKING;
-    this.attackTimer = pattern.duration;
-    this.attackDuration = pattern.duration;
     this.body.animations.play(anim);
   }
 
@@ -218,14 +215,15 @@ export class Character extends GameObject {
 
   playIdleAnimation() {
     // if (this.state !== STATE_IDLE) return;
-    this.body.animations?.play(`idle${this.getDirectionName()}`);
+    this.body.animations?.play(`idle_${this.getDirectionKey()}`);
   }
 
   playWalkAnimation(direction) {
     if (this.state === STATE_ATTACKING) return;
-    this.body.animations?.play(`walk${this.getDirectionName(direction)}`);
+    this.body.animations?.play(`walk_${this.getDirectionKey(direction)}`);
   }
 
+  /** PascalCase, kept for any external consumer that may still need it. */
   getDirectionName(direction = this.facingDirection) {
     switch (direction) {
       case UP: return "Up";
@@ -233,6 +231,17 @@ export class Character extends GameObject {
       case LEFT: return "Left";
       case RIGHT: return "Right";
       default: return "Down";
+    }
+  }
+
+  /** snake_case — used to construct Aseprite tag keys (walk_down, sword_up, etc.). */
+  getDirectionKey(direction = this.facingDirection) {
+    switch (direction) {
+      case UP: return "up";
+      case DOWN: return "down";
+      case LEFT: return "left";
+      case RIGHT: return "right";
+      default: return "down";
     }
   }
 

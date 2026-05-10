@@ -16,22 +16,22 @@ export class AttackingState extends State {
   }
 
   update(delta, root) {
-    this.character.attackTimer -= delta;
-
     if (!this.hasHit) {
       this.checkMeleeHit(root);
     }
 
+    // Projectile launch is timed against the animation's own clock.
+    const animations = this.character.body.animations;
     const weapon = this.character.equippedWeapon;
     if (!this.hasLaunched && weapon?.launchTime != null) {
-      const elapsed = this.character.attackDuration - this.character.attackTimer;
-      if (elapsed >= weapon.launchTime) {
+      if (animations.currentTime >= weapon.launchTime) {
         this.character.launchProjectile();
         this.hasLaunched = true;
       }
     }
 
-    if (this.character.attackTimer <= 0) {
+    // The attack ends when the attack animation ends.
+    if (animations.isFinished()) {
       this.transitionTo(STATE_IDLE);
     }
   }

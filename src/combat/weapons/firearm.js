@@ -1,4 +1,4 @@
-import { FIRE } from "../attackTypes.js";
+import { FIREARM } from "../attackTypes.js";
 import { HITBOX_FRONT } from "../attackHelpers.js";
 
 export const firearm = {
@@ -10,7 +10,7 @@ export const firearm = {
     },
     ammo: "infinite",
     cooldown: "10000",
-    attackType: FIRE,
+    attackType: FIREARM,
     hitbox: { range: 0, shape: null },
     icon: { resource: "firearm", frameSize: { x: 16, y: 16 } },
     launchTime: 400,

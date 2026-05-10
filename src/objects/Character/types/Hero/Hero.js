@@ -3,21 +3,24 @@ import { Vector2 } from "../../../../Vector2.js";
 import { resources } from "../../../../Resource.js";
 import { events } from "../../../../Events.js";
 import { PlayerController } from "../../../../controllers/PlayerController.js";
-import { createHeroAnimations } from "../../characterAnimations.js";
 import { ItemPickupState, STATE_ITEM_PICKUP } from "../../../../state/states/ItemPickupState.js";
 import { EntryState, STATE_ENTRY } from "../../../../state/states/EntryState.js";
 import { Companion } from "../Companion/Companion.js";
 
 export class Hero extends Character {
   constructor(x, y) {
+    // Pull animations + spritesheet from the Aseprite bundle. Each Character
+    // gets a fresh Animations instance via createAnimations() so playback
+    // state isn't shared between instances.
+    const aseprite = resources.aseprite.protagonist;
     super({
       position: new Vector2(x, y),
-      spriteResource: resources.images.hero,
-      animations: createHeroAnimations(),
-      frameSize: new Vector2(72, 72),
-      hFrames: 4,
-      vFrames: 16,
-      frame: 1,
+      spriteResource: aseprite.image,
+      animations: aseprite.createAnimations(),
+      frameSize: new Vector2(aseprite.frameSize.w, aseprite.frameSize.h),
+      hFrames: aseprite.hFrames,
+      vFrames: aseprite.vFrames,
+      frame: 0,
       bodyOffset: new Vector2(-28, -36),
       shadowOffset: new Vector2(-8, -18),
       isSolid: true,

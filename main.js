@@ -25,8 +25,10 @@ async function startGame() {
   drawLoadingScreen();
 
   // Wait for all images to load
-  await resources.allLoaded(); //NOTE: do we need to load them all on init? 
+  await resources.allLoaded(); //NOTE: do we need to load them all on init?
   console.log("All resources loaded!");
+  window.resources = resources; // Expose for debugging
+  console.log("Aseprite bundles:", resources.aseprite);
 
   // Establish the root scene
   const mainScene = new Main({
