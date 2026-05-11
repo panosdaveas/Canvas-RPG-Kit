@@ -1,5 +1,5 @@
 {
-  "name": "RPG KIT",
+  "name": "rpg-kit",
   "description": "A data-driven top-down RPG/ARPG framework for Tiled + Aseprite + JS/HTML5",
   "private": true,
   "version": "0.0.0",
