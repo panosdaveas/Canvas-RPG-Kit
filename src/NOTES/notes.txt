@@ -84,6 +84,15 @@ attackRevoveryTimer hard resets on AttackingState to a value > 0. At the same ti
 #combat #story
 Perhaps in later stages, allow hot swap between the last 3 weapons spawned. when a weapon's ammo runs out then spawn a new one in its place
 
+#engine #core #tiled #docsCollisions Layer that acts 2-fold:
+
+1. Indicator for drawing layers:
+  Layers beneath it render beneath the game objects (players, npcs, etc)
+  Layers above it will render above the game objects (foreground layer)
+2. Pack smaller collision areas to larger collision areas (instead of hundreds of individual tiles) - map packing concept
+
+resources: [https://youtu.be/k3262rez2wy?t=235&si=laqfyoig3hgst6oh]
+
 #states #animations
 Pick_up_State: Drive the state off the animation (like AttackingState does), so the timer goes away too:
 
@@ -94,6 +103,13 @@ enter() {
 update() {
   if (this.character.body.animations.isFinished()) this.transitionTo(STATE_IDLE);
 }
+
+#support #engine #docs
+create "translation" json file: entity {name, description}
+resourse: [https://www.youtube.com/live/YpRiUhQNzNk?si=R2KfLOdjAgEcswa6&t=6720]
+
+#support #docs #engine
+Tiled & Aseprite conventions (naing, layering, etc). Guidlines to use with engine.
 
 
 # ============================================================================
@@ -167,3 +183,4 @@ Wiring pattern is identical across all of these:
 
 No engine changes needed for any of these — the loader and Animations API already
 support it. Just author + add a read site in the relevant state/system.
+

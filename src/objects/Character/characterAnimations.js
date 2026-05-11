@@ -1,3 +1,6 @@
+// this file is no longer needed - to be deleted in next commit
+// switched to Aseprite integration
+
 import { Animations } from "../../Animations.js";
 import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 
