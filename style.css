@@ -12,7 +12,7 @@ html, body {
 canvas {
   width: 100%;
   background: black;
-  image-rendering: pixelated;
+  /* image-rendering: pixelated; */
   /* Chrome, Safari, Edge — true 
     nearest-neighbor */
   image-rendering: crisp-edges;

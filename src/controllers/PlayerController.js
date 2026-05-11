@@ -17,7 +17,7 @@ export class PlayerController extends Controller {
 
     //TODO: change: On equip, set movementThreshold in player controlle to 0. Reset when uequipp to have snappier movement during combat. outside of combat, it can feel more chill
     events.on("WEAPON_SELECTED", this, () => {
-      this.movementThreshold = 0;
+      this.movementThreshold = 40;
     });
 
     events.on("WEAPON_UPEQUIPPED", this, () => {
