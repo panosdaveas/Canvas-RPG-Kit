@@ -1,8 +1,14 @@
 {
-  "name": "RPG KIT - TILED + ASEPRITE + JS",
+  "name": "RPG KIT",
+  "description": "A data-driven top-down RPG/ARPG framework for Tiled + Aseprite + JS/HTML5",
   "private": true,
   "version": "0.0.0",
+  "author": "Robot.Dreams",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panosdaveas/Canvas-RPG-Kit.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
