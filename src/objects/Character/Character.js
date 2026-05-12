@@ -30,6 +30,9 @@ export class Character extends GameObject {
     this.facingDirection = config.facingDirection ?? DOWN;
     this.destinationPosition = this.position.duplicate();
     this.speed = config.speed ?? 1;
+    // Base speed — the un-modified value. Terrain effects (e.g. stairs)
+    // mutate `this.speed`, then restore to `_baseSpeed` once off the terrain.
+    this._baseSpeed = this.speed;
     this.suspendOnPause = true;
 
     // Attack — animation drives end timing (body.animations.isFinished()),
@@ -94,6 +97,23 @@ export class Character extends GameObject {
 
   ready() {
     this.playIdleAnimation();
+  }
+
+  /**
+   * Adjust `this.speed` based on the tile we're on or moving toward.
+   * Called by MovingState on each move so terrain effects (stairs) apply
+   * naturally per-move. Restores to `_baseSpeed` when off the terrain.
+   *
+   * Current rule: if either endpoint of the current move is on a tile
+   * with non-zero elevation (i.e. a stair), halve the speed.
+   */
+  updateSpeedFromTerrain() {
+    const level = this.parent;
+    if (!level || typeof level.getElevationAt !== "function") return;
+    const onStair =
+      level.getElevationAt(this.position.x, this.position.y) !== 0 ||
+      level.getElevationAt(this.destinationPosition.x, this.destinationPosition.y) !== 0;
+    this.speed = onStair ? this._baseSpeed * 0.5 : this._baseSpeed;
   }
 
   setController(controller) {

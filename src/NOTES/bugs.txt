@@ -6,3 +6,5 @@ stay in fornt of an exit. when hit by an enemy and play the step back animation,
 Objects can appear between foreground & background. E.g. a sowrd animation shows the animation between a tree's static trunk and tree's foreground top.
 Is it pixel bleeding??
 
+#rendering
+when the browser window is high (half screen) then the objets oat the bottom are not rendered when player is on top of the map. has to do with chunk size ? or grace viewport ouotside the maps? 

@@ -529,6 +529,7 @@
                  "height":32,
                  "id":25,
                  "name":"1",
+                 "opacity":1,
                  "properties":[
                         {
                          "name":"message",
@@ -546,6 +547,7 @@
                  "height":32,
                  "id":26,
                  "name":"2",
+                 "opacity":1,
                  "properties":[
                         {
                          "name":"message",
@@ -575,6 +577,7 @@
                  "height":16,
                  "id":12,
                  "name":"1",
+                 "opacity":1,
                  "properties":[
                         {
                          "name":"targetMap",
@@ -592,6 +595,7 @@
                  "height":16,
                  "id":56,
                  "name":"2",
+                 "opacity":1,
                  "properties":[
                         {
                          "name":"targetMap",
@@ -620,6 +624,7 @@
                  "height":0,
                  "id":53,
                  "name":"",
+                 "opacity":1,
                  "point":true,
                  "properties":[
                         {
@@ -650,17 +655,13 @@
                  "height":0,
                  "id":37,
                  "name":"npc_2",
+                 "opacity":1,
                  "point":true,
                  "properties":[
                         {
                          "name":"commands",
                          "type":"string",
                          "value":"IDLE(2000)\nMOVE(DOWN, 2)\nIDLE(2000)\nFACE(RIGHT)\nIDLE(1000)\nMOVE(LEFT, 4)\nIDLE(1000)\nFACE(DOWN)\nIDLE(2000)\n\n"
-                        }, 
-                        {
-                         "name":"content",
-                         "type":"string",
-                         "value":""
                         }, 
                         {
                          "name":"facingDirection",
@@ -699,6 +700,7 @@
                  "height":16,
                  "id":38,
                  "name":"",
+                 "opacity":1,
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -710,6 +712,7 @@
                  "height":0,
                  "id":73,
                  "name":"npc1",
+                 "opacity":1,
                  "point":true,
                  "properties":[
                         {
@@ -726,16 +729,6 @@
                          "name":"facingDirection",
                          "type":"string",
                          "value":"RIGHT"
-                        }, 
-                        {
-                         "name":"loop",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"pingPong",
-                         "type":"bool",
-                         "value":false
                         }, 
                         {
                          "name":"spawn",
@@ -769,18 +762,8 @@
                  "height":0,
                  "id":52,
                  "name":"chest_1",
+                 "opacity":1,
                  "point":true,
-                 "properties":[
-                        {
-                         "name":"itemType",
-                         "type":"string",
-                         "value":"GOLD"
-                        }, 
-                        {
-                         "name":"value",
-                         "type":"int",
-                         "value":100
-                        }],
                  "rotation":0,
                  "type":"Chest",
                  "visible":true,
@@ -794,11 +777,11 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":39,
+ "nextlayerid":40,
  "nextobjectid":74,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.12.1",
  "tileheight":16,
  "tilesets":[
         {

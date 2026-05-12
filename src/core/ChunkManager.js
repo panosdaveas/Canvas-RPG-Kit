@@ -210,6 +210,19 @@ export class ChunkManager {
   }
 
   /**
+   * Look up elevation for a world-space tile across all loaded chunks.
+   * Returns 0 if the tile has no elevation or its chunk isn't loaded.
+   */
+  getElevationAt(worldX, worldY) {
+    for (const chunk of this.loadedChunks.values()) {
+      if (!chunk.isLoaded) continue;
+      const elev = chunk.getElevationAt(worldX, worldY);
+      if (elev !== 0) return elev;
+    }
+    return 0;
+  }
+
+  /**
    * Get collision walls from all loaded chunks
    * Returns a Set of encoded numeric keys representing solid grid cells
    */

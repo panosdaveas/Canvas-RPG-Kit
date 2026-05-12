@@ -238,6 +238,14 @@ export class SimpleLevel extends Level {
   }
 
   /**
+   * Look up elevation (in pixels) for a tile at world coords.
+   * Returns 0 if no elevation data is registered there.
+   */
+  getElevationAt(worldX, worldY) {
+    return this.chunk?.getElevationAt(worldX, worldY) ?? 0;
+  }
+
+  /**
    * Draw ground layers (called by Main before game objects)
    */
   drawGroundChunks(ctx) {

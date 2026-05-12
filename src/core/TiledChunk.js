@@ -132,6 +132,14 @@ export class TiledChunk {
         // Check if this layer is marked as static for caching
         const isStatic = this._getLayerProperty(layer, "static") === true;
 
+        // Check for elevation data — tiles in such a layer mark "stand here
+        // = terrain effect" (currently used to slow movement, but the data
+        // itself is just a number for whoever wants it).
+        const elevation = this._getLayerProperty(layer, "elevation");
+        if (typeof elevation === "number" && elevation !== 0) {
+          this._registerElevationLayer(layer, elevation);
+        }
+
         // Organize into ground or foreground based on collision layer position
         if (!foundCollision) {
           // Layers before collision = ground
@@ -166,6 +174,38 @@ export class TiledChunk {
 
     const prop = layer.properties.find(p => p.name === propertyName);
     return prop ? prop.value : null;
+  }
+
+  /**
+   * Record every non-zero tile in an elevation-tagged layer into a map.
+   * Coordinates are world-space pixel coords (matching the tile anchor) so
+   * callers can query via getElevationAt(position.x, position.y).
+   *
+   * If multiple elevation layers overlap on the same tile, the last one wins.
+   */
+  _registerElevationLayer(layer, elevation) {
+    this.elevationMap ??= new Map();
+
+    const data = layer.data;
+    const width = layer.width;
+
+    for (let i = 0; i < data.length; i++) {
+      if (data[i] === 0) continue;
+      const localX = i % width;
+      const localY = Math.floor(i / width);
+      const worldX = this.worldX + localX * TILE_SIZE;
+      const worldY = this.worldY + localY * TILE_SIZE;
+      this.elevationMap.set(encodeCoord(worldX, worldY), elevation);
+    }
+  }
+
+  /**
+   * Look up elevation (in pixels) for a tile at the given world coords.
+   * Returns 0 if no elevation is registered for that tile.
+   */
+  getElevationAt(worldX, worldY) {
+    if (!this.elevationMap || this.elevationMap.size === 0) return 0;
+    return this.elevationMap.get(encodeCoord(worldX, worldY)) ?? 0;
   }
 
   /**
@@ -496,6 +536,7 @@ export class TiledChunk {
     this.foregroundYSortLayers = [];
     this.objectLayers = [];
     this.collisionSet.clear();
+    this.elevationMap?.clear();
     this.tileAnimations.clear();
 
     // Clean up cached canvases

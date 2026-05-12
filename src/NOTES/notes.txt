@@ -108,9 +108,14 @@ update() {
 create "translation" json file: entity {name, description}
 resourse: [https://www.youtube.com/live/YpRiUhQNzNk?si=R2KfLOdjAgEcswa6&t=6720]
 
+#engine #sprites #collision
+The "tile reservation" subtlety:
+That destinationPosition ?? position is significant. While a character interpolates between tiles, its collision footprint is at the destination tile, not the visual position. So if Hero is at (5,5) moving to (6,5), an enemy trying to enter (6,5) is blocked from the moment Hero commits — not when Hero visually arrives.
+
+This is a reservation model. The character "owns" the tile it's heading toward. It prevents two characters from interpolating into the same tile and visually overlapping mid-move.
+
 #support #docs #engine
 Tiled & Aseprite conventions (naing, layering, etc). Guidlines to use with engine.
-
 
 # ============================================================================
 # aseprite-integration branch — staged adoption plan

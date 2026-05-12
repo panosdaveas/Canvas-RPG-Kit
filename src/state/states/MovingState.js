@@ -10,6 +10,8 @@ export class MovingState extends State {
 
   enter() {
     this.startY = this.character.position.y;
+    // Terrain modifies movement speed per-move (e.g. stairs halve it).
+    this.character.updateSpeedFromTerrain();
   }
 
   update(delta, root) {

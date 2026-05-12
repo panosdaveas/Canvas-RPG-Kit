@@ -137,6 +137,14 @@ export class ChunkedLevel extends Level {
   }
 
   /**
+   * Look up elevation (in pixels) for a tile at world coords.
+   * Returns 0 if no elevation data is registered there.
+   */
+  getElevationAt(worldX, worldY) {
+    return this.chunkManager.getElevationAt(worldX, worldY);
+  }
+
+  /**
    * Draw ground layers before other objects
    */
   drawBackground(ctx, x, y) {
