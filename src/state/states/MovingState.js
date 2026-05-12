@@ -10,8 +10,6 @@ export class MovingState extends State {
 
   enter() {
     this.startY = this.character.position.y;
-    // Terrain effect: stairs lift the character's body sprite as they cross.
-    this.character.updateElevationFromTerrain();
   }
 
   update(delta, root) {

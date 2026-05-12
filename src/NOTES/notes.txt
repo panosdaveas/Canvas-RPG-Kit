@@ -117,6 +117,47 @@ This is a reservation model. The character "owns" the tile it's heading toward. 
 #support #docs #engine
 Tiled & Aseprite conventions (naing, layering, etc). Guidlines to use with engine.
 
+#engine #tiled #terrain TODO — elevation consumer (parser already in place)
+Tiled tile layers with a layer-level `elevation` property (e.g. "Stairs" layer
+with elevation: 4) are parsed into a per-tile elevation map. Lookup is exposed
+all the way up via `level.getElevationAt(x, y)`. NOTHING currently reads it
+on the consumer side — decide later how to use it.
+
+Parser surface (all wired, all working):
+  - TiledChunk._registerElevationLayer + getElevationAt
+  - ChunkManager.getElevationAt
+  - ChunkedLevel.getElevationAt
+  - SimpleLevel.getElevationAt
+
+Two design candidates already explored (both reverted, pick one or invent another):
+
+  (A) Visual lift — offset body.position.y by elevation, smoothly lerped.
+      Mechanism: per-move target set in MovingState.enter via a
+      Character.updateElevationFromTerrain() helper; Character.step lerps
+      `elevation` toward `elevationTarget` and writes
+      `body.position.y = _bodyRestY - elevation`. Pretty, but no gameplay
+      effect.
+
+  (B) Speed slowdown — halve `this.speed` while on or moving toward a stair.
+      Mechanism: per-move check in MovingState.enter via a
+      Character.updateSpeedFromTerrain() helper; uses `_baseSpeed` to
+      restore. Gameplay-meaningful but invisible.
+
+  (C) Both — visual lift + speed slowdown. Probably the most satisfying
+      "climbing" feel. Cost: a few extra lines in step() and the helper.
+
+Notes:
+  - Whatever consumer ships, the lookup is `level.getElevationAt(x, y)`.
+    `x, y` are world-space pixel coords matching the tile anchor (same
+    coordinate system as `position` / `destinationPosition`).
+  - The natural call site is `MovingState.enter()` (per-move, applies to
+    all Characters, not just the player). Adding the check in
+    PlayerController.tryMove would make it player-only.
+  - For knockback effects on stairs: HitState uses its own KNOCKBACK_SPEED
+    and doesn't read character.speed, so option (B) wouldn't affect
+    knockback through a stair. Option (A) would (body lifts during the
+    knockback move).
+
 # ============================================================================
 # aseprite-integration branch — staged adoption plan
 # ============================================================================
