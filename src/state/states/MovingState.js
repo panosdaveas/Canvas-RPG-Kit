@@ -10,8 +10,8 @@ export class MovingState extends State {
 
   enter() {
     this.startY = this.character.position.y;
-    // Terrain modifies movement speed per-move (e.g. stairs halve it).
-    this.character.updateSpeedFromTerrain();
+    // Terrain effect: stairs lift the character's body sprite as they cross.
+    this.character.updateElevationFromTerrain();
   }
 
   update(delta, root) {

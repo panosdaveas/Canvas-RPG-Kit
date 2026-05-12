@@ -30,9 +30,6 @@ export class Character extends GameObject {
     this.facingDirection = config.facingDirection ?? DOWN;
     this.destinationPosition = this.position.duplicate();
     this.speed = config.speed ?? 1;
-    // Base speed — the un-modified value. Terrain effects (e.g. stairs)
-    // mutate `this.speed`, then restore to `_baseSpeed` once off the terrain.
-    this._baseSpeed = this.speed;
     this.suspendOnPause = true;
 
     // Attack — animation drives end timing (body.animations.isFinished()),
@@ -61,17 +58,25 @@ export class Character extends GameObject {
     // this.addChild(this.shadow);
 
     // Body
+    const bodyOffset = config.bodyOffset ?? new Vector2(-8, -20);
     this.body = new Sprite({
       resource: config.spriteResource,
       frameSize: config.frameSize ?? new Vector2(32, 32),
       hFrames: config.hFrames ?? 4,
       vFrames: config.vFrames ?? 8,
       frame: config.frame ?? 0,
-      position: config.bodyOffset ?? new Vector2(-8, -20),
+      position: bodyOffset.duplicate(),
       animations: config.animations ?? null,
     });
     this.body.drawOrder = 1;
     this.addChild(this.body);
+
+    // Elevation — body sprite lifts by this many pixels (e.g. on stairs).
+    // `elevationTarget` is set per-move by MovingState; `elevation` is the
+    // current value, smoothly lerped toward target in step().
+    this._bodyRestY = bodyOffset.y;
+    this.elevation = 0;
+    this.elevationTarget = 0;
 
     // State machine (after sprites are ready)
     this._setupStateMachine();
@@ -100,20 +105,20 @@ export class Character extends GameObject {
   }
 
   /**
-   * Adjust `this.speed` based on the tile we're on or moving toward.
-   * Called by MovingState on each move so terrain effects (stairs) apply
-   * naturally per-move. Restores to `_baseSpeed` when off the terrain.
+   * Set `elevationTarget` from the tile we're moving toward. Called by
+   * MovingState on each move; step() then lerps `elevation` toward this
+   * target each frame, lifting the body sprite while traversing stairs.
    *
-   * Current rule: if either endpoint of the current move is on a tile
-   * with non-zero elevation (i.e. a stair), halve the speed.
+   * Uses the destination tile so the lift transition spans the move itself
+   * (smooth climb up onto a stair, smooth descent off it).
    */
-  updateSpeedFromTerrain() {
+  updateElevationFromTerrain() {
     const level = this.parent;
     if (!level || typeof level.getElevationAt !== "function") return;
-    const onStair =
-      level.getElevationAt(this.position.x, this.position.y) !== 0 ||
-      level.getElevationAt(this.destinationPosition.x, this.destinationPosition.y) !== 0;
-    this.speed = onStair ? this._baseSpeed * 0.5 : this._baseSpeed;
+    this.elevationTarget = level.getElevationAt(
+      this.destinationPosition.x,
+      this.destinationPosition.y
+    );
   }
 
   setController(controller) {
@@ -152,6 +157,16 @@ export class Character extends GameObject {
 
     // Delegate to current state
     this.stateMachine.update(delta, root);
+
+    // Smooth body lift toward elevationTarget. Shadow (if added as a child)
+    // stays grounded at this.position; only body.position.y shifts.
+    if (this.elevation !== this.elevationTarget) {
+      this.elevation += (this.elevationTarget - this.elevation) * 0.2;
+      if (Math.abs(this.elevationTarget - this.elevation) < 0.1) {
+        this.elevation = this.elevationTarget;
+      }
+      this.body.position.y = this._bodyRestY - this.elevation;
+    }
   }
 
   // ====================
