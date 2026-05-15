@@ -10,14 +10,14 @@ export const bow = {
     ammo: "infinite",
     cooldown: 2000,
     attackType: BOW,
-    hitbox: { range: 8, shape: null },
+    hitbox: { range: 7, shape: null },
     // Projectile launch frame is driven by Aseprite tag User Data
     // ({"launchFrame": N}) on bow_<dir> — see protagonist_new.json.
     icon: { resource: "bow", frameSize: { x: 16, y: 16 } },
     projectile: {
         id: "arrow",
         speed: 2,
-        maxRange: 128,
+        maxRange: 112,
         spriteOffset: { x: 0, y: -6 },
         sprite: {
             resource: "arrow",

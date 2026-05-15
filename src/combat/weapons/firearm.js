@@ -11,14 +11,14 @@ export const firearm = {
     ammo: "infinite",
     cooldown: 3000,
     attackType: FIREARM,
-    hitbox: { range: 12, shape: null },
+    hitbox: { range: 10, shape: null },
     icon: { resource: "firearm", frameSize: { x: 16, y: 16 } },
     // Projectile launch frame is driven by Aseprite tag User Data
     // ({"launchFrame": N}) on firearm_<dir> — see protagonist_new.json.
     projectile: {
         id: "arrow",
         speed: 4,
-        maxRange: 128,
+        maxRange: 160,
         spriteOffset: { x: 0, y: -6 },
         sprite: {
             resource: "arrow",
