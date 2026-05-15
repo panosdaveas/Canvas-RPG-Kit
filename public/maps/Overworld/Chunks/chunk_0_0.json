@@ -776,9 +776,68 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":40,
+         "name":"Enemies",
+         "objects":[
+                {
+                 "height":0,
+                 "id":76,
+                 "name":"Enemy1",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"facingDirection",
+                         "type":"string",
+                         "value":"UP"
+                        }, 
+                        {
+                         "name":"weapon",
+                         "type":"string",
+                         "value":"sword"
+                        }],
+                 "rotation":0,
+                 "type":"Enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":208,
+                 "y":320
+                }, 
+                {
+                 "height":0,
+                 "id":77,
+                 "name":"Enemy2",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"facingDirection",
+                         "type":"string",
+                         "value":"LEFT"
+                        }, 
+                        {
+                         "name":"weapon",
+                         "type":"string",
+                         "value":"bow"
+                        }],
+                 "rotation":0,
+                 "type":"Enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":288,
+                 "y":352
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":40,
- "nextobjectid":74,
+ "nextlayerid":41,
+ "nextobjectid":78,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.12.1",
