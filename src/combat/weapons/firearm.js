@@ -9,9 +9,9 @@ export const firearm = {
         effects: null,
     },
     ammo: "infinite",
-    cooldown: "10000",
+    cooldown: 3000,
     attackType: FIREARM,
-    hitbox: { range: 0, shape: null },
+    hitbox: { range: 12, shape: null },
     icon: { resource: "firearm", frameSize: { x: 16, y: 16 } },
     // Projectile launch frame is driven by Aseprite tag User Data
     // ({"launchFrame": N}) on firearm_<dir> — see protagonist_new.json.

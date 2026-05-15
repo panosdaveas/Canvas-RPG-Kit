@@ -144,11 +144,18 @@ export class GameObjectFactory {
   }
 
   _createEnemy(tiledObject) {
-    // Enemy properties read from Tiled (all optional):
-    //   facingDirection: "UP" | "DOWN" | "LEFT" | "RIGHT"
-    //   weapon: "sword" | "bow" | "firearm" (key into combat/weapons/index.js)
-    const facingDirection = this._getProperty(tiledObject, "facingDirection");
+    // Enemy properties read from Tiled:
+    //   weapon (REQUIRED): "sword" | "bow" | "firearm" — key into combat/weapons.
+    //     Without a weapon, EnemyController has no way to derive detection
+    //     and attack ranges, so we skip the spawn entirely.
+    //   facingDirection (optional): "UP" | "DOWN" | "LEFT" | "RIGHT"
     const weapon = this._getProperty(tiledObject, "weapon");
+    if (!weapon) {
+      console.warn("Enemy: missing 'weapon' property in Tiled, skipping spawn", tiledObject);
+      return null;
+    }
+
+    const facingDirection = this._getProperty(tiledObject, "facingDirection");
 
     return new Enemy({
       x: tiledObject.worldX,

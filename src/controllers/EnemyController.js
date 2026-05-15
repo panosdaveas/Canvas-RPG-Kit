@@ -8,12 +8,23 @@ import { events } from "../Events.js";
 export class EnemyController extends Controller {
   constructor(character, config = {}) {
     super(character);
-    // this.detectionRange = config.detectionRange ?? 5; // in tiles
-    this.detectionRange = character.weapon.projectile ? character.weapon.hitbox.range : character.weapon?.detectionRange; 
-    // this.detectionRange = Math.max(character.weapon.detectionRange, character.weapon.hitbox.range); // in tiles
-    this.attackRange = character.weapon.hitbox?.range ?? 1; // in tiles
-    // this.attackRange = config.attackRange ?? 1; // in tiles
-    this.attackCooldown = config.attackCooldown ?? 1500;
+    const weapon = character.equippedWeapon;
+
+    // attackRange — how close the enemy must be to hit. Always the weapon's
+    // hitbox range (in tiles): 1 for sword, 8 for bow, etc.
+    this.attackRange = weapon.hitbox?.range ?? 1;
+
+    // detectionRange — how far the enemy can "see" the hero. Projectile
+    // weapons (bow, firearm) detect at exactly their attack range — no point
+    // chasing if you can already shoot. Melee weapons have a wider detection
+    // range than attack range, so the enemy closes the gap before swinging.
+    this.detectionRange = weapon.projectile
+      ? this.attackRange
+      : (weapon.detectionRange ?? 5);
+
+    // attackCooldown — integer ms between attack attempts, per weapon.
+    this.attackCooldown = weapon.cooldown ?? config.attackCooldown ?? 1500;
+
     this.attackTimer = 0;
     this.heroPosition = null;
     this._heroInRange = false;

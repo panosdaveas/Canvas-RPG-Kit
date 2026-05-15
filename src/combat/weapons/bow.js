@@ -8,7 +8,7 @@ export const bow = {
         effects: null,
     },
     ammo: "infinite",
-    cooldown: null,
+    cooldown: 2000,
     attackType: BOW,
     hitbox: { range: 8, shape: null },
     // Projectile launch frame is driven by Aseprite tag User Data

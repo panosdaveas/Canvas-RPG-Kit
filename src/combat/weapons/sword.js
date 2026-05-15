@@ -9,7 +9,7 @@ export const sword = {
         effects: null,
     },
     ammo: "infinite",
-    cooldown: null,
+    cooldown: 1500,
     attackType: SWORD,
     hitbox: { range: 1, shape: HITBOX_ARC },
     detectionRange: 5,

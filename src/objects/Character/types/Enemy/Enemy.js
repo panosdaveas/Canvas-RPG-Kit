@@ -41,14 +41,15 @@ export class Enemy extends Character {
         });
 
         // weapon from Tiled (string key into the weapons module, e.g. "sword").
-        // Guard against typos / unknown keys so we don't crash on equip().
-        if (config?.weapon && weapons[config.weapon]) {
-            this.weapon = weapons[config.weapon];
-            this.equip(this.weapon);
-        } else if (config?.weapon) {
-            console.warn(`Enemy: unknown weapon "${config.weapon}"`);
+        // Factory guarantees a non-null value reaches us; guard the lookup
+        // against typos / unknown keys. Without a valid weapon, no controller
+        // (the controller derives its ranges from weapon data and would crash).
+        if (weapons[config.weapon]) {
+            this.equip(weapons[config.weapon]);
+            this.setController(new EnemyController(this, {}));
+        } else {
+            console.warn(`Enemy: unknown weapon "${config.weapon}", spawning inert`);
         }
-        this.setController(new EnemyController(this, {}));
     }
 
     draw(ctx, x, y) {
