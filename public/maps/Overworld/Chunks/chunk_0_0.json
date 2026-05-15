@@ -581,8 +581,9 @@
                  "properties":[
                         {
                          "name":"targetMap",
-                         "type":"file",
-                         "value":"..\/..\/Interior\/Rooms\/room_0.json"
+                         "propertytype":"targetMap",
+                         "type":"string",
+                         "value":"room_0"
                         }],
                  "rotation":0,
                  "type":"Exit",
@@ -599,8 +600,9 @@
                  "properties":[
                         {
                          "name":"targetMap",
-                         "type":"file",
-                         "value":"..\/..\/Interior\/Rooms\/room_1.json"
+                         "propertytype":"targetMap",
+                         "type":"string",
+                         "value":"room_1"
                         }],
                  "rotation":0,
                  "type":"Exit",
@@ -629,6 +631,7 @@
                  "properties":[
                         {
                          "name":"facingDirection",
+                         "propertytype":"facingDirection",
                          "type":"string",
                          "value":"DOWN"
                         }],
@@ -664,7 +667,13 @@
                          "value":"IDLE(2000)\nMOVE(DOWN, 2)\nIDLE(2000)\nFACE(RIGHT)\nIDLE(1000)\nMOVE(LEFT, 4)\nIDLE(1000)\nFACE(DOWN)\nIDLE(2000)\n\n"
                         }, 
                         {
+                         "name":"content",
+                         "type":"string",
+                         "value":"Yo, yo"
+                        }, 
+                        {
                          "name":"facingDirection",
+                         "propertytype":"facingDirection",
                          "type":"string",
                          "value":"LEFT"
                         }, 
@@ -696,19 +705,6 @@
                  "y":272
                 }, 
                 {
-                 "gid":1938,
-                 "height":16,
-                 "id":38,
-                 "name":"",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":384,
-                 "y":288
-                }, 
-                {
                  "height":0,
                  "id":73,
                  "name":"npc1",
@@ -727,8 +723,19 @@
                         }, 
                         {
                          "name":"facingDirection",
+                         "propertytype":"facingDirection",
                          "type":"string",
                          "value":"RIGHT"
+                        }, 
+                        {
+                         "name":"loop",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"pingPong",
+                         "type":"bool",
+                         "value":false
                         }, 
                         {
                          "name":"spawn",
@@ -764,6 +771,17 @@
                  "name":"chest_1",
                  "opacity":1,
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"itemType",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"value",
+                         "type":"int",
+                         "value":100
+                        }],
                  "rotation":0,
                  "type":"Chest",
                  "visible":true,
@@ -784,18 +802,20 @@
          "objects":[
                 {
                  "height":0,
-                 "id":76,
+                 "id":78,
                  "name":"Enemy1",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
                          "name":"facingDirection",
+                         "propertytype":"facingDirection",
                          "type":"string",
                          "value":"UP"
                         }, 
                         {
                          "name":"weapon",
+                         "propertytype":"weapon",
                          "type":"string",
                          "value":"sword"
                         }],
@@ -803,23 +823,25 @@
                  "type":"Enemy",
                  "visible":true,
                  "width":0,
-                 "x":208,
+                 "x":224,
                  "y":320
                 }, 
                 {
                  "height":0,
-                 "id":77,
+                 "id":79,
                  "name":"Enemy2",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
                          "name":"facingDirection",
+                         "propertytype":"facingDirection",
                          "type":"string",
                          "value":"LEFT"
                         }, 
                         {
                          "name":"weapon",
+                         "propertytype":"weapon",
                          "type":"string",
                          "value":"bow"
                         }],
@@ -837,7 +859,7 @@
          "y":0
         }],
  "nextlayerid":41,
- "nextobjectid":78,
+ "nextobjectid":80,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.12.1",
@@ -899,98 +921,14 @@
          "tilewidth":16
         }, 
         {
-         "columns":12,
+         "columns":0,
          "firstgid":21003,
-         "image":"..\/..\/..\/..\/..\/Tiles\/Canvas-RPG-Kit-TILED\/Tilesets\/Characters\/RSE Protags 01.png",
-         "imageheight":256,
-         "imagewidth":288,
          "margin":0,
          "name":"Hero",
          "spacing":0,
-         "tilecount":96,
+         "tilecount":0,
          "tileheight":32,
-         "tiles":[
-                {
-                 "animation":[
-                        {
-                         "duration":120,
-                         "tileid":48
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":49
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":50
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":49
-                        }],
-                 "id":48
-                }, 
-                {
-                 "animation":[
-                        {
-                         "duration":120,
-                         "tileid":60
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":61
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":62
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":61
-                        }],
-                 "id":60
-                }, 
-                {
-                 "animation":[
-                        {
-                         "duration":120,
-                         "tileid":72
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":73
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":74
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":73
-                        }],
-                 "id":72
-                }, 
-                {
-                 "animation":[
-                        {
-                         "duration":120,
-                         "tileid":84
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":85
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":86
-                        }, 
-                        {
-                         "duration":120,
-                         "tileid":85
-                        }],
-                 "id":84
-                }],
-         "tilewidth":24
+         "tilewidth":32
         }],
  "tilewidth":16,
  "type":"map",

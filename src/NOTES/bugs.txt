@@ -8,3 +8,7 @@ Is it pixel bleeding??
 
 #rendering
 when the browser window is high (half screen) then the objets oat the bottom are not rendered when player is on top of the map. has to do with chunk size ? or grace viewport ouotside the maps? 
+
+#combat
+axis-priority chase. attacks when aligned to the player. It works for close attacks, but for long ranged, it aligns but does not check for obstacles between the enemy and player. for example if there is an npc between, the enemy will keep atacking without repositioning.
+

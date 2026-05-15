@@ -1,16 +1,31 @@
 import { Vector2 } from "../Vector2.js";
 
 /**
- * Fetches the SpawnPlayer position from a map chunk JSON file
- * @param {string} targetMapPath - Relative path from the targetMap property (e.g., "../../Interior/Chunks/chunk_0_0.json")
+ * Maps a targetMap name prefix to its world directory layout.
+ * The Tiled `targetMap` property is a bare identifier like "room_0" or "chunk_0_0";
+ * this table tells us which world it belongs to and where the JSON lives on disk.
+ */
+const MAP_REGISTRY = [
+  { prefix: "room_",  world: "Interior",  subdir: "Rooms"  },
+  { prefix: "chunk_", world: "Overworld", subdir: "Chunks" },
+];
+
+function lookupMapEntry(name) {
+  return MAP_REGISTRY.find(entry => name.startsWith(entry.prefix)) ?? null;
+}
+
+/**
+ * Fetches the SpawnPlayer position from a map JSON file
+ * @param {string} targetMap - Map identifier from the Tiled property (e.g., "room_0", "chunk_0_0")
  * @returns {Promise<{position: Vector2, facingDirection: string}|null>}
  */
-export async function getSpawnPlayerFromMap(targetMapPath) {
+export async function getSpawnPlayerFromMap(targetMap) {
   try {
-    // Convert relative Tiled path to absolute path for fetch
-    // targetMapPath is relative to the chunk file, e.g., "../../Interior/Chunks/chunk_0_0.json"
-    // We need to convert it to "/maps/Interior/Chunks/chunk_0_0.json"
-    const absolutePath = resolveMapPath(targetMapPath);
+    const absolutePath = resolveMapPath(targetMap);
+    if (!absolutePath) {
+      console.warn(`Unknown targetMap identifier: ${targetMap}`);
+      return null;
+    }
 
     const response = await fetch(absolutePath);
     if (!response.ok) {
@@ -55,39 +70,27 @@ export async function getSpawnPlayerFromMap(targetMapPath) {
       facingDirection: facingDirection
     };
   } catch (error) {
-    console.error(`Error fetching spawn position from ${targetMapPath}:`, error);
+    console.error(`Error fetching spawn position from ${targetMap}:`, error);
     return null;
   }
 }
 
 /**
- * Converts a relative Tiled path to an absolute fetch path
- * e.g., "../../Interior/Chunks/chunk_0_0.json" -> "/maps/Interior/Chunks/chunk_0_0.json"
+ * Resolves a targetMap identifier to an absolute fetch path.
+ * e.g., "room_0" -> "/maps/Interior/Rooms/room_0.json"
+ * e.g., "chunk_0_0" -> "/maps/Overworld/Chunks/chunk_0_0.json"
  */
-export function resolveMapPath(relativePath) {
-  // Remove the "../.." prefix and build absolute path
-  // Tiled paths are like: "../../Interior/Chunks/chunk_0_0.json"
-  // We want: "/maps/Interior/Chunks/chunk_0_0.json"
-
-  const parts = relativePath.split('/');
-  // Filter out ".." parts and take the meaningful path
-  const meaningfulParts = parts.filter(p => p !== '..' && p !== '.');
-
-  return '/maps/' + meaningfulParts.join('/');
+export function resolveMapPath(targetMap) {
+  const entry = lookupMapEntry(targetMap);
+  if (!entry) return null;
+  return `/maps/${entry.world}/${entry.subdir}/${targetMap}.json`;
 }
 
 /**
- * Determines the world name from a targetMap path
- * e.g., "../../Overworld/Chunks/chunk_0_0.json" -> "Overworld"
- * e.g., "../../Interior/Chunks/chunk_0_0.json" -> "Interior"
+ * Determines the world name from a targetMap identifier.
+ * e.g., "room_0" -> "Interior"
+ * e.g., "chunk_0_0" -> "Overworld"
  */
-export function getWorldNameFromPath(targetMapPath) {
-  const parts = targetMapPath.split('/');
-  // Find the first meaningful directory name (not "..")
-  for (const part of parts) {
-    if (part !== '..' && part !== '.' && part !== 'Chunks' && !part.endsWith('.json')) {
-      return part;
-    }
-  }
-  return null;
+export function getWorldNameFromPath(targetMap) {
+  return lookupMapEntry(targetMap)?.world ?? null;
 }

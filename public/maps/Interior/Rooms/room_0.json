@@ -238,11 +238,13 @@
                  "height":16,
                  "id":3,
                  "name":"exit_1",
+                 "opacity":1,
                  "properties":[
                         {
                          "name":"targetMap",
-                         "type":"file",
-                         "value":"..\/..\/Overworld\/Chunks\/chunk_0_0.json"
+                         "propertytype":"targetMap",
+                         "type":"string",
+                         "value":"chunk_0_0"
                         }],
                  "rotation":0,
                  "type":"Exit",
@@ -255,8 +257,9 @@
          "properties":[
                 {
                  "name":"targetMap",
-                 "type":"file",
-                 "value":""
+                 "propertytype":"targetMap",
+                 "type":"string",
+                 "value":"room_0"
                 }],
          "type":"objectgroup",
          "visible":true,
@@ -272,6 +275,7 @@
                  "height":0,
                  "id":5,
                  "name":"",
+                 "opacity":1,
                  "point":true,
                  "properties":[
                         {
@@ -286,7 +290,7 @@
                  "x":112,
                  "y":144
                 }],
-         "opacity":1,
+         "opacity":0.94,
          "type":"objectgroup",
          "visible":true,
          "x":0,
@@ -301,12 +305,44 @@
                  "height":0,
                  "id":4,
                  "name":"npc_1",
+                 "opacity":1,
                  "point":true,
                  "properties":[
+                        {
+                         "name":"commands",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":"You're in Room_0"
+                        }, 
+                        {
+                         "name":"facingDirection",
+                         "propertytype":"facingDirection",
+                         "type":"string",
+                         "value":"DOWN"
+                        }, 
+                        {
+                         "name":"loop",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"pingPong",
+                         "type":"bool",
+                         "value":false
+                        }, 
                         {
                          "name":"spawn",
                          "type":"object",
                          "value":4
+                        }, 
+                        {
+                         "name":"spriteResource",
+                         "type":"string",
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"Npc",
@@ -325,7 +361,7 @@
  "nextobjectid":6,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.11.2",
+ "tiledversion":"1.12.1",
  "tileheight":16,
  "tilesets":[
         {
