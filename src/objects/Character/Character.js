@@ -139,9 +139,20 @@ export class Character extends GameObject {
   // ====================
 
   takeHit(damage, attackDirection) {
-    if (this.state === STATE_HIT) return;
+    // `_invulnerable` is true during the knockback + flash-recovery phases of
+    // HitState. During the stunned phase it flips back to false, so further
+    // hits land and re-trigger the cycle (new knockback, fresh stun timer).
+    if (this._invulnerable) return;
+
     this._hitDirection = attackDirection ?? null;
-    this.state = STATE_HIT;
+
+    if (this.state === STATE_HIT) {
+      // Already in HitState (stunned phase) — restart from the top without a
+      // state-machine round-trip. enter() resets phase/timers/knockback.
+      this.stateMachine.currentState.enter();
+    } else {
+      this.state = STATE_HIT;
+    }
   }
 
   // --------------------

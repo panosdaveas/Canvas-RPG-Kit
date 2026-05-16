@@ -47,6 +47,12 @@ export class EnemyController extends Controller {
     if (character.state !== STATE_IDLE || !character.hasArrivedAtDestination()) return;
     if (!this.heroPosition) return;
 
+    // Snapshot the level's collision sources once per tick — every decision
+    // below (movement, line-of-sight) uses the same set, no need to recompute
+    // or spread-copy. isTileFree only reads from these.
+    const walls = root.level?.walls;
+    const candidates = root.level?.children ?? [];
+
     const dx = this.heroPosition.x - character.position.x;
     const dy = this.heroPosition.y - character.position.y;
     const dist = (Math.abs(dx) + Math.abs(dy)) / TILE_SIZE;
@@ -76,15 +82,33 @@ export class EnemyController extends Controller {
           character.playIdleAnimation();
           return;
         }
-        character.attack();
-        this.attackTimer = this.attackCooldown;
+        // Projectile weapons need a clear path to the hero — don't fire if a
+        // solid object (NPC, chest, another enemy) or wall is in the way.
+        // Melee weapons (range 1, adjacent tile) trivially pass: no
+        // intermediate tiles to walk.
+        if (this._hasClearShot(walls, candidates, dx, dy)) {
+          character.attack();
+          this.attackTimer = this.attackCooldown;
+          return;
+        }
+        // Shot blocked — try a perpendicular sidestep to find a new angle.
+        // If both perpendiculars are blocked too, idle this frame.
+        for (const dir of this.perpendicularDirections(attackDir)) {
+          const next = character.position.toNeighbor(dir);
+          if (isTileFree(walls, candidates, next.x, next.y, character)) {
+            character.facingDirection = dir;
+            character.destinationPosition.x = next.x;
+            character.destinationPosition.y = next.y;
+            character.playWalkAnimation(dir);
+            return;
+          }
+        }
+        character.playIdleAnimation();
       } else {
         character.playIdleAnimation();
       }
       return;
     }
-
-    const candidates = root.level?.children ? [...root.level.children] : [];
 
     // Within attack range but not aligned → try either axis to align
     const inAttackRange = absDx <= this.attackRange && absDy <= this.attackRange;
@@ -95,7 +119,7 @@ export class EnemyController extends Controller {
 
       for (const dir of directions) {
         const next = character.position.toNeighbor(dir);
-        if (isTileFree(root.level?.walls, candidates, next.x, next.y, character)) {
+        if (isTileFree(walls, candidates, next.x, next.y, character)) {
           character.facingDirection = dir;
           character.destinationPosition.x = next.x;
           character.destinationPosition.y = next.y;
@@ -116,7 +140,7 @@ export class EnemyController extends Controller {
 
     for (const dir of directions) {
       const next = character.position.toNeighbor(dir);
-      if (isTileFree(root.level?.walls, candidates, next.x, next.y, character)) {
+      if (isTileFree(walls, candidates, next.x, next.y, character)) {
         character.facingDirection = dir;
         character.destinationPosition.x = next.x;
         character.destinationPosition.y = next.y;
@@ -147,5 +171,32 @@ export class EnemyController extends Controller {
   perpendicularDirections(dir) {
     if (dir === UP || dir === DOWN) return [RIGHT, LEFT];
     return [DOWN, UP];
+  }
+
+  /**
+   * Walk every tile strictly between the enemy and the hero (cardinal-aligned,
+   * so one of dx/dy is zero). Returns true if every intermediate tile is free
+   * of walls AND solid game objects.
+   *
+   * Cheaper version of a real line-of-sight raycast — we only ever shoot down
+   * a row or column, so tile-stepping is sufficient. The hero's own tile is
+   * not checked (loop ends at i = steps - 1).
+   *
+   * Caller passes the same `walls`/`candidates` it used for movement, so we
+   * don't re-read level.children inside.
+   */
+  _hasClearShot(walls, candidates, dx, dy) {
+    const stepX = Math.sign(dx) * TILE_SIZE;
+    const stepY = Math.sign(dy) * TILE_SIZE;
+    const steps = Math.max(Math.abs(dx), Math.abs(dy)) / TILE_SIZE;
+
+    for (let i = 1; i < steps; i++) {
+      const checkX = this.character.position.x + stepX * i;
+      const checkY = this.character.position.y + stepY * i;
+      if (!isTileFree(walls, candidates, checkX, checkY, this.character)) {
+        return false;
+      }
+    }
+    return true;
   }
 }
