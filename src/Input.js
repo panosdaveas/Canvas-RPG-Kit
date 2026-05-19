@@ -66,6 +66,16 @@ export class Input {
     return justPressed;
   }
 
+  // Edge-triggered direction press for the current frame. Returns one of
+  // UP/DOWN/LEFT/RIGHT, or null if no direction key was just pressed.
+  getDirectionJustPressed() {
+    if (this.getActionJustPressed("ArrowUp") || this.getActionJustPressed("KeyW")) return UP;
+    if (this.getActionJustPressed("ArrowDown") || this.getActionJustPressed("KeyS")) return DOWN;
+    if (this.getActionJustPressed("ArrowLeft") || this.getActionJustPressed("KeyA")) return LEFT;
+    if (this.getActionJustPressed("ArrowRight") || this.getActionJustPressed("KeyD")) return RIGHT;
+    return null;
+  }
+
   onArrowPressed(direction) {
     // Add this arrow to the queue if it's new
     if (this.heldDirections.indexOf(direction) === -1) {

@@ -79,7 +79,7 @@ export class PlayerController extends Controller {
     // Buffer a direction press during MOVING (parallel to attackBuffered).
     // Consumed by MovingState on arrival. Last-press wins.
     if (character.state === STATE_MOVING) {
-      const dir = this._justPressedDirection(input);
+      const dir = input?.getDirectionJustPressed();
       if (dir) character.bufferedMoveDirection = dir;
     }
 
@@ -186,12 +186,4 @@ export class PlayerController extends Controller {
     }
   }
 
-  _justPressedDirection(input) {
-    if (!input) return null;
-    if (input.getActionJustPressed("ArrowUp") || input.getActionJustPressed("KeyW")) return UP;
-    if (input.getActionJustPressed("ArrowDown") || input.getActionJustPressed("KeyS")) return DOWN;
-    if (input.getActionJustPressed("ArrowLeft") || input.getActionJustPressed("KeyA")) return LEFT;
-    if (input.getActionJustPressed("ArrowRight") || input.getActionJustPressed("KeyD")) return RIGHT;
-    return null;
-  }
 }
