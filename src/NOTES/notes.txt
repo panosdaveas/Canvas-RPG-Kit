@@ -1,4 +1,6 @@
-1. Maps Parsing                                                                             
+#engine #core #maps #collision
+
+Maps Parsing
 
   Two-tier system:                                                      
   - ChunkedLevel for open worlds: streams 30x30-tile chunks via ChunkManager based on camera  
@@ -27,14 +29,12 @@
   Potential concern: No render batching — each sprite is an individual drawImage call. Fine
   for current scale, but would become a bottleneck with many on-screen objects.
 
+#engine #collisions #ysorting
 
-Two parallel structures: the hierarchy tree and a separate _sortedObjects array in Main —
-  you must remember to call addToYSortedObjects manually
-
+Two parallel structures: the hierarchy tree and a separate _sortedObjects array in Main — you must remember to call addToYSortedObjects manually
 
 Strength: Factory pattern with runtime registration
-  Watch Out For: Dual tracking (hierarchy + sorted array)
-
+* Watch Out For: Dual tracking (hierarchy + sorted array)
 
 #Combat #ai #enemies
 
@@ -76,7 +76,7 @@ i need to take a look at the behaviour when the game enters the
   look quite cool         
 
 #states #Combat
-On equip, set movementThreshold in player controlle to 0. Reset when uequipp
+On equip, set movementThreshold in player controlle to 0. Reset when unequipp
 
 #combat #states
 attackRevoveryTimer hard resets on AttackingState to a value > 0. At the same time we set it =0 in the character class. Investigate more..
@@ -117,7 +117,8 @@ This is a reservation model. The character "owns" the tile it's heading toward. 
 #support #docs #engine
 Tiled & Aseprite conventions (naing, layering, etc). Guidlines to use with engine.
 
-#engine #tiled #terrain TODO — elevation consumer (parser already in place)
+#engine #tiled #maps 
+TODO — elevation consumer (parser already in place)
 Tiled tile layers with a layer-level `elevation` property (e.g. "Stairs" layer
 with elevation: 4) are parsed into a per-tile elevation map. Lookup is exposed
 all the way up via `level.getElevationAt(x, y)`. NOTHING currently reads it
@@ -162,7 +163,8 @@ Notes:
 # aseprite-integration branch — staged adoption plan
 # ============================================================================
 
-#aseprite #phase1 DONE
+#aseprite #animations 
+Phase1 DONE
 Projectile launch driven by tag User Data {"launchFrame": N} (0-based, tag-relative)
 - AttackingState reads animations.getUserData() and getFrameIndex()
 - weapon.launchTime removed from bow.js / firearm.js
@@ -170,7 +172,8 @@ Projectile launch driven by tag User Data {"launchFrame": N} (0-based, tag-relat
 - Authored in Aseprite (Tag Properties → User Data) going forward; JSON-edited
   for now until next re-export
 
-#aseprite #phase2 TODO — hitbox geometry from slices
+#aseprite 
+Phase2 TODO — hitbox geometry from slices
 Goal: replace abstract weapon.hitbox = { range, shape } + getHitboxPositions() math
 with per-frame slice rectangles authored in Aseprite. Frame-accurate, geometry-accurate,
 re-tunable without code.
@@ -205,7 +208,8 @@ Caveat: direction. The current hitbox math derives placement from attackDirectio
 slice is to the south of the body and sword_up's is to the north, that's already
 direction-correct because the artist drew it that way. No extra math needed.
 
-#aseprite #phase3 TODO — everything else
+#aseprite #animations
+Phase3 TODO — everything else
 General pattern: tag User Data carries flat metadata, slices carry per-frame geometry.
 Consumer reads at the right state's update and reacts.
 
@@ -255,16 +259,18 @@ Combat Could Become About:
 ✔ choosing safe lanes
 ✔ adapting weapon usage
 
-instead of:
-❌ precise sword dancing.
+instead of precise sword dancing.
 
 bad rolls = short range | good rolls = longer range
+*think abou the mimimum aatck range to be 2 tiles (longsword) instead of one that is now.
 
-#state-machine #state
+#stateMachine #state
 
 Behavior now:
 up-down-attack (move first, then attack): hero finishes UP move → faces DOWN → attacks DOWN.
 up-attack-down (attack first, then move): hero finishes UP move → attacks UP (original facing). DOWN is dropped on attack start.
 up-down-left-attack: hero finishes UP move → faces LEFT (latest move-buffer value) → attacks LEFT.
 up-move-only (no attack): unchanged — tryMove picks it up on next IDLE tick.
+
+*the trick: if both movement and attack are buffered, then if movement is first, then transform it to change in facing direction. if movement is second, then digest it and fire buffer only attack.
 
