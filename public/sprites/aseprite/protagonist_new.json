@@ -5,7 +5,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 1.aseprite": {
     "frame": { "x": 72, "y": 0, "w": 72, "h": 72 },
@@ -13,7 +13,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 2.aseprite": {
     "frame": { "x": 144, "y": 0, "w": 72, "h": 72 },
@@ -21,7 +21,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 3.aseprite": {
     "frame": { "x": 216, "y": 0, "w": 72, "h": 72 },
@@ -29,7 +29,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 4.aseprite": {
     "frame": { "x": 0, "y": 72, "w": 72, "h": 72 },
@@ -37,7 +37,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 5.aseprite": {
     "frame": { "x": 72, "y": 72, "w": 72, "h": 72 },
@@ -45,7 +45,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 6.aseprite": {
     "frame": { "x": 144, "y": 72, "w": 72, "h": 72 },
@@ -53,7 +53,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 7.aseprite": {
     "frame": { "x": 216, "y": 72, "w": 72, "h": 72 },
@@ -61,7 +61,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 8.aseprite": {
     "frame": { "x": 0, "y": 144, "w": 72, "h": 72 },
@@ -69,7 +69,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 9.aseprite": {
     "frame": { "x": 72, "y": 144, "w": 72, "h": 72 },
@@ -77,7 +77,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 10.aseprite": {
     "frame": { "x": 144, "y": 144, "w": 72, "h": 72 },
@@ -85,7 +85,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 11.aseprite": {
     "frame": { "x": 216, "y": 144, "w": 72, "h": 72 },
@@ -93,7 +93,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 12.aseprite": {
     "frame": { "x": 0, "y": 216, "w": 72, "h": 72 },
@@ -101,7 +101,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 13.aseprite": {
     "frame": { "x": 72, "y": 216, "w": 72, "h": 72 },
@@ -109,7 +109,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 14.aseprite": {
     "frame": { "x": 144, "y": 216, "w": 72, "h": 72 },
@@ -117,7 +117,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 15.aseprite": {
     "frame": { "x": 216, "y": 216, "w": 72, "h": 72 },
@@ -125,7 +125,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 60
+    "duration": 133
    },
    "protagonist_new 16.aseprite": {
     "frame": { "x": 0, "y": 288, "w": 72, "h": 72 },

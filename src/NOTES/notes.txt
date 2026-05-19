@@ -260,3 +260,11 @@ instead of:
 
 bad rolls = short range | good rolls = longer range
 
+#state-machine #state
+
+Behavior now:
+up-down-attack (move first, then attack): hero finishes UP move → faces DOWN → attacks DOWN.
+up-attack-down (attack first, then move): hero finishes UP move → attacks UP (original facing). DOWN is dropped on attack start.
+up-down-left-attack: hero finishes UP move → faces LEFT (latest move-buffer value) → attacks LEFT.
+up-move-only (no attack): unchanged — tryMove picks it up on next IDLE tick.
+
