@@ -72,7 +72,7 @@ export class PlayerController extends Controller {
       }
     }
 
-    if (input?.getActionJustPressed("ShiftRight")) {
+    if (input?.getActionJustPressed("ShiftRight") || input?.getActionJustPressed("KeyX")) {
       character.attack();
     }
 
