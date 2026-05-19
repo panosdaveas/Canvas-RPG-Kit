@@ -26,10 +26,19 @@ export class MovingState extends State {
       // Buffered attack fires immediately after arrival
       if (this.character.attackBuffered) {
         this.character.attackBuffered = false;
+        // If a move was buffered BEFORE the attack, redirect facing to it
+        // (no walk — just face that way and attack).
+        if (this.character.moveBeforeAttack && this.character.bufferedMoveDirection) {
+          this.character.facingDirection = this.character.bufferedMoveDirection;
+        }
+        this.character.bufferedMoveDirection = null;
+        this.character.moveBeforeAttack = false;
         this.character.startAttack();
         return;
       }
 
+      // Buffered move (if any) is consumed by PlayerController.tryMove on the
+      // next IDLE+arrived tick — that path already validates isTileFree.
       this.transitionTo(STATE_IDLE);
     }
   }

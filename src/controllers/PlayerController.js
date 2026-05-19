@@ -2,7 +2,7 @@ import { Controller } from "./Controller.js";
 import { DOWN, LEFT, RIGHT, UP } from "../Input.js";
 import { isTileFree } from "../helpers/grid.js";
 import { events } from "../Events.js";
-import { Character, STATE_ATTACKING, STATE_IDLE, STATE_INTERACTING } from "../objects/Character/Character.js";
+import { Character, STATE_ATTACKING, STATE_IDLE, STATE_INTERACTING, STATE_MOVING } from "../objects/Character/Character.js";
 import { sword, bow, firearm } from "../combat/weapons/index.js";
 
 
@@ -17,7 +17,7 @@ export class PlayerController extends Controller {
 
     //TODO: change: On equip, set movementThreshold in player controlle to 0. Reset when uequipp to have snappier movement during combat. outside of combat, it can feel more chill
     events.on("WEAPON_SELECTED", this, () => {
-      this.movementThreshold = 40;
+      this.movementThreshold = 0;
     });
 
     events.on("WEAPON_UPEQUIPPED", this, () => {
@@ -74,6 +74,13 @@ export class PlayerController extends Controller {
 
     if (input?.getActionJustPressed("ShiftRight")) {
       character.attack();
+    }
+
+    // Buffer a direction press during MOVING (parallel to attackBuffered).
+    // Consumed by MovingState on arrival. Last-press wins.
+    if (character.state === STATE_MOVING) {
+      const dir = this._justPressedDirection(input);
+      if (dir) character.bufferedMoveDirection = dir;
     }
 
     // While attacking: allow facing change, nothing else
@@ -141,7 +148,19 @@ export class PlayerController extends Controller {
     const character = this.character;
     const input = root.input;
 
-    if (!input?.direction) {
+    // Consume a buffered move direction first, fall back to held input.
+    // Buffered moves bypass the hold threshold — the player already committed.
+    let direction = null;
+    let fromBuffer = false;
+    if (character.bufferedMoveDirection) {
+      direction = character.bufferedMoveDirection;
+      character.bufferedMoveDirection = null;
+      fromBuffer = true;
+    } else if (input?.direction) {
+      direction = input.direction;
+    }
+
+    if (!direction) {
       character.playIdleAnimation();
       return;
     }
@@ -149,12 +168,12 @@ export class PlayerController extends Controller {
     let nextX = character.destinationPosition.x;
     let nextY = character.destinationPosition.y;
 
-    character.facingDirection = input.direction;
-    character.playWalkAnimation(input.direction);
+    character.facingDirection = direction;
+    character.playWalkAnimation(direction);
 
-    if (this.directionHeldTime < this.movementThreshold) return;
+    if (!fromBuffer && this.directionHeldTime < this.movementThreshold) return;
 
-    switch (input.direction) {
+    switch (direction) {
       case DOWN:  nextY += this.gridSize; break;
       case UP:    nextY -= this.gridSize; break;
       case LEFT:  nextX -= this.gridSize; break;
@@ -165,5 +184,14 @@ export class PlayerController extends Controller {
       character.destinationPosition.x = nextX;
       character.destinationPosition.y = nextY;
     }
+  }
+
+  _justPressedDirection(input) {
+    if (!input) return null;
+    if (input.getActionJustPressed("ArrowUp") || input.getActionJustPressed("KeyW")) return UP;
+    if (input.getActionJustPressed("ArrowDown") || input.getActionJustPressed("KeyS")) return DOWN;
+    if (input.getActionJustPressed("ArrowLeft") || input.getActionJustPressed("KeyA")) return LEFT;
+    if (input.getActionJustPressed("ArrowRight") || input.getActionJustPressed("KeyD")) return RIGHT;
+    return null;
   }
 }

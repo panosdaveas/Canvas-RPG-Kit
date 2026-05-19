@@ -230,3 +230,33 @@ Wiring pattern is identical across all of these:
 No engine changes needed for any of these — the loader and Animations API already
 support it. Just author + add a read site in the relevant state/system.
 
+#engine #animation
+TRADEOFF: when snapping to tiles (16px) then the keystrokes tapped in the interval until the movement is completed are ignored. feels laggy at rapid key strokes. Alternatively, remove the snapping to tiles and go with free move (1px). TBD.
+note: maybe buffer always the next move?
+
+#engine #combat #animation
+buffer one move ahead. Priority : Input priority ? last buffered move? last buffered move from movement pool. if movement and attack buffered, proritize attack. - TACTICAL ACTION instead of micro movement fast action. 
+
+combat should emphasize:
+
+positioning
+anticipation
+-> lane control
+crowd management
+weapon reach
+
+The shorter the attack range, the more demanding movement precision becomes.
+The more ranged the combat, the more viable deliberate/grid movement becomes.
+
+Combat Could Become About:
+
+✔ controlling space
+✔ predicting enemy movement
+✔ choosing safe lanes
+✔ adapting weapon usage
+
+instead of:
+❌ precise sword dancing.
+
+bad rolls = short range | good rolls = longer range
+

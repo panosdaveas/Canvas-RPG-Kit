@@ -13,6 +13,7 @@ export class AttackingState extends State {
   enter() {
     this.hasHit = false;
     this.hasLaunched = false;
+    this.character.bufferedMoveDirection = null;
   }
 
   update(delta, root) {
@@ -94,7 +95,7 @@ export class AttackingState extends State {
   exit() {
     // Currently 0 (no post-attack movement lockout). Bump if we ever want
     // attacks to feel weighty / prevent immediate dart-away.
-    this.character.attackRecoveryTimer = 0;
+    this.character.attackRecoveryTimer = 40;
     this.character.attackDirection = null;
     this.character.playIdleAnimation();
   }

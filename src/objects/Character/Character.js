@@ -35,6 +35,10 @@ export class Character extends GameObject {
     // Attack — animation drives end timing (body.animations.isFinished()),
     // so we don't carry a parallel attackTimer/attackDuration here anymore.
     this.attackBuffered = false;
+    this.bufferedMoveDirection = null;
+    // True when attack was buffered AFTER a move was already buffered.
+    // Used on arrival so the attack picks up the buffered direction as facing.
+    this.moveBeforeAttack = false;
     this.attackRecoveryTimer = 0; //NOTE: i can set it to 80?
     this.attackDirection = null; // Locked direction during attack
     this.equippedWeapon = null;
@@ -165,6 +169,9 @@ export class Character extends GameObject {
     // Buffer if moving
     if (this.state === STATE_MOVING) {
       this.attackBuffered = true;
+      // Remember if a move was already buffered when we got here.
+      // On arrival, that move's direction becomes the attack's facing.
+      this.moveBeforeAttack = this.bufferedMoveDirection !== null;
       return;
     }
 
