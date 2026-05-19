@@ -50,6 +50,10 @@ export class Hero extends Character {
   }
 
   ready() {
+    super.ready(); // play initial idle anim — without this the body keeps the
+                   // default activeKey (first pattern in the Aseprite export,
+                   // usually walk_<dir>) and animates in place until input changes it.
+
     // Set up player controller
     this.setController(new PlayerController(this));
 
