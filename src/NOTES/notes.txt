@@ -274,3 +274,8 @@ up-move-only (no attack): unchanged — tryMove picks it up on next IDLE tick.
 
 *the trick: if both movement and attack are buffered, then if movement is first, then transform it to change in facing direction. if movement is second, then digest it and fire buffer only attack.
 
+#sprites #art
+
+Maybe draw the projectiles in the same canvas size as the player to avoid positioning offsets? 
+Also, in a bigger canvas, arrow shadow can be "baked" in the sprite. that way, there is also the capability for shadow animation effect.
+

@@ -19,7 +19,7 @@ export class Projectile extends GameObject {
 
     this.direction = direction;
     this.speed = projectileConfig.speed ?? 2;
-    this.maxRange = projectileConfig.maxRange ?? 1000;
+    this.maxRange = projectileConfig.maxRange ?? 128;
     this.damage = damage;
     this.team = team ?? "neutral";
     this.distanceTraveled = 0;
@@ -38,6 +38,14 @@ export class Projectile extends GameObject {
         frame: 0,
         position: new Vector2(offset.x, offset.y),
       });
+
+      const shadow = new Sprite({
+        resource: resources.images.shadow,
+        frameSize: new Vector2(32, 32),
+        position: new Vector2(-8, -12),
+      });
+      
+      this.addChild(shadow);
       this.addChild(this.sprite);
 
       // Set initial frame based on direction
