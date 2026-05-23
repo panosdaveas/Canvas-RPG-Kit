@@ -285,3 +285,13 @@ Example: when approaching an enemy - tilt the camera even higher top-wise..
 
 #maps #design
 get inspiration from real locations (maybe hometown?)
+
+#combat #enemies #pathfinding
+1. Shared registry (minimum change). Add a static EnemyRegistry (a Set<Enemy>) — each enemy registers on spawn and removes on destroy. The controller queries EnemyRegistry.others(this) to get the small list of fellow enemies, no scene scan. Fast, but pinch-attack logic still lives in EnemyController and each enemy re-derives its role every tile (with risk of three enemies disagreeing on who's on the left flank).
+
+2. Squad object (more structured, what I'd recommend). A Squad holds direct refs to N enemies and assigns roles (flank-left, flank-right, front). Each enemy reads this.squad.role(this) and the desired target tile. Enemies are dumb executors; the squad owns the tactic. Avoids re-derivation, makes it trivial to add new formations (envelop, line, scatter) without growing the controller, and one place to fix when behavior is wrong.
+
+Tradeoff: Squad is a new abstraction that needs spawning (Tiled object layer with a squadId property → factory groups enemies into a Squad). Registry is just one file but the "who plays which role" decision still has to live somewhere — it usually grows into a squad anyway.
+
+
+

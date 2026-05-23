@@ -467,7 +467,7 @@
                  "value":true
                 }],
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":30,
          "x":0,
          "y":0
@@ -694,6 +694,7 @@
                         }, 
                         {
                          "name":"spriteResource",
+                         "propertytype":"spriteResource",
                          "type":"string",
                          "value":"hero"
                         }],
@@ -744,6 +745,7 @@
                         }, 
                         {
                          "name":"spriteResource",
+                         "propertytype":"spriteResource",
                          "type":"string",
                          "value":"hero"
                         }],
@@ -919,16 +921,6 @@
          "tilecount":2,
          "tileheight":16,
          "tilewidth":16
-        }, 
-        {
-         "columns":0,
-         "firstgid":21003,
-         "margin":0,
-         "name":"Hero",
-         "spacing":0,
-         "tilecount":0,
-         "tileheight":32,
-         "tilewidth":32
         }],
  "tilewidth":16,
  "type":"map",
