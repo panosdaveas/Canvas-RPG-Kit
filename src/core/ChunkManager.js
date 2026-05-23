@@ -223,24 +223,6 @@ export class ChunkManager {
   }
 
   /**
-   * Get collision walls from all loaded chunks
-   * Returns a Set of encoded numeric keys representing solid grid cells
-   */
-  getCollisionWalls() {
-    const allWalls = new Set();
-
-    for (const chunk of this.loadedChunks.values()) {
-      if (chunk.isLoaded && chunk.collisionSet) {
-        for (const wall of chunk.collisionSet) {
-          allWalls.add(wall);
-        }
-      }
-    }
-
-    return allWalls;
-  }
-
-  /**
    * Clean up all chunks
    */
   destroy() {

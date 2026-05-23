@@ -293,5 +293,12 @@ get inspiration from real locations (maybe hometown?)
 
 Tradeoff: Squad is a new abstraction that needs spawning (Tiled object layer with a squadId property → factory groups enemies into a Squad). Registry is just one file but the "who plays which role" decision still has to live somewhere — it usually grows into a squad anyway.
 
+#collision #performance #tiled
+Option A for static-vs-dynamic solids: tag each Tiled object layer with a custom property `static: true|false` (e.g. Chests/Signs/Fences = static, Npcs/Enemies = dynamic). Factory reads the layer prop when spawning and stamps each object with a flag (e.g. `isStatic`). ChunkedLevel's blockers cache then bakes any `isSolid && isStatic` object's tile into the walls Set on spawn (and clears it on destroy via a walk-up like the YSort cleanup). isTileFree's children scan only checks objects without the flag — Characters and other dynamic solids.
+
+Win: removes the per-call O(N) scan over static solids; helpers stay decoupled from the Character class (no instanceof in grid.js). Tradeoff: another piece of layer metadata that has to stay in sync — wrong default on a new layer is an easy mistake. Pick a sensible default (probably `static: false` so dynamic is the safe fallback). For instance-level overrides (e.g. a Chest on a moving platform), put a per-object `static` property on top of the layer default.
+
+Today the walls cache is the only optimization in place; this is the path to take if/when per-call cost in isTileFree becomes measurable (lots of static props + many ranged enemies + projectiles).
+
 
 

@@ -30,7 +30,24 @@ export class ChunkedLevel extends Level {
 
     // Custom game object factory (can be overridden in subclass)
     this.gameObjectFactory = params.gameObjectFactory || gameObjectFactory;
-    
+
+    // Cached union of all loaded chunks' collision sets, lazy-rebuilt only
+    // when a chunk loads or unloads (flagged via _wallsCacheValid).
+    this._wallsCache = new Set();
+    this._wallsCacheValid = false;
+  }
+
+  get walls() {
+    if (!this._wallsCacheValid) {
+      this._wallsCache.clear();
+      for (const chunk of this.chunkManager.loadedChunks.values()) {
+        if (chunk.isLoaded && chunk.collisionSet) {
+          for (const w of chunk.collisionSet) this._wallsCache.add(w);
+        }
+      }
+      this._wallsCacheValid = true;
+    }
+    return this._wallsCache;
   }
 
   /**
@@ -70,6 +87,9 @@ export class ChunkedLevel extends Level {
     // Track spawned objects for this chunk
     this.spawnedObjectsByChunk.set(key, spawnedObjects);
 
+    // Chunk walls just loaded — next walls access will rebuild the cache.
+    this._wallsCacheValid = false;
+
     console.log(`Spawned ${spawnedObjects.length} objects for chunk ${key}`);
   }
 
@@ -108,6 +128,9 @@ export class ChunkedLevel extends Level {
     // Clear the tracking
     this.spawnedObjectsByChunk.delete(key);
 
+    // Chunk walls gone — invalidate the cache.
+    this._wallsCacheValid = false;
+
     console.log(`Removed ${spawnedObjects.length} objects for chunk ${key}`);
   }
 
@@ -127,13 +150,6 @@ export class ChunkedLevel extends Level {
    */
   updateCameraPosition(x, y) {
     this.cameraPosition = { x, y };
-  }
-
-  /**
-   * Get collision walls from all loaded chunks
-   */
-  getWalls() {
-    return this.chunkManager.getCollisionWalls();
   }
 
   /**

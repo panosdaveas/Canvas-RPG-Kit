@@ -119,10 +119,4 @@ export class Overworld extends ChunkedLevel {
     });
   }
 
-  /**
-   * Override getWalls to return collision data from chunks
-   */
-  get walls() {
-    return this.getWalls();
-  }
 }
