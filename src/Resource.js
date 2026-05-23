@@ -26,6 +26,10 @@ class Resources {
       chest: "/sprites/chest.png",
       // Weapons
       arrow: "/sprites/weapons/arrow.png",
+      // Icons (weapons)
+      bowIcon: "/sprites/weapons/icons/bow.png",
+      swordIcon: "/sprites/weapons/icons/sword.png",
+      firearmIcon: "/sprites/weapons/icons/firearm.png",
     };
 
     // Aseprite-driven bundles: animations + slices + userData + spritesheet

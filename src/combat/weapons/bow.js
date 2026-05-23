@@ -13,7 +13,7 @@ export const bow = {
     hitbox: { range: 7, shape: null },
     // Projectile launch frame is driven by Aseprite tag User Data
     // ({"launchFrame": N}) on bow_<dir> — see protagonist_new.json.
-    icon: { resource: "bow", frameSize: { x: 16, y: 16 } },
+    icon: { resource: "bowIcon", frameSize: { x: 24, y: 24 } },
     projectile: {
         id: "arrow",
         speed: 2,

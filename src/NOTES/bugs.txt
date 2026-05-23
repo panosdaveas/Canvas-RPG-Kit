@@ -4,7 +4,7 @@ stay in fornt of an exit. when hit by an enemy and play the step back animation,
 
 #rendering #ysorting
 Objects can appear between foreground & background. E.g. a sowrd animation shows the animation between a tree's static trunk and tree's foreground top.
-Is it pixel bleeding??
+Is it pixel bleeding?? No! the trunk of the tree belongs to the static backgound and does not participate in y-sorting. suggestd fix: add two rows of tiles in the foreground. e.g. if a tree has height of 3 tiles, include the 2 top tiles in the foreground!
 
 #rendering
 when the browser window is high (half screen) then the objets oat the bottom are not rendered when player is on top of the map. has to do with chunk size ? or grace viewport ouotside the maps? 
