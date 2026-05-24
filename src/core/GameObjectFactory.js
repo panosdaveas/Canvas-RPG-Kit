@@ -3,6 +3,7 @@ import { Enemy } from "../objects/Character/types/Enemy/Enemy.js";
 import { Exit } from "../objects/Exit/Exit.js";
 import { Sign } from "../objects/Sign/Sign.js";
 import { Chest } from "../objects/Chest/Chest.js";
+import { TileObject } from "../objects/TileObject/TileObject.js";
 
 /**
  * Factory for spawning game objects from Tiled object layer data
@@ -35,6 +36,11 @@ export class GameObjectFactory {
       // Add more object types here as needed
       "Chest": this._createChest.bind(this),
       // "Enemy": this._createEnemy.bind(this),
+
+      // Destructible scenery placed as Tiled tile objects (the gid is the
+      // visual; ParticleBurst pipeline shatters it on projectile impact).
+      "Destructible": this._createDestructible.bind(this),
+      "destructible": this._createDestructible.bind(this),
     };
   }
 
@@ -185,6 +191,21 @@ export class GameObjectFactory {
   _createChest(tiledObject) {
     const itemType = this._getProperty(tiledObject, "itemType") || "GOLD";
     return new Chest(tiledObject.worldX, tiledObject.worldY, itemType);
+  }
+
+  _createDestructible(tiledObject) {
+    // Must be a Tiled tile object — `tileSource` is added by TiledChunk when
+    // the object carries a gid. Skip rectangle/ellipse objects mistakenly
+    // tagged as Destructible.
+    if (!tiledObject.tileSource) {
+      console.warn("Destructible: missing tileSource — needs to be a tile object with a gid", tiledObject);
+      return null;
+    }
+    return new TileObject({
+      x: tiledObject.worldX,
+      y: tiledObject.worldY,
+      tileSource: tiledObject.tileSource,
+    });
   }
 
 }

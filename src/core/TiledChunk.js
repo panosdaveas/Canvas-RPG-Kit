@@ -531,6 +531,30 @@ export class TiledChunk {
   }
 
   /**
+   * Resolve a Tiled tile gid to a concrete source rect within the right
+   * tileset image. Used to bridge tile-object data (gid) into Sprite-friendly
+   * coords for TileObject. Mirrors the lookup in _drawTile.
+   */
+  _resolveTileSource(gid) {
+    // tilesets is sorted by firstgid descending — first one we match owns it.
+    let tileset = this.tilesets[0];
+    for (const ts of this.tilesets) {
+      if (gid >= ts.firstgid) { tileset = ts; break; }
+    }
+    const tilesetImage = this.tilesetImages[tileset.imageIndex];
+    const localTileId = gid - tileset.firstgid;
+    const srcX = (localTileId % tileset.columns) * tileset.tilewidth;
+    const srcY = Math.floor(localTileId / tileset.columns) * tileset.tileheight;
+    return {
+      resource: tilesetImage,
+      srcX,
+      srcY,
+      srcW: tileset.tilewidth,
+      srcH: tileset.tileheight,
+    };
+  }
+
+  /**
    * Get all objects from object layers
    * Returns array of objects with their properties
    */
@@ -544,14 +568,21 @@ export class TiledChunk {
           // For tall objects, use the bottom tile as the interaction point
           // (obj.height - TILE_SIZE) shifts from top to bottom tile
           const yOffset = obj.height ? obj.height - TILE_SIZE : 0;
-          allObjects.push({
+          const enriched = {
             ...obj,
             layerName: layer.name,
             chunkX: this.chunkX,
             chunkY: this.chunkY,
             worldX: this.worldX + obj.x,
-            worldY: this.worldY + obj.y + yOffset
-          });
+            worldY: this.worldY + obj.y + yOffset,
+          };
+          // Tile objects (placed from a tileset) carry a `gid`. Pre-resolve
+          // the tileset + source rect so the factory can spawn a TileObject
+          // without needing to know about chunk-level tileset state.
+          if (obj.gid) {
+            enriched.tileSource = this._resolveTileSource(obj.gid);
+          }
+          allObjects.push(enriched);
         }
       }
     }

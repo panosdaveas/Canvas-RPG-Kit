@@ -837,6 +837,54 @@
                  "width":0,
                  "x":240,
                  "y":208
+                }, 
+                {
+                 "height":0,
+                 "id":81,
+                 "name":"chest_1",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"itemType",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"value",
+                         "type":"int",
+                         "value":100
+                        }],
+                 "rotation":0,
+                 "type":"Chest",
+                 "visible":true,
+                 "width":0,
+                 "x":416,
+                 "y":176
+                }, 
+                {
+                 "height":0,
+                 "id":82,
+                 "name":"chest_1",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"itemType",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"value",
+                         "type":"int",
+                         "value":100
+                        }],
+                 "rotation":0,
+                 "type":"Chest",
+                 "visible":true,
+                 "width":0,
+                 "x":432,
+                 "y":272
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -908,7 +956,7 @@
          "y":0
         }],
  "nextlayerid":44,
- "nextobjectid":81,
+ "nextobjectid":83,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.12.1",

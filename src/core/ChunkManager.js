@@ -186,10 +186,6 @@ export class ChunkManager {
    * Draw all ground layers from loaded chunks
    */
   drawGroundLayers(ctx) {
-    const loadedCount = this.loadedChunks.size;
-    if (loadedCount === 0) {
-      console.log("WARNING: No chunks loaded to draw!");
-    }
     for (const chunk of this.loadedChunks.values()) {
       if (chunk.isLoaded) {
         chunk.drawGroundLayers(ctx);

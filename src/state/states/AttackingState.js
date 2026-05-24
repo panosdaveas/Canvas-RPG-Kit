@@ -54,7 +54,8 @@ export class AttackingState extends State {
 
     const myTeam = this.character.team;
 
-    const candidates = [...level.children];
+    // Read-only — same reasoning as Projectile.checkCollisions.
+    const candidates = level.children;
 
     // NOTE: code before intercepting projectiles
     // for (const pos of hitboxPositions) {

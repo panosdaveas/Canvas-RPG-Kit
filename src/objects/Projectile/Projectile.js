@@ -7,6 +7,7 @@ import { UP, DOWN, LEFT, RIGHT } from "../../Input.js";
 import { isTileFree, snapToGrid } from "../../helpers/grid.js";
 import { DEBUG_LAYERS, TILE_SIZE } from "../../Constants.js";
 import { Character } from "../Character/Character.js";
+import { ParticleBurst } from "../ParticleBurst/ParticleBurst.js";
 
 
 // TODO: projectile-vs-projectile needs a weight/priority system to decide the outcome, now we only have melle intercepts projectile
@@ -119,7 +120,10 @@ export class Projectile extends GameObject {
     const gridX = snapToGrid(this.position.x);
     const gridY = snapToGrid(this.position.y);
 
-    const candidates = [...level.children];
+    // Read-only access — no need to copy. We never mutate this list and
+    // any concurrent add/remove from another callback during this scan would
+    // be harmless (find returns the first match, not all).
+    const candidates = level.children;
 
     // Check walls + solid objects
     if (!isTileFree(level.walls, candidates, gridX, gridY)) {
@@ -142,6 +146,44 @@ export class Projectile extends GameObject {
           damage: this.damage,
           projectile: this,
         });
+      }
+
+      // Resolve what actually blocked us (hitTarget is only filled when the
+      // blocker was attackable). Looser scan matches ANY child at the impact
+      // tile — including non-solid objects like Signs that sit on top of a
+      // collision-layer tile. Null = bare wall, no game object at that tile.
+      const blocker = hitTarget ?? candidates.find(c => {
+        if (c === this) return false;
+        const cx = c.destinationPosition?.x ?? c.position.x;
+        const cy = c.destinationPosition?.y ?? c.position.y;
+        return cx === gridX && cy === gridY;
+      });
+      console.log("projectile hit:", blocker ?? "wall", "at", gridX, gridY);
+
+      // Cosmetic shatter: spawn a ParticleBurst from the blocker's renderable
+      // sprite. `sprite` covers projectiles / rods / chests / signs etc.;
+      // `body` covers Characters (Hero, NPC, Enemy).
+      // const sprite = blocker?.sprite ?? blocker?.body;
+      // just game objects (not characters that have a body)
+      const sprite = blocker?.sprite;
+      if (sprite) {
+        const frameCoord = sprite.frameMap.get(sprite.frame) ?? new Vector2(0, 0);
+        const burst = new ParticleBurst({
+          resource: sprite.resource,
+          frameCoord,
+          frameSize: sprite.frameSize,
+          position: blocker.position,
+          drawOffset: sprite.position,
+          splits: 3,
+          impactDirection: this.direction,
+        });
+        level.addChild(burst);
+        if (level.parent?.addToYSortedObjects) {
+          level.parent.addToYSortedObjects(burst);
+        }
+        // Remove the shattered object from the level. destroy() walks up to
+        // deregister from Y-sort and detaches from its parent.
+        blocker.destroy();
       }
 
       this.destroyProjectile();

@@ -75,6 +75,10 @@ export class GameObject {
   // }
 
   getDrawChildrenOrdered() {
+    // 0 or 1 children: nothing to sort, return the list directly. Skips the
+    // per-frame array allocation + sort for the common case (most leaf
+    // objects have no children; even Hero has just body + companion).
+    if (this.children.length < 2) return this.children;
     return [...this.children].sort((a, b) => {
       if (b.drawLayer === "FLOOR") {
         return 1;
