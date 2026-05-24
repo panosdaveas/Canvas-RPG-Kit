@@ -5,6 +5,7 @@ import {Main} from "./src/objects/Main/Main.js";
 import { Overworld } from './src/levels/Overworld.js';
 import {resources} from './src/Resource.js';
 import {screenEffects} from './src/ScreenEffects.js';
+import {PerfHUD} from './src/PerfHUD.js';
 
 // Grabbing the canvas to draw to
 const canvas = document.querySelector("#game-canvas");
@@ -36,6 +37,8 @@ async function startGame() {
   })
   window.mainScene = mainScene; // Expose for debugging
   mainScene.setLevel(new Overworld());
+
+  const perfHUD = new PerfHUD();
 
   let paused = false;
 
@@ -97,6 +100,8 @@ async function startGame() {
       ctx.fillText("PAUSED", canvas.width / 2, canvas.height / 2);
       ctx.restore();
     }
+
+    perfHUD.tick();
   }
 
   // Start the game!
