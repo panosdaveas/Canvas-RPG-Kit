@@ -23,6 +23,9 @@ export class Main extends GameObject {
 
     // Y-sort optimization: only re-sort when needed
     this._sortedObjects = [];
+    // Merged depth-sorted sequence (game objects + foreground ySort tile
+    // drawables). Rebuilt only when _ySortDirty fires; iterated each frame.
+    this._mergedYSort = [];
     this._ySortDirty = true;
     this._lastHeroY = null;
 
@@ -113,9 +116,13 @@ export class Main extends GameObject {
         withObject.state = STATE_INTERACTING;
       }
 
-      // Run the appropriate action (waits for completion)
+      // Run the appropriate action (waits for completion). Freeze the rest
+      // of the world for the dialogue duration so enemies can't hit the hero
+      // mid-textbox and knockbacks can't interrupt it.
       if (typeof withObject?.getContent === "function") {
+        events.emit("WORLD_PAUSE");
         await this.runTextBoxAction(withObject);
+        events.emit("WORLD_RESUME");
       }
 
       // Return hero and target to idle state
@@ -228,7 +235,10 @@ export class Main extends GameObject {
     const index = this._sortedObjects.indexOf(obj);
     if (index !== -1) {
       this._sortedObjects.splice(index, 1);
-      // No need to mark dirty - removal doesn't affect sort order
+      // Dirty the cached merged sequence so the removed ref drops out on
+      // next rebuild (otherwise a destroyed object's draw() would keep firing
+      // — e.g. a projectile's debug hitbox lingering after impact).
+      this._ySortDirty = true;
     }
   }
 
@@ -282,30 +292,43 @@ export class Main extends GameObject {
       this.level.drawGroundChunks(ctx);
     }
 
-    // 2. Draw all game objects (hero, NPCs, level children, etc.) - Y-sorted
-    // Only re-sort when positions have changed
+    // 2. Y-sort pass.
+    // Sort + merge work runs ONLY on dirty (interval-driven: tile arrival,
+    // add/remove, chunk load/unload). Per-frame work is just the iteration
+    // below — required because the canvas is cleared every frame.
     if (this._ySortDirty) {
-      this._sortedObjects.sort((a, b) => {
-        // Add small bias for hero and objects with ySortBias
-        //NOTE: maybe don't need the bias since the weapons / items are now baked 
-        // const aY = a.position.y + (a === this.hero ? 0.1 : (a.ySortBias ?? 0));
-        // const bY = b.position.y + (b === this.hero ? 0.1 : (b.ySortBias ?? 0));
-        const aY = a.position.y;
-        const bY = b.position.y;
-        return aY - bY;
-      });
+      this._sortedObjects.sort((a, b) => a.position.y - b.position.y);
+
+      // Two-pointer merge of game objects + level ySort tiles (both sorted
+      // by Y) into the reused _mergedYSort. Entries are stored directly —
+      // duck-type at draw time via the `position` property.
+      this._mergedYSort.length = 0;
+      const objs = this._sortedObjects;
+      const tiles = this.level?.ySortDrawables ?? [];
+      let oi = 0, ti = 0;
+      while (oi < objs.length || ti < tiles.length) {
+        const oy = oi < objs.length ? objs[oi].position.y : Infinity;
+        const ty = ti < tiles.length ? tiles[ti].worldY : Infinity;
+        if (oy <= ty) this._mergedYSort.push(objs[oi++]);
+        else this._mergedYSort.push(tiles[ti++]);
+      }
       this._ySortDirty = false;
     }
 
-    // Draw Y-sorted objects with viewport culling
+    // Per-frame iteration: walk the cached merged sequence and draw what's
+    // in view. Entries are either game objects (have `.position`) or tile
+    // drawables (have `.tileId`).
     const viewportBounds = this._getViewportBounds(ctx);
-    let objectsDrawn = 0;
-    this._sortedObjects.forEach(obj => {
-      if (this._isInViewport(obj, viewportBounds)) {
-        obj.draw(ctx, 0, 0);
-        objectsDrawn++;
+    for (const e of this._mergedYSort) {
+      if (e.position) {
+        if (this._isInViewport(e, viewportBounds)) e.draw(ctx, 0, 0);
+      } else {
+        if (e.worldX >= viewportBounds.left && e.worldX <= viewportBounds.right &&
+            e.worldY >= viewportBounds.top && e.worldY <= viewportBounds.bottom) {
+          e.chunk._drawTile(ctx, e.tileId, e.worldX, e.worldY);
+        }
       }
-    });
+    }
 
     //DEBUG:
     // Throttled debug log (every 1 second)

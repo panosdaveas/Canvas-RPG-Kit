@@ -33,6 +33,10 @@ export class TiledChunk {
 
     // Y-sort tracking
     this.foregroundYSortLayers = []; // Foreground layers that participate in Y-sorting
+    // Per-tile drawables emitted from ySort foreground layers. Main interleaves
+    // these with game objects in the merged depth pass so characters can pass
+    // in front of/behind individual foreground tiles by Y.
+    this.ySortDrawables = [];
 
     // Static layer caching - offscreen canvases for pre-rendered static layers
     this.staticGroundCanvas = null;
@@ -46,6 +50,10 @@ export class TiledChunk {
 
     // Parse and organize the layers
     this._parseLayers();
+
+    // Emit one drawable per non-empty tile in ySort foreground layers, so
+    // Main can interleave them with characters in the depth pass.
+    this._buildYSortDrawables();
 
     // Build collision set for quick lookups
     this._buildCollisionSet();
@@ -206,6 +214,32 @@ export class TiledChunk {
   getElevationAt(worldX, worldY) {
     if (!this.elevationMap || this.elevationMap.size === 0) return 0;
     return this.elevationMap.get(encodeCoord(worldX, worldY)) ?? 0;
+  }
+
+  /**
+   * Walk every ySort foreground layer and emit one drawable per non-empty
+   * tile. Each drawable carries the data Main needs to invoke _drawTile in
+   * the merged depth pass, plus the tile's worldY which is also its sort key.
+   */
+  _buildYSortDrawables() {
+    for (const layer of this.foregroundYSortLayers) {
+      const data = layer.data;
+      const width = layer.width;
+      const height = layer.height;
+      const layerOffsetX = layer.offsetx || 0;
+      const layerOffsetY = layer.offsety || 0;
+
+      for (let row = 0; row < height; row++) {
+        for (let col = 0; col < width; col++) {
+          const tileId = data[row * width + col];
+          if (tileId === 0) continue;
+
+          const worldX = this.worldX + col * TILE_SIZE + layerOffsetX;
+          const worldY = this.worldY + row * TILE_SIZE + layerOffsetY;
+          this.ySortDrawables.push({ tileId, worldX, worldY, chunk: this });
+        }
+      }
+    }
   }
 
   /**
@@ -534,6 +568,7 @@ export class TiledChunk {
     this.foregroundLayers = [];
     this.staticForegroundLayers = [];
     this.foregroundYSortLayers = [];
+    this.ySortDrawables = [];
     this.objectLayers = [];
     this.collisionSet.clear();
     this.elevationMap?.clear();

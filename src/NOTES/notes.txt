@@ -300,5 +300,7 @@ Win: removes the per-call O(N) scan over static solids; helpers stay decoupled f
 
 Today the walls cache is the only optimization in place; this is the path to take if/when per-call cost in isTileFree becomes measurable (lots of static props + many ranged enemies + projectiles).
 
+#tiled #maps #ysorting
 
+Do i want ySort = true layers ? (above the collisions layer)
 

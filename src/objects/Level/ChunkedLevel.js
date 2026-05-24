@@ -35,6 +35,12 @@ export class ChunkedLevel extends Level {
     // when a chunk loads or unloads (flagged via _wallsCacheValid).
     this._wallsCache = new Set();
     this._wallsCacheValid = false;
+
+    // Cached, pre-sorted union of all loaded chunks' ySort tile drawables.
+    // Same lazy + invalidate pattern as walls. Main two-pointer-merges this
+    // into _mergedYSort on dirty.
+    this._ySortDrawablesCache = [];
+    this._ySortDrawablesValid = false;
   }
 
   get walls() {
@@ -48,6 +54,21 @@ export class ChunkedLevel extends Level {
       this._wallsCacheValid = true;
     }
     return this._wallsCache;
+  }
+
+  get ySortDrawables() {
+    if (!this._ySortDrawablesValid) {
+      this._ySortDrawablesCache.length = 0;
+      for (const chunk of this.chunkManager.loadedChunks.values()) {
+        if (chunk.isLoaded && chunk.ySortDrawables.length) {
+          for (const d of chunk.ySortDrawables) this._ySortDrawablesCache.push(d);
+        }
+      }
+      // Pre-sort by worldY so Main can two-pointer merge with _sortedObjects.
+      this._ySortDrawablesCache.sort((a, b) => a.worldY - b.worldY);
+      this._ySortDrawablesValid = true;
+    }
+    return this._ySortDrawablesCache;
   }
 
   /**
@@ -89,6 +110,11 @@ export class ChunkedLevel extends Level {
 
     // Chunk walls just loaded — next walls access will rebuild the cache.
     this._wallsCacheValid = false;
+    // New ySort tiles entered the world — invalidate aggregate cache AND ask
+    // Main to rebuild the merged sort so the new chunk's tiles join the depth
+    // pass on the next frame.
+    this._ySortDrawablesValid = false;
+    events.emit("YSORT_DIRTY");
 
     console.log(`Spawned ${spawnedObjects.length} objects for chunk ${key}`);
   }
@@ -130,6 +156,10 @@ export class ChunkedLevel extends Level {
 
     // Chunk walls gone — invalidate the cache.
     this._wallsCacheValid = false;
+    // ySort tiles from this chunk are gone too — invalidate aggregate cache
+    // AND ask Main to rebuild the merged sort so stale refs drop out.
+    this._ySortDrawablesValid = false;
+    events.emit("YSORT_DIRTY");
 
     console.log(`Removed ${spawnedObjects.length} objects for chunk ${key}`);
   }
@@ -198,7 +228,9 @@ export class ChunkedLevel extends Level {
    */
   drawForegroundChunks(ctx) {
     if (this.chunkManager) {
-      this.chunkManager.drawForegroundLayers(ctx, true); // Draw all foreground layers
+      // ySort foreground layers are drawn by Main in the merged depth pass;
+      // here we only draw the always-on-top ones.
+      this.chunkManager.drawForegroundLayers(ctx, false);
     }
   }
 
