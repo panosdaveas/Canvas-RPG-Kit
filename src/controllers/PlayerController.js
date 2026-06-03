@@ -171,6 +171,11 @@ export class PlayerController extends Controller {
     character.facingDirection = direction;
     character.playWalkAnimation(direction);
 
+    // NOTE: comment-out this line to
+    // Respect the hold-time threshold for buffered moves too: a brief tap
+    // (released before arrival) registers as a facing change only, not a
+    // committed step. To commit, the player must still be holding the
+    // direction (or have re-pressed it long enough).
     if (!fromBuffer && this.directionHeldTime < this.movementThreshold) return;
 
     switch (direction) {
