@@ -1,26 +1,26 @@
 #engine #core #maps #collision
 
 Maps Parsing
-
   Two-tier system:                                                      
   - ChunkedLevel for open worlds: streams 30x30-tile chunks via ChunkManager based on camera  
   proximity, with a world.json manifest mapping coordinates to chunk files.                   
   - SimpleLevel for interiors: loads a single Tiled JSON map, no streaming overhead.          
-                                                                                              
-  TiledChunk parsing:                                                     
+
+TiledChunk parsing:                                                     
   - Layers split into ground/collision/foreground by convention
   - Static layers pre-rendered to offscreen canvas (good perf win)
   - Animated tiles supported natively
   - Collision encoded as bit-packed coordinates in a Set for O(1) lookups
 
-  Potential concern: No spatial indexing beyond the collision set. As object counts grow,
-  finding nearby entities is still a linear scan.
+Potential concern: No spatial indexing beyond the collision set. As object counts grow, finding nearby entities is still a linear scan.
 
+#collisions #engine #optimization
+Maintain a Set<encodedCoord> of occupied tiles for dynamic objects (parallel to walls) — updated on move/spawn/destroy. Brings the children check to O(1) total. We sketched this earlier and reverted — the bookkeeping at every destinationPosition change wasn't worth it for this scene size.
 
-  Render pipeline in Main.js:
-  1. Clear → camera transform → ground layers → Y-sorted objects → foreground layers → HUD
+Render pipeline in Main.js:
+1. Clear → camera transform → ground layers → Y-sorted objects → foreground layers → HUD
 
-  Key optimizations already in place:
+Key optimizations already in place:
   - Dirty-flag Y-sorting: _ySortDirty flag avoids re-sorting every frame
   - Viewport culling: objects and tiles outside view are skipped
   - HUD caching: rendered to offscreen canvas, only redrawn when _hudDirty
@@ -30,7 +30,6 @@ Maps Parsing
   for current scale, but would become a bottleneck with many on-screen objects.
 
 #engine #collisions #ysorting
-
 Two parallel structures: the hierarchy tree and a separate _sortedObjects array in Main — you must remember to call addToYSortedObjects manually
 
 Strength: Factory pattern with runtime registration
