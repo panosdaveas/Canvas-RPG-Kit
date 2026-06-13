@@ -5,7 +5,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 1.aseprite": {
     "frame": { "x": 72, "y": 0, "w": 72, "h": 72 },
@@ -13,7 +13,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 2.aseprite": {
     "frame": { "x": 144, "y": 0, "w": 72, "h": 72 },
@@ -21,7 +21,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 3.aseprite": {
     "frame": { "x": 216, "y": 0, "w": 72, "h": 72 },
@@ -29,7 +29,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 4.aseprite": {
     "frame": { "x": 0, "y": 72, "w": 72, "h": 72 },
@@ -37,7 +37,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 5.aseprite": {
     "frame": { "x": 72, "y": 72, "w": 72, "h": 72 },
@@ -45,7 +45,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 6.aseprite": {
     "frame": { "x": 144, "y": 72, "w": 72, "h": 72 },
@@ -53,7 +53,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 7.aseprite": {
     "frame": { "x": 216, "y": 72, "w": 72, "h": 72 },
@@ -61,7 +61,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 8.aseprite": {
     "frame": { "x": 0, "y": 144, "w": 72, "h": 72 },
@@ -69,7 +69,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 9.aseprite": {
     "frame": { "x": 72, "y": 144, "w": 72, "h": 72 },
@@ -77,7 +77,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 10.aseprite": {
     "frame": { "x": 144, "y": 144, "w": 72, "h": 72 },
@@ -85,7 +85,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 11.aseprite": {
     "frame": { "x": 216, "y": 144, "w": 72, "h": 72 },
@@ -93,7 +93,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 12.aseprite": {
     "frame": { "x": 0, "y": 216, "w": 72, "h": 72 },
@@ -101,7 +101,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 13.aseprite": {
     "frame": { "x": 72, "y": 216, "w": 72, "h": 72 },
@@ -109,7 +109,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 14.aseprite": {
     "frame": { "x": 144, "y": 216, "w": 72, "h": 72 },
@@ -117,7 +117,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 15.aseprite": {
     "frame": { "x": 216, "y": 216, "w": 72, "h": 72 },
@@ -125,7 +125,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 72, "h": 72 },
     "sourceSize": { "w": 72, "h": 72 },
-    "duration": 133
+    "duration": 116
    },
    "protagonist_new 16.aseprite": {
     "frame": { "x": 0, "y": 288, "w": 72, "h": 72 },
@@ -528,10 +528,10 @@
    { "name": "sword_left", "from": 20, "to": 23, "direction": "forward", "color": "#000000ff" },
    { "name": "sword_right", "from": 24, "to": 27, "direction": "forward", "color": "#000000ff" },
    { "name": "sword_up", "from": 28, "to": 31, "direction": "forward", "color": "#000000ff" },
-   { "name": "bow_down", "from": 32, "to": 35, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
-   { "name": "bow_left", "from": 36, "to": 39, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
-   { "name": "bow_right", "from": 40, "to": 43, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
-   { "name": "bow_up", "from": 44, "to": 47, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
+   { "name": "bow_down", "from": 32, "to": 35, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":2}" },
+   { "name": "bow_left", "from": 36, "to": 39, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":2}" },
+   { "name": "bow_right", "from": 40, "to": 43, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":2}" },
+   { "name": "bow_up", "from": 44, "to": 47, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":2}" },
    { "name": "firearm_down", "from": 48, "to": 51, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
    { "name": "firearm_left", "from": 52, "to": 55, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
    { "name": "firearm_right", "from": 56, "to": 59, "direction": "forward", "color": "#000000ff", "data": "{\"launchFrame\":3}" },
