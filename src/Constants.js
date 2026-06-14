@@ -32,6 +32,7 @@ export const SPRITE = {
 
 // Layer types - these match the Tiled layer names
 export const COLLISION_LAYER_NAME = "Collisions"; // Layer that separates ground from foreground
+export const CHARACTER_ONLY_COLLISION_LAYER_NAME = "LowCollisions"; // Blocks characters but lets projectiles pass
 
 export const CULLING = {
     BUFFER_TILES: 2, // Extra tiles to render beyond viewport for smoothness

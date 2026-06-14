@@ -303,3 +303,5 @@ Today the walls cache is the only optimization in place; this is the path to tak
 
 Do i want ySort = true layers ? (above the collisions layer)
 
+#tiles #map #tiled
+maybe trigger animated tiles on condition ? 

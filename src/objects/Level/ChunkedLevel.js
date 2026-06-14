@@ -31,10 +31,15 @@ export class ChunkedLevel extends Level {
     // Custom game object factory (can be overridden in subclass)
     this.gameObjectFactory = params.gameObjectFactory || gameObjectFactory;
 
-    // Cached union of all loaded chunks' collision sets, lazy-rebuilt only
-    // when a chunk loads or unloads (flagged via _wallsCacheValid).
+    // Character-blocking wall cache — union of every loaded chunk's full
+    // collision + character-only collision sets. Read by isTileFree for
+    // character movement decisions. Lazy-rebuilt on chunk load/unload.
     this._wallsCache = new Set();
     this._wallsCacheValid = false;
+    // Projectile-blocking wall cache — only the FULL collision tiles, so
+    // arrows fly over LowCollisions (railings, fences, etc.).
+    this._projectileWallsCache = new Set();
+    this._projectileWallsValid = false;
 
     // Cached, pre-sorted union of all loaded chunks' ySort tile drawables.
     // Same lazy + invalidate pattern as walls. Main two-pointer-merges this
@@ -47,13 +52,30 @@ export class ChunkedLevel extends Level {
     if (!this._wallsCacheValid) {
       this._wallsCache.clear();
       for (const chunk of this.chunkManager.loadedChunks.values()) {
-        if (chunk.isLoaded && chunk.collisionSet) {
+        if (!chunk.isLoaded) continue;
+        if (chunk.collisionSet) {
           for (const w of chunk.collisionSet) this._wallsCache.add(w);
+        }
+        if (chunk.characterOnlyCollisionSet) {
+          for (const w of chunk.characterOnlyCollisionSet) this._wallsCache.add(w);
         }
       }
       this._wallsCacheValid = true;
     }
     return this._wallsCache;
+  }
+
+  get projectileWalls() {
+    if (!this._projectileWallsValid) {
+      this._projectileWallsCache.clear();
+      for (const chunk of this.chunkManager.loadedChunks.values()) {
+        if (chunk.isLoaded && chunk.collisionSet) {
+          for (const w of chunk.collisionSet) this._projectileWallsCache.add(w);
+        }
+      }
+      this._projectileWallsValid = true;
+    }
+    return this._projectileWallsCache;
   }
 
   get ySortDrawables() {
@@ -110,6 +132,7 @@ export class ChunkedLevel extends Level {
 
     // Chunk walls just loaded — next walls access will rebuild the cache.
     this._wallsCacheValid = false;
+    this._projectileWallsValid = false;
     // New ySort tiles entered the world — invalidate aggregate cache AND ask
     // Main to rebuild the merged sort so the new chunk's tiles join the depth
     // pass on the next frame.
@@ -156,6 +179,7 @@ export class ChunkedLevel extends Level {
 
     // Chunk walls gone — invalidate the cache.
     this._wallsCacheValid = false;
+    this._projectileWallsValid = false;
     // ySort tiles from this chunk are gone too — invalidate aggregate cache
     // AND ask Main to rebuild the merged sort so stale refs drop out.
     this._ySortDrawablesValid = false;

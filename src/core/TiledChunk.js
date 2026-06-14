@@ -1,4 +1,4 @@
-import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME, CULLING, DEBUG_LAYERS, CANVAS } from "../Constants.js";
+import { TILE_SIZE, CHUNK_SIZE, COLLISION_LAYER_NAME, CHARACTER_ONLY_COLLISION_LAYER_NAME, CULLING, DEBUG_LAYERS, CANVAS } from "../Constants.js";
 import { encodeCoord } from "../helpers/grid.js";
 
 /**
@@ -26,7 +26,8 @@ export class TiledChunk {
     // Organized layer groups
     this.groundLayers = []; // Layers below collision layer (non-static)
     this.staticGroundLayers = []; // Ground layers with static=true
-    this.collisionLayer = null; // The collision layer itself
+    this.collisionLayer = null; // The collision layer itself (blocks both characters and projectiles)
+    this.characterOnlyCollisionLayer = null; // Optional low-walls layer (blocks characters, lets projectiles through)
     this.foregroundLayers = []; // Layers above collision layer (non-static)
     this.staticForegroundLayers = []; // Foreground layers with static=true
     this.objectLayers = []; // Object layers (interactions, NPCs, etc.)
@@ -134,6 +135,13 @@ export class TiledChunk {
         if (layer.name === COLLISION_LAYER_NAME) {
           this.collisionLayer = layer;
           foundCollision = true;
+          continue;
+        }
+        // Character-only collision (low walls, fences, railings). Doesn't
+        // render, doesn't affect ground/foreground split — Tiled order
+        // around it doesn't matter.
+        if (layer.name === CHARACTER_ONLY_COLLISION_LAYER_NAME) {
+          this.characterOnlyCollisionLayer = layer;
           continue;
         }
 
@@ -247,27 +255,28 @@ export class TiledChunk {
    * Uses numeric encoding (32-bit integer) for memory efficiency
    */
   _buildCollisionSet() {
-    this.collisionSet = new Set();
+    this.collisionSet = new Set();              // full collision (chars + projectiles)
+    this.characterOnlyCollisionSet = new Set(); // character-only collision (low walls)
 
-    if (!this.collisionLayer) return;
+    if (this.collisionLayer) {
+      this._fillCollisionSet(this.collisionLayer, this.collisionSet);
+    }
+    if (this.characterOnlyCollisionLayer) {
+      this._fillCollisionSet(this.characterOnlyCollisionLayer, this.characterOnlyCollisionSet);
+    }
+  }
 
-    const data = this.collisionLayer.data;
-    const width = this.collisionLayer.width;
-
+  _fillCollisionSet(layer, set) {
+    const data = layer.data;
+    const width = layer.width;
     for (let i = 0; i < data.length; i++) {
       const tileId = data[i];
-
-      // Non-zero tile ID means collision
-      if (tileId !== 0) {
-        const localX = i % width;
-        const localY = Math.floor(i / width);
-
-        // Convert to world pixel coordinates
-        const worldX = this.worldX + localX * TILE_SIZE;
-        const worldY = this.worldY + localY * TILE_SIZE;
-
-        this.collisionSet.add(encodeCoord(worldX, worldY));
-      }
+      if (tileId === 0) continue;
+      const localX = i % width;
+      const localY = Math.floor(i / width);
+      const worldX = this.worldX + localX * TILE_SIZE;
+      const worldY = this.worldY + localY * TILE_SIZE;
+      set.add(encodeCoord(worldX, worldY));
     }
   }
 
@@ -602,6 +611,7 @@ export class TiledChunk {
     this.ySortDrawables = [];
     this.objectLayers = [];
     this.collisionSet.clear();
+    this.characterOnlyCollisionSet?.clear();
     this.elevationMap?.clear();
     this.tileAnimations.clear();
 

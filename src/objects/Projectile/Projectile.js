@@ -125,8 +125,11 @@ export class Projectile extends GameObject {
     // be harmless (find returns the first match, not all).
     const candidates = level.children;
 
-    // Check walls + solid objects
-    if (!isTileFree(level.walls, candidates, gridX, gridY)) {
+    // Check walls + solid objects. Use projectileWalls (full collision only)
+    // so the projectile flies over LowCollisions tiles; falls back to
+    // level.walls for level types that don't expose a split (e.g. SimpleLevel).
+    const wallSet = level.projectileWalls ?? level.walls;
+    if (!isTileFree(wallSet, candidates, gridX, gridY)) {
       // If the blocking object is an enemy, deal damage
       const hitTarget = candidates.find(c => {
         if (c === this || !c.isSolid) return false;

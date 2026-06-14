@@ -50,7 +50,11 @@ export class EnemyController extends Controller {
     // Snapshot the level's collision sources once per tick — every decision
     // below (movement, line-of-sight) uses the same set, no need to recompute
     // or spread-copy. isTileFree only reads from these.
+    // walls = character-blocking (full + LowCollisions); used for movement.
+    // projectileWalls = full collision only; used for line-of-sight so the
+    // enemy can fire over railings just like the player's projectiles do.
     const walls = root.level?.walls;
+    const projectileWalls = root.level?.projectileWalls ?? walls;
     const candidates = root.level?.children ?? [];
 
     const dx = this.heroPosition.x - character.position.x;
@@ -86,7 +90,7 @@ export class EnemyController extends Controller {
         // solid object (NPC, chest, another enemy) or wall is in the way.
         // Melee weapons (range 1, adjacent tile) trivially pass: no
         // intermediate tiles to walk.
-        if (this._hasClearShot(walls, candidates, dx, dy)) {
+        if (this._hasClearShot(projectileWalls, candidates, dx, dy)) {
           character.attack();
           this.attackTimer = this.attackCooldown;
           return;
