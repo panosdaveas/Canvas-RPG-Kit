@@ -46,7 +46,10 @@ export class Projectile extends GameObject {
         position: new Vector2(-8, -12),
       });
       
-      this.addChild(shadow);
+      // TODO: abstract the shadow logic in the weapon data
+      if (spriteConfig.resource == "arrow") {
+        this.addChild(shadow);
+      }
       this.addChild(this.sprite);
 
       // Set initial frame based on direction

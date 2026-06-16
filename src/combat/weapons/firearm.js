@@ -16,12 +16,12 @@ export const firearm = {
     // Projectile launch frame is driven by Aseprite tag User Data
     // ({"launchFrame": N}) on firearm_<dir> — see protagonist_new.json.
     projectile: {
-        id: "arrow",
+        id: "bullet",
         speed: 4,
         maxRange: 160,
         spriteOffset: { x: 0, y: -6 },
         sprite: {
-            resource: "arrow",
+            resource: "bullet",
             frameSize: { x: 16, y: 16 },
             hFrames: 1,
             vFrames: 4,

@@ -26,6 +26,7 @@ class Resources {
       chest: "/sprites/chest.png",
       // Weapons
       arrow: "/sprites/weapons/arrow.png",
+      bullet: "/sprites/weapons/bullet.png",
       // Icons (weapons)
       bowIcon: "/sprites/weapons/icons/bow.png",
       swordIcon: "/sprites/weapons/icons/sword.png",
