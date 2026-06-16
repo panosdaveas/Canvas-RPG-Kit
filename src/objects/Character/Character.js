@@ -64,11 +64,11 @@ export class Character extends GameObject {
     // Body
     this.body = new Sprite({
       resource: config.spriteResource,
-      frameSize: config.frameSize ?? new Vector2(32, 32),
+      frameSize: config.frameSize ?? new Vector2(72, 72),
       hFrames: config.hFrames ?? 4,
       vFrames: config.vFrames ?? 8,
       frame: config.frame ?? 0,
-      position: config.bodyOffset ?? new Vector2(-8, -20),
+      position: config.bodyOffset ?? new Vector2(-28, -32),
       animations: config.animations ?? null,
     });
     this.body.drawOrder = 1;

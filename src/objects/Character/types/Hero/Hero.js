@@ -6,6 +6,7 @@ import { PlayerController } from "../../../../controllers/PlayerController.js";
 import { ItemPickupState, STATE_ITEM_PICKUP } from "../../../../state/states/ItemPickupState.js";
 import { EntryState, STATE_ENTRY } from "../../../../state/states/EntryState.js";
 import { Companion } from "../Companion/Companion.js";
+import { TILE_SIZE } from "../../../../Constants.js";
 
 export class Hero extends Character {
   constructor(x, y) {
@@ -21,7 +22,7 @@ export class Hero extends Character {
       hFrames: aseprite.hFrames,
       vFrames: aseprite.vFrames,
       frame: 0,
-      bodyOffset: new Vector2(-28, -36),
+      bodyOffset: new Vector2(-(aseprite.frameSize.w - TILE_SIZE)/2, -aseprite.frameSize.h/2),
       shadowOffset: new Vector2(-8, -18),
       isSolid: true,
       team: "player"

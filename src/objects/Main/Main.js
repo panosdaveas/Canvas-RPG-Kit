@@ -48,7 +48,7 @@ export class Main extends GameObject {
 
     // Create hero (persists across levels, re-parented on level change).
     // The Companion lives as a child of Hero, so it travels along automatically.
-    this.hero = new Hero(gridCells(20), gridCells(14));
+    this.hero = new Hero(gridCells(14), gridCells(14));
     if (this.level) {
       this.level.addChild(this.hero);
       this._rebuildSortedObjects();

@@ -72,7 +72,7 @@ export class Npc extends Character {
 
   draw(ctx, x, y) {
     ctx.save();
-    ctx.filter = "saturate(0) brightness(2)";
+    ctx.filter = "saturate(0) brightness(1)";
     super.draw(ctx, x, y);
     ctx.restore();
   }

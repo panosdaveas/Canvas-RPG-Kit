@@ -1,16 +1,17 @@
 // Grid and tile configuration
 export const TILE_SIZE = 16; // Pixels per grid cell
 
+export const CHUNK_SIZE = 30; // Tiles per chunk (30x30)
+export const CHUNK_PIXEL_SIZE = CHUNK_SIZE * TILE_SIZE; // 480 pixels
+
 export const CANVAS = {
-    WIDTH: 360, // canvas width in pixels
-    HEIGHT: 360, // canvas height in pixels
+    WIDTH: CHUNK_SIZE * TILE_SIZE, // canvas width in pixels
+    HEIGHT: CHUNK_SIZE * TILE_SIZE, // canvas height in pixels
     // WIDTH: 480, // canvas width in pixels
     // HEIGHT: 270, // canvas height in pixels
 }
 
 // Chunk system configuration
-export const CHUNK_SIZE = 30; // Tiles per chunk (30x30)
-export const CHUNK_PIXEL_SIZE = CHUNK_SIZE * TILE_SIZE; // 480 pixels
 
 // Chunk loading configuration
 export const VISIBLE_CHUNK_RADIUS = 1; // Load chunks within this radius of camera (9x9 grid total)
@@ -26,8 +27,10 @@ export const CAMERA = {
     DEAD_ZONE_HEIGHT: 0, // How far up/down hero can move before camera follows
 }
 
+const HERO_CANVAS_SIZE = 72;
+
 export const SPRITE = {
-    HERO_HALF_SIZE: TILE_SIZE / 2, // Half the size of the hero sprite (16x16 sprite)
+    HERO_HALF_SIZE: HERO_CANVAS_SIZE/2, // Half the size of the hero sprite (16x16 sprite)
 }
 
 // Layer types - these match the Tiled layer names

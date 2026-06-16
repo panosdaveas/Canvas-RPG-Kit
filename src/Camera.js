@@ -98,8 +98,8 @@ export class Camera extends GameObject {
     const personHalf = SPRITE.HERO_HALF_SIZE;
     const canvasWidth = CANVAS.WIDTH;
     const canvasHeight = CANVAS.HEIGHT;
-    const halfWidth = -personHalf + canvasWidth / 2;
-    const halfHeight = -personHalf + canvasHeight / 2;
+    const halfWidth = -personHalf + canvasWidth/2;
+    const halfHeight = -personHalf + canvasHeight/2;
     this.position = new Vector2(
       -pos.x + halfWidth,
       -pos.y + halfHeight,

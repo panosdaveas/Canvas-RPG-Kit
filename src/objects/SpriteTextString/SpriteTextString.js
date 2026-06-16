@@ -9,7 +9,7 @@ import {CANVAS} from "../../Constants.js";
 export class SpriteTextString extends GameObject {
   constructor(config={}) {
     super({
-      position: new Vector2((CANVAS.WIDTH - 256) / 2, CANVAS.HEIGHT - 80)
+      position: new Vector2((CANVAS.WIDTH - 256) / 2, CANVAS.HEIGHT - 128)
     });
 
 
