@@ -413,7 +413,6 @@
          "y":0
         }, 
         {
-         "class":"Signs",
          "draworder":"topdown",
          "id":6,
          "name":"Signs",
@@ -430,7 +429,7 @@
                          "value":"Hi, i am a Green sign!"
                         }],
                  "rotation":0,
-                 "type":"Signs",
+                 "type":"Sign",
                  "visible":true,
                  "width":48,
                  "x":144,
@@ -446,33 +445,7 @@
          "draworder":"topdown",
          "id":13,
          "name":"Enemies",
-         "objects":[
-                {
-                 "height":0,
-                 "id":7,
-                 "name":"",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"facingDirection",
-                         "propertytype":"facingDirection",
-                         "type":"string",
-                         "value":"DOWN"
-                        }, 
-                        {
-                         "name":"weapon",
-                         "propertytype":"weapon",
-                         "type":"string",
-                         "value":"bow"
-                        }],
-                 "rotation":0,
-                 "type":"Enemy",
-                 "visible":true,
-                 "width":0,
-                 "x":128,
-                 "y":64
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -500,6 +473,13 @@
          "imagewidth":2240,
          "margin":0,
          "name":"Overworld",
+         "properties":[
+                {
+                 "name":"resource",
+                 "propertytype":"Tilesets",
+                 "type":"string",
+                 "value":"overworldTileset"
+                }],
          "spacing":0,
          "tilecount":21000,
          "tileheight":16,
@@ -542,6 +522,13 @@
          "imagewidth":16,
          "margin":0,
          "name":"Collisions",
+         "properties":[
+                {
+                 "name":"resource",
+                 "propertytype":"Tilesets",
+                 "type":"string",
+                 "value":"collisionsTileset"
+                }],
          "spacing":0,
          "tilecount":2,
          "tileheight":16,
